@@ -1,4 +1,3 @@
-// Command homerow is a terminal typing tutor.
 package main
 
 import (
