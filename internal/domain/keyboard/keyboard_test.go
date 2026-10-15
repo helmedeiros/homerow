@@ -6,7 +6,7 @@ import (
 	"github.com/helmedeiros/homerow/internal/domain/keyboard"
 )
 
-func TestHomeRowKeysBelongToTheirResting(t *testing.T) {
+func TestHomeRowKeysBelongToTheirRestingFinger(t *testing.T) {
 	cases := map[rune]keyboard.Finger{
 		'a': keyboard.LeftPinky,
 		's': keyboard.LeftRing,
