@@ -15,6 +15,24 @@ type Config struct {
 	Duration   time.Duration
 	SpawnEvery time.Duration
 	FallEvery  time.Duration
+	RampEvery  time.Duration
+	Ramp       float64
+}
+
+const FastestFall = 150 * time.Millisecond
+
+func DefaultConfig(keys []rune) Config {
+	return Config{
+		Keys:       keys,
+		Width:      40,
+		Height:     12,
+		Lives:      3,
+		Duration:   time.Minute,
+		SpawnEvery: 1600 * time.Millisecond,
+		FallEvery:  600 * time.Millisecond,
+		RampEvery:  15 * time.Second,
+		Ramp:       0.85,
+	}
 }
 
 type Drop struct {
@@ -59,7 +77,7 @@ func (g *Game) Advance(dt time.Duration) {
 		g.elapsed = next
 		if g.nextFall == next {
 			g.fall()
-			g.nextFall += g.cfg.FallEvery
+			g.nextFall += g.FallInterval()
 		}
 		if g.nextSpawn == next {
 			g.spawn()
@@ -69,6 +87,17 @@ func (g *Game) Advance(dt time.Duration) {
 	if !g.Over() {
 		g.elapsed = end
 	}
+}
+
+func (g *Game) FallInterval() time.Duration {
+	interval := g.cfg.FallEvery
+	if g.cfg.RampEvery <= 0 {
+		return interval
+	}
+	for range int(g.elapsed / g.cfg.RampEvery) {
+		interval = time.Duration(float64(interval) * g.cfg.Ramp)
+	}
+	return max(interval, FastestFall)
 }
 
 func (g *Game) spawn() {
