@@ -26,6 +26,8 @@ type Game struct {
 	rng       *rand.Rand
 	drops     []Drop
 	lives     int
+	hits      int
+	misses    int
 	elapsed   time.Duration
 	nextSpawn time.Duration
 	nextFall  time.Duration
@@ -73,6 +75,30 @@ func (g *Game) fall() {
 		g.drops[i].Row++
 	}
 }
+
+const pointsPerHit = 10
+
+func (g *Game) Press(r rune) bool {
+	lowest := -1
+	for i, d := range g.drops {
+		if d.Char == r && (lowest < 0 || d.Row > g.drops[lowest].Row) {
+			lowest = i
+		}
+	}
+	if lowest < 0 {
+		g.misses++
+		return false
+	}
+	g.drops = append(g.drops[:lowest], g.drops[lowest+1:]...)
+	g.hits++
+	return true
+}
+
+func (g *Game) Hits() int { return g.hits }
+
+func (g *Game) Misses() int { return g.misses }
+
+func (g *Game) Score() int { return g.hits * pointsPerHit }
 
 func (g *Game) Drops() []Drop { return append([]Drop(nil), g.drops...) }
 
