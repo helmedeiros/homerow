@@ -3,6 +3,8 @@ package game
 import (
 	"math/rand/v2"
 	"time"
+
+	"github.com/helmedeiros/homerow/internal/domain/scoring"
 )
 
 type Config struct {
@@ -28,6 +30,7 @@ type Game struct {
 	lives     int
 	hits      int
 	misses    int
+	landed    int
 	elapsed   time.Duration
 	nextSpawn time.Duration
 	nextFall  time.Duration
@@ -44,8 +47,11 @@ func New(cfg Config, rng *rand.Rand) *Game {
 }
 
 func (g *Game) Advance(dt time.Duration) {
-	end := g.elapsed + dt
-	for {
+	if g.Over() {
+		return
+	}
+	end := min(g.elapsed+dt, g.cfg.Duration)
+	for !g.Over() {
 		next := min(g.nextSpawn, g.nextFall)
 		if next > end {
 			break
@@ -60,7 +66,9 @@ func (g *Game) Advance(dt time.Duration) {
 			g.nextSpawn += g.cfg.SpawnEvery
 		}
 	}
-	g.elapsed = end
+	if !g.Over() {
+		g.elapsed = end
+	}
 }
 
 func (g *Game) spawn() {
@@ -71,14 +79,25 @@ func (g *Game) spawn() {
 }
 
 func (g *Game) fall() {
-	for i := range g.drops {
-		g.drops[i].Row++
+	falling := g.drops[:0]
+	for _, d := range g.drops {
+		d.Row++
+		if d.Row >= g.cfg.Height {
+			g.landed++
+			g.lives = max(g.lives-1, 0)
+			continue
+		}
+		falling = append(falling, d)
 	}
+	g.drops = falling
 }
 
 const pointsPerHit = 10
 
 func (g *Game) Press(r rune) bool {
+	if g.Over() {
+		return false
+	}
 	lowest := -1
 	for i, d := range g.drops {
 		if d.Char == r && (lowest < 0 || d.Row > g.drops[lowest].Row) {
@@ -104,4 +123,27 @@ func (g *Game) Drops() []Drop { return append([]Drop(nil), g.drops...) }
 
 func (g *Game) Lives() int { return g.lives }
 
-func (g *Game) Over() bool { return false }
+func (g *Game) Landed() int { return g.landed }
+
+func (g *Game) Elapsed() time.Duration { return g.elapsed }
+
+func (g *Game) Remaining() time.Duration { return g.cfg.Duration - g.elapsed }
+
+func (g *Game) Over() bool {
+	return g.lives == 0 || g.elapsed >= g.cfg.Duration
+}
+
+const charactersPerWord = 5
+
+func (g *Game) Result() scoring.Result {
+	attempts := g.hits + g.misses + g.landed
+	accuracy := 100.0
+	if attempts > 0 {
+		accuracy = float64(g.hits) / float64(attempts) * 100
+	}
+	wpm := 0.0
+	if minutes := g.elapsed.Minutes(); minutes > 0 {
+		wpm = float64(g.hits) / charactersPerWord / minutes
+	}
+	return scoring.Result{Accuracy: accuracy, WPM: wpm}
+}
