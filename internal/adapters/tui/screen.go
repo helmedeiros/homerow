@@ -9,6 +9,10 @@ type screen interface {
 
 type startLessonMsg struct{ number int }
 
+type stepDoneMsg struct{}
+
+type leaveLessonMsg struct{}
+
 func send(msg tea.Msg) tea.Cmd {
 	return func() tea.Msg { return msg }
 }
