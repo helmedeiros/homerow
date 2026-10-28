@@ -1,0 +1,96 @@
+package tui
+
+import (
+	"strings"
+	"testing"
+	"time"
+
+	tea "github.com/charmbracelet/bubbletea"
+)
+
+type fakeClock struct{ now time.Time }
+
+func (c *fakeClock) Now() time.Time { return c.now }
+
+func (c *fakeClock) tick(d time.Duration) { c.now = c.now.Add(d) }
+
+func newClock() *fakeClock {
+	return &fakeClock{now: time.Date(2026, 10, 28, 20, 0, 0, 0, time.UTC)}
+}
+
+func typeText(s screen, clock *fakeClock, text string) (screen, tea.Cmd) {
+	var cmd tea.Cmd
+	for _, r := range text {
+		clock.tick(time.Second)
+		key := runes(string(r))
+		if r == ' ' {
+			key = special(tea.KeySpace)
+		}
+		s, cmd = s.Update(key)
+	}
+	return s, cmd
+}
+
+func TestDrillShowsTheTextAndTheFingerForTheNextKey(t *testing.T) {
+	view := newDrillScreen("fj fj", 0, newClock().Now).View()
+
+	if !strings.Contains(view, "fj fj") || !strings.Contains(view, "left index") {
+		t.Fatalf("view:\n%s", view)
+	}
+}
+
+func TestDrillMovesTheFingerHintAlong(t *testing.T) {
+	clock := newClock()
+	s, _ := typeText(newDrillScreen("fj", 0, clock.Now), clock, "f")
+
+	if !strings.Contains(s.View(), "right index") {
+		t.Fatalf("view:\n%s", s.View())
+	}
+}
+
+func TestDrillShowsLiveSpeedAndAccuracy(t *testing.T) {
+	clock := newClock()
+	s, _ := typeText(newDrillScreen("fjfjf fjfjf", 0, clock.Now), clock, "fjfjd")
+
+	view := s.View()
+	if !strings.Contains(view, "80%") || !strings.Contains(view, "wpm") {
+		t.Fatalf("view:\n%s", view)
+	}
+}
+
+func TestDrillFinishesWithTheResult(t *testing.T) {
+	clock := newClock()
+	_, cmd := typeText(newDrillScreen("fj fj", 0, clock.Now), clock, "fj fd")
+
+	done, ok := message(cmd).(stepDoneMsg)
+	if !ok {
+		t.Fatalf("message = %#v, want step done", message(cmd))
+	}
+	if done.result.Accuracy != 80 || done.result.WPM <= 0 || !done.scored {
+		t.Fatalf("result = %+v", done)
+	}
+}
+
+func TestDrillIgnoresBackspaceAndCanBeLeft(t *testing.T) {
+	s := screen(newDrillScreen("fj", 0, newClock().Now))
+
+	s, cmd := s.Update(special(tea.KeyBackspace))
+	if cmd != nil {
+		t.Fatalf("backspace sent %#v", message(cmd))
+	}
+	_, cmd = s.Update(special(tea.KeyEsc))
+	if _, ok := message(cmd).(leaveLessonMsg); !ok {
+		t.Fatalf("message = %#v, want leave", message(cmd))
+	}
+}
+
+func TestDrillWrapsLongTextOnWords(t *testing.T) {
+	text := strings.TrimSpace(strings.Repeat("asdf jkl; ", 12))
+	view := newDrillScreen(text, 0, newClock().Now).View()
+
+	for _, line := range strings.Split(view, "\n") {
+		if len([]rune(line)) > drillWidth+4 && strings.Contains(line, "asdf") {
+			t.Fatalf("line too long (%d): %q", len([]rune(line)), line)
+		}
+	}
+}
