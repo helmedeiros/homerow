@@ -18,13 +18,24 @@ type drillScreen struct {
 	session *drill.Session
 	limit   time.Duration
 	now     func() time.Time
+	started time.Time
 }
 
 func newDrillScreen(text string, limit time.Duration, now func() time.Time) drillScreen {
 	return drillScreen{session: drill.NewSession(text), limit: limit, now: now}
 }
 
+func (d drillScreen) Init() tea.Cmd {
+	if d.limit <= 0 {
+		return nil
+	}
+	return tick()
+}
+
 func (d drillScreen) Update(msg tea.Msg) (screen, tea.Cmd) {
+	if _, ok := msg.(tickMsg); ok {
+		return d.ticked()
+	}
 	key, ok := msg.(tea.KeyMsg)
 	if !ok {
 		return d, nil
@@ -44,7 +55,27 @@ func (d drillScreen) Update(msg tea.Msg) (screen, tea.Cmd) {
 	return d, nil
 }
 
+func (d drillScreen) ticked() (screen, tea.Cmd) {
+	if d.limit <= 0 {
+		return d, nil
+	}
+	if d.timeLeft() <= 0 {
+		return d, send(d.finished())
+	}
+	return d, tick()
+}
+
+func (d drillScreen) timeLeft() time.Duration {
+	if d.started.IsZero() {
+		return d.limit
+	}
+	return d.limit - d.now().Sub(d.started)
+}
+
 func (d drillScreen) typed(r rune) (screen, tea.Cmd) {
+	if d.started.IsZero() {
+		d.started = d.now()
+	}
 	d.session.Type(r, d.now())
 	if d.session.Done() {
 		return d, send(d.finished())
@@ -65,9 +96,11 @@ func (d drillScreen) View() string {
 	next, more := d.session.Expected()
 	info, _ := keyboard.Lookup(next)
 	b.WriteString(renderHands(info.Finger, more) + "\n\n")
-	fmt.Fprintf(&b, "%s   %s\n\n",
-		mutedStyle.Render(fmt.Sprintf("speed %.0f wpm", d.session.WPM())),
-		mutedStyle.Render(fmt.Sprintf("accuracy %.0f%%", d.session.Accuracy())))
+	stats := fmt.Sprintf("speed %.0f wpm   accuracy %.0f%%", d.session.WPM(), d.session.Accuracy())
+	if d.limit > 0 {
+		stats += "   time left " + clockFace(d.timeLeft())
+	}
+	b.WriteString(mutedStyle.Render(stats) + "\n\n")
 	b.WriteString(mutedStyle.Render("esc lessons"))
 	return b.String()
 }
@@ -117,4 +150,15 @@ func wrap(text []rune, width int) [][2]int {
 		}
 	}
 	return append(spans, [2]int{start, len(text)})
+}
+
+type tickMsg struct{}
+
+func tick() tea.Cmd {
+	return tea.Tick(time.Second, func(time.Time) tea.Msg { return tickMsg{} })
+}
+
+func clockFace(d time.Duration) string {
+	seconds := max(int(d.Seconds()), 0)
+	return fmt.Sprintf("%d:%02d", seconds/60, seconds%60)
 }
