@@ -23,6 +23,7 @@ const usage = `usage: homerow [--data FILE] [command]
 
 commands:
   (none)    open the typing tutor
+  lessons   list the lessons and your progress
   version   print the version
 
 flags:
@@ -46,6 +47,8 @@ func run(args []string, in io.Reader, out, errOut io.Writer) int {
 	switch flags.Arg(0) {
 	case "":
 		return withTrainer(*data, errOut, func(t *app.Trainer) error { return play(t, in, out) })
+	case "lessons":
+		return withTrainer(*data, errOut, func(t *app.Trainer) error { return listLessons(t, out) })
 	case "version":
 		_, _ = fmt.Fprintf(out, "homerow %s\n", version)
 		return 0
