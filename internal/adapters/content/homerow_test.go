@@ -90,3 +90,9 @@ func TestEveryDrillUsesOnlyItsLessonKeys(t *testing.T) {
 		}
 	}
 }
+
+func TestCatalogServesTheHomeRow(t *testing.T) {
+	if got := (content.Catalog{}).Module(); got.Title != "Home Row" || len(got.Lessons) != 23 {
+		t.Fatalf("module = %q with %d lessons", got.Title, len(got.Lessons))
+	}
+}
