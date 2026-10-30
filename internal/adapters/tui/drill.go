@@ -19,17 +19,18 @@ type drillScreen struct {
 	limit   time.Duration
 	now     func() time.Time
 	started time.Time
+	tick    ticker
 }
 
 func newDrillScreen(text string, limit time.Duration, now func() time.Time) drillScreen {
-	return drillScreen{session: drill.NewSession(text), limit: limit, now: now}
+	return drillScreen{session: drill.NewSession(text), limit: limit, now: now, tick: realTicker}
 }
 
 func (d drillScreen) Init() tea.Cmd {
 	if d.limit <= 0 {
 		return nil
 	}
-	return tick()
+	return d.tick(time.Second, tickMsg{})
 }
 
 func (d drillScreen) Update(msg tea.Msg) (screen, tea.Cmd) {
@@ -62,7 +63,7 @@ func (d drillScreen) ticked() (screen, tea.Cmd) {
 	if d.timeLeft() <= 0 {
 		return d, send(d.finished())
 	}
-	return d, tick()
+	return d, d.tick(time.Second, tickMsg{})
 }
 
 func (d drillScreen) timeLeft() time.Duration {
@@ -154,8 +155,10 @@ func wrap(text []rune, width int) [][2]int {
 
 type tickMsg struct{}
 
-func tick() tea.Cmd {
-	return tea.Tick(time.Second, func(time.Time) tea.Msg { return tickMsg{} })
+type ticker func(time.Duration, tea.Msg) tea.Cmd
+
+func realTicker(d time.Duration, msg tea.Msg) tea.Cmd {
+	return tea.Tick(d, func(time.Time) tea.Msg { return msg })
 }
 
 func clockFace(d time.Duration) string {

@@ -21,18 +21,15 @@ type gameScreen struct {
 	now   func() time.Time
 	last  time.Time
 	ended bool
+	tick  ticker
 }
 
 func newGameScreen(cfg game.Config, rng *rand.Rand, now func() time.Time) gameScreen {
-	return gameScreen{game: game.New(cfg, rng), cfg: cfg, now: now, last: now()}
+	return gameScreen{game: game.New(cfg, rng), cfg: cfg, now: now, last: now(), tick: realTicker}
 }
 
 func (g gameScreen) Init() tea.Cmd {
-	return frame()
-}
-
-func frame() tea.Cmd {
-	return tea.Tick(frameEvery, func(time.Time) tea.Msg { return frameMsg{} })
+	return g.tick(frameEvery, frameMsg{})
 }
 
 func (g gameScreen) Update(msg tea.Msg) (screen, tea.Cmd) {
@@ -56,7 +53,7 @@ func (g gameScreen) advanced() (screen, tea.Cmd) {
 		g.ended = true
 		return g, send(stepDoneMsg{result: g.game.Result(), scored: true})
 	}
-	return g, frame()
+	return g, g.tick(frameEvery, frameMsg{})
 }
 
 func (g gameScreen) pressed(key tea.KeyMsg) (screen, tea.Cmd) {
