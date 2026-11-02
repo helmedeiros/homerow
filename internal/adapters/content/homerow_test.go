@@ -4,10 +4,13 @@ import (
 	"math/rand/v2"
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/helmedeiros/homerow/internal/adapters/content"
 	"github.com/helmedeiros/homerow/internal/domain/curriculum"
+	"github.com/helmedeiros/homerow/internal/domain/game"
 	"github.com/helmedeiros/homerow/internal/domain/keyboard"
+	"github.com/helmedeiros/homerow/internal/domain/scoring"
 )
 
 func TestHomeRowLessonsAreValidAndNumberedInOrder(t *testing.T) {
@@ -94,5 +97,23 @@ func TestEveryDrillUsesOnlyItsLessonKeys(t *testing.T) {
 func TestCatalogServesTheHomeRow(t *testing.T) {
 	if got := (content.Catalog{}).Module(); got.Title != "Home Row" || len(got.Lessons) != 23 {
 		t.Fatalf("module = %q with %d lessons", got.Title, len(got.Lessons))
+	}
+}
+
+func TestAPerfectGameEarnsFiveStarsInEveryPlayLesson(t *testing.T) {
+	for _, l := range content.HomeRow().Lessons {
+		if l.Kind != curriculum.Play {
+			continue
+		}
+		g := game.New(game.DefaultConfig(l.Keys), rand.New(rand.NewPCG(1, 1)))
+		for !g.Over() {
+			g.Advance(100 * time.Millisecond)
+			for _, d := range g.Drops() {
+				g.Press(d.Char)
+			}
+		}
+		if stars := scoring.Stars(g.Result(), l.GoalWPM); stars != scoring.MaxStars {
+			t.Errorf("lesson %d: perfect play earns %d stars (%.1f wpm, goal %.0f)", l.Number, stars, g.Result().WPM, l.GoalWPM)
+		}
 	}
 }

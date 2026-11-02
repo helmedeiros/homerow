@@ -18,6 +18,7 @@ const (
 	starterGoal = 8
 	middleGoal  = 10
 	homeGoal    = 12
+	playGoal    = 8
 
 	practiceTime = time.Minute
 )
@@ -35,14 +36,14 @@ func homeRowLessons() []curriculum.Lesson {
 		newKeys(5, "Keys d and k", "dk", fjdk),
 		review(6, "Review: d and k", fjdk, "dk", starterGoal),
 		practice(7, "Practice: d and k", fjdk, "dk", starterGoal, false),
-		play(8, "Play: f j d k", fjdk, starterGoal),
+		play(8, "Play: f j d k", fjdk),
 		newKeys(9, "Keys s and l", "sl", fjdksl),
 		review(10, "Review: s and l", fjdksl, "sl", middleGoal),
 		practice(11, "Practice: s and l", fjdksl, "sl", middleGoal, false),
 		newKeys(12, "Keys a and ;", "a;", firstHome),
 		review(13, "Review: a and ;", firstHome, "a;", middleGoal),
 		practice(14, "First eight keys", firstHome, "", middleGoal, true),
-		play(15, "Play: first eight keys", firstHome, middleGoal),
+		play(15, "Play: first eight keys", firstHome),
 		{Number: 16, Title: "Finding home", Kind: curriculum.Intro, Pages: findingHomePages},
 		handDrill(17, "Home row: left hand", leftHand, homeGoal),
 		handDrill(18, "Home row: right hand", rightHand, homeGoal),
@@ -50,7 +51,7 @@ func homeRowLessons() []curriculum.Lesson {
 		review(20, "Review: g and h", homeRow, "gh", homeGoal),
 		practice(21, "Practice: g and h", homeRow, "gh", homeGoal, false),
 		practice(22, "Home row review", homeRow, "", homeGoal, true),
-		play(23, "Play: home row", homeRow, homeGoal),
+		play(23, "Play: home row", homeRow),
 	}
 }
 
@@ -87,6 +88,6 @@ func practice(number int, title, keys, focus string, goal float64, words bool) c
 	}
 }
 
-func play(number int, title, keys string, goal float64) curriculum.Lesson {
-	return curriculum.Lesson{Number: number, Title: title, Kind: curriculum.Play, Keys: []rune(keys), GoalWPM: goal}
+func play(number int, title, keys string) curriculum.Lesson {
+	return curriculum.Lesson{Number: number, Title: title, Kind: curriculum.Play, Keys: []rune(keys), GoalWPM: playGoal}
 }
