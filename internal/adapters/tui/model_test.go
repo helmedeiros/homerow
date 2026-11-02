@@ -17,12 +17,15 @@ type harness struct {
 	t     *testing.T
 	model tea.Model
 	clock *fakeClock
-	store *memstore.Store
+	store app.ProgressStore
 }
 
 func newHarness(t *testing.T) *harness {
+	return newHarnessWith(t, memstore.New())
+}
+
+func newHarnessWith(t *testing.T, store app.ProgressStore) *harness {
 	clock := newClock()
-	store := memstore.New()
 	trainer := app.NewTrainer(staticCatalog{}, store, func() uint64 { return 7 })
 	m, err := New(trainer, Options{Now: clock.Now, Seed: func() uint64 { return 7 }, tick: manualTicks})
 	if err != nil {
