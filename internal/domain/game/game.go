@@ -81,7 +81,7 @@ func (g *Game) Advance(dt time.Duration) {
 		}
 		if g.nextSpawn == next {
 			g.spawn()
-			g.nextSpawn += g.cfg.SpawnEvery
+			g.nextSpawn += g.SpawnInterval()
 		}
 	}
 	if !g.Over() {
@@ -90,14 +90,21 @@ func (g *Game) Advance(dt time.Duration) {
 }
 
 func (g *Game) FallInterval() time.Duration {
-	interval := g.cfg.FallEvery
+	return max(g.ramped(g.cfg.FallEvery), FastestFall)
+}
+
+func (g *Game) SpawnInterval() time.Duration {
+	return g.ramped(g.cfg.SpawnEvery)
+}
+
+func (g *Game) ramped(interval time.Duration) time.Duration {
 	if g.cfg.RampEvery <= 0 {
 		return interval
 	}
 	for range int(g.elapsed / g.cfg.RampEvery) {
 		interval = time.Duration(float64(interval) * g.cfg.Ramp)
 	}
-	return max(interval, FastestFall)
+	return interval
 }
 
 func (g *Game) spawn() {

@@ -39,3 +39,23 @@ func TestDefaultConfigIsPlayable(t *testing.T) {
 		t.Fatalf("config = %+v", cfg)
 	}
 }
+
+func TestLettersSpawnFasterAsTheRoundGoesOn(t *testing.T) {
+	cfg := config()
+	cfg.RampEvery = 10 * time.Second
+	cfg.Ramp = 0.5
+	g := game.New(cfg, rand.New(rand.NewPCG(1, 1)))
+
+	if got := g.SpawnInterval(); got != 2*time.Second {
+		t.Fatalf("SpawnInterval() = %v at start", got)
+	}
+	for range 100 {
+		g.Advance(100 * time.Millisecond)
+		for _, d := range g.Drops() {
+			g.Press(d.Char)
+		}
+	}
+	if got := g.SpawnInterval(); got != time.Second {
+		t.Fatalf("SpawnInterval() = %v after one ramp", got)
+	}
+}
