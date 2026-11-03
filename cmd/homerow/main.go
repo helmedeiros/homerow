@@ -70,8 +70,12 @@ func withTrainer(data string, errOut io.Writer, use func(*app.Trainer) error) in
 	return 0
 }
 
+func newModel(trainer *app.Trainer) (tui.Model, error) {
+	return tui.New(trainer, tui.Options{Now: time.Now, Seed: rand.Uint64})
+}
+
 func play(trainer *app.Trainer, in io.Reader, out io.Writer) error {
-	model, err := tui.New(trainer, tui.Options{Now: time.Now, Seed: rand.Uint64})
+	model, err := newModel(trainer)
 	if err != nil {
 		return err
 	}
