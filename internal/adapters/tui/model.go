@@ -145,13 +145,14 @@ func average(results []scoring.Result) scoring.Result {
 }
 
 func (m Model) showMap() (tea.Model, tea.Cmd) {
+	focus := m.mapFocus()
 	m.run = nil
 	overview, err := m.trainer.Overview()
 	if err != nil {
 		m.err = err
 		return m, nil
 	}
-	m.current = newMapScreen(overview)
+	m.current = newMapScreen(overview).focus(focus)
 	return m, nil
 }
 
@@ -173,4 +174,14 @@ func (m Model) header() string {
 	done := min(m.run.step, total)
 	dots := accentStyle.Render(strings.Repeat("●", done)) + mutedStyle.Render(strings.Repeat("○", total-done))
 	return fmt.Sprintf("%s  %s", titleStyle.Render(fmt.Sprintf("Lesson %d · %s", lesson.Number, lesson.Title)), dots)
+}
+
+func (m Model) mapFocus() int {
+	if r, ok := m.current.(resultsScreen); ok && r.outcome.Passed && r.outcome.Next != 0 {
+		return r.outcome.Next
+	}
+	if m.run != nil {
+		return m.run.plan.Lesson.Number
+	}
+	return 0
 }

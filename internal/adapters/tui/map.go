@@ -26,6 +26,15 @@ func newMapScreen(o app.Overview) mapScreen {
 	return m
 }
 
+func (m mapScreen) focus(number int) mapScreen {
+	for i, card := range m.overview.Lessons {
+		if card.Number == number {
+			m.cursor = i
+		}
+	}
+	return m
+}
+
 func (m mapScreen) selected() int {
 	return m.overview.Lessons[m.cursor].Number
 }

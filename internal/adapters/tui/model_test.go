@@ -185,3 +185,26 @@ func TestUnknownLessonKeepsTheMapWithAnError(t *testing.T) {
 		t.Fatalf("view:\n%s", h.view())
 	}
 }
+
+func TestTheMapKeepsTheLessonYouJustLeft(t *testing.T) {
+	h := newHarness(t)
+	h.send(startLessonMsg{number: 6})
+
+	h.send(special(tea.KeyEsc))
+
+	if got := h.current().(mapScreen).selected(); got != 6 {
+		t.Fatalf("selected = %d, want 6", got)
+	}
+}
+
+func TestTheMapMovesOnAfterAPassedLesson(t *testing.T) {
+	h := newHarness(t)
+	h.send(startLessonMsg{number: 4})
+	h.typeDrill()
+
+	h.send(special(tea.KeyEsc))
+
+	if got := h.current().(mapScreen).selected(); got != 5 {
+		t.Fatalf("selected = %d, want 5", got)
+	}
+}

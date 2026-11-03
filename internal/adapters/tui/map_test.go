@@ -88,3 +88,14 @@ func TestMapMovesOncePerKeyInABurst(t *testing.T) {
 		t.Fatalf("selected = %d, want 1", got)
 	}
 }
+
+func TestMapCanFocusALesson(t *testing.T) {
+	m := newMapScreen(sampleOverview()).focus(2)
+
+	if m.selected() != 2 {
+		t.Fatalf("selected = %d, want 2", m.selected())
+	}
+	if newMapScreen(sampleOverview()).focus(99).selected() != 4 {
+		t.Fatal("an unknown lesson should keep the default selection")
+	}
+}
