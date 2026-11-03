@@ -94,3 +94,12 @@ func TestDrillWrapsLongTextOnWords(t *testing.T) {
 		}
 	}
 }
+
+func TestDrillTypesEveryCharacterOfABurst(t *testing.T) {
+	_, cmd := newDrillScreen("fjf", 0, newClock().Now).Update(runes("fjf"))
+
+	done, ok := message(cmd).(stepDoneMsg)
+	if !ok || done.result.Accuracy != 100 {
+		t.Fatalf("message = %#v, want a finished drill", message(cmd))
+	}
+}

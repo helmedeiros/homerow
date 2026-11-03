@@ -49,9 +49,7 @@ func (d drillScreen) Update(msg tea.Msg) (screen, tea.Cmd) {
 	case tea.KeySpace:
 		return d.typed(' ')
 	case tea.KeyRunes:
-		if len(key.Runes) == 1 {
-			return d.typed(key.Runes[0])
-		}
+		return d.typed(key.Runes...)
 	}
 	return d, nil
 }
@@ -73,13 +71,15 @@ func (d drillScreen) timeLeft() time.Duration {
 	return d.limit - d.now().Sub(d.started)
 }
 
-func (d drillScreen) typed(r rune) (screen, tea.Cmd) {
+func (d drillScreen) typed(burst ...rune) (screen, tea.Cmd) {
 	if d.started.IsZero() {
 		d.started = d.now()
 	}
-	d.session.Type(r, d.now())
-	if d.session.Done() {
-		return d, send(d.finished())
+	for _, r := range burst {
+		d.session.Type(r, d.now())
+		if d.session.Done() {
+			return d, send(d.finished())
+		}
 	}
 	return d, nil
 }

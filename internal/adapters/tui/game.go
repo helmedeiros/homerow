@@ -63,8 +63,8 @@ func (g gameScreen) pressed(key tea.KeyMsg) (screen, tea.Cmd) {
 	case tea.KeyCtrlC:
 		return g, tea.Quit
 	case tea.KeyRunes:
-		if len(key.Runes) == 1 {
-			g.game.Press(key.Runes[0])
+		for _, r := range key.Runes {
+			g.game.Press(r)
 		}
 	}
 	return g, nil

@@ -59,3 +59,11 @@ func TestKeyIntroCanBeLeft(t *testing.T) {
 		t.Fatalf("message = %#v, want leave", message(cmd))
 	}
 }
+
+func TestKeyIntroFinishesWhenABurstContainsTheKey(t *testing.T) {
+	_, cmd := newKeyIntroScreen('j').Update(runes("dj"))
+
+	if _, ok := message(cmd).(stepDoneMsg); !ok {
+		t.Fatalf("message = %#v, want step done", message(cmd))
+	}
+}

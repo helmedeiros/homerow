@@ -78,3 +78,13 @@ func TestMapQuits(t *testing.T) {
 		t.Fatalf("message = %#v, want quit", message(cmd))
 	}
 }
+
+func TestMapMovesOncePerKeyInABurst(t *testing.T) {
+	var s screen = newMapScreen(sampleOverview())
+
+	s, _ = s.Update(runes("kkk"))
+
+	if got := s.(mapScreen).selected(); got != 1 {
+		t.Fatalf("selected = %d, want 1", got)
+	}
+}

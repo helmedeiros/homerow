@@ -36,16 +36,31 @@ func (m mapScreen) Update(msg tea.Msg) (screen, tea.Cmd) {
 		return m, nil
 	}
 	switch key.String() {
-	case "up", "k":
+	case "up":
 		m.cursor = max(m.cursor-1, 0)
-	case "down", "j":
+	case "down":
 		m.cursor = min(m.cursor+1, len(m.overview.Lessons)-1)
 	case "enter":
 		return m, send(startLessonMsg{number: m.selected()})
 	case "q", "esc", "ctrl+c":
 		return m, tea.Quit
 	}
+	if key.Type == tea.KeyRunes {
+		m = m.moved(key.Runes)
+	}
 	return m, nil
+}
+
+func (m mapScreen) moved(burst []rune) mapScreen {
+	for _, r := range burst {
+		switch r {
+		case 'k':
+			m.cursor = max(m.cursor-1, 0)
+		case 'j':
+			m.cursor = min(m.cursor+1, len(m.overview.Lessons)-1)
+		}
+	}
+	return m
 }
 
 func (m mapScreen) View() string {

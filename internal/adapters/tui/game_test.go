@@ -96,3 +96,18 @@ func TestGameCanBeLeft(t *testing.T) {
 		t.Fatalf("message = %#v, want leave", message(cmd))
 	}
 }
+
+func TestGameTakesEveryLetterOfABurst(t *testing.T) {
+	clock := newClock()
+	s, _ := advance(newTestGame(clock), clock, 6*time.Second)
+	var burst strings.Builder
+	for _, d := range s.(gameScreen).game.Drops() {
+		burst.WriteRune(d.Char)
+	}
+
+	s, _ = s.Update(runes(burst.String()))
+
+	if left := len(s.(gameScreen).game.Drops()); left != 0 || burst.Len() < 2 {
+		t.Fatalf("burst %q left %d drops", burst.String(), left)
+	}
+}

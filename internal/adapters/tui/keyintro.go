@@ -23,16 +23,20 @@ func (k keyIntroScreen) Update(msg tea.Msg) (screen, tea.Cmd) {
 	if !ok {
 		return k, nil
 	}
-	pressed := key.String()
-	switch pressed {
+	switch key.String() {
 	case "esc":
 		return k, send(leaveLessonMsg{})
 	case "ctrl+c":
 		return k, tea.Quit
-	case string(k.key):
+	}
+	pressed := string(key.Runes)
+	if key.Type == tea.KeySpace {
+		pressed = " "
+	}
+	if strings.ContainsRune(pressed, k.key) {
 		return k, send(stepDoneMsg{})
 	}
-	k.wrong = pressed
+	k.wrong = key.String()
 	return k, nil
 }
 
