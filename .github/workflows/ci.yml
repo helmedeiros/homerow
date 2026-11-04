@@ -29,3 +29,23 @@ jobs:
         run: make cover
       - name: build
         run: go build ./...
+
+  cross-build:
+    needs: check
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        target: [linux/amd64, linux/arm64, darwin/amd64, darwin/arm64, windows/amd64]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+          check-latest: true
+      - name: build ${{ matrix.target }}
+        env:
+          CGO_ENABLED: "0"
+          MATRIX_TARGET: ${{ matrix.target }}
+        run: |
+          GOOS="${MATRIX_TARGET%/*}" GOARCH="${MATRIX_TARGET#*/}" go build -o /dev/null ./cmd/homerow
+        shell: bash
