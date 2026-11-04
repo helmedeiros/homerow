@@ -60,3 +60,58 @@ func TestSaveLeavesNoTemporaryFiles(t *testing.T) {
 		t.Fatalf("files = %v", files)
 	}
 }
+
+func TestUnknownLessonKeyIsCorrupt(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "progress.json")
+	_ = os.WriteFile(path, []byte(`{"version":1,"lessons":{"one":{"completed":true}}}`), 0o600)
+
+	if _, err := filestore.New(path).Load(); !errors.Is(err, filestore.ErrCorrupt) {
+		t.Fatalf("err = %v, want ErrCorrupt", err)
+	}
+}
+
+func TestUnreadableFileIsReportedAsIs(t *testing.T) {
+	path := t.TempDir()
+
+	_, err := filestore.New(path).Load()
+	if err == nil || errors.Is(err, filestore.ErrCorrupt) {
+		t.Fatalf("err = %v, want a read error", err)
+	}
+}
+
+func TestSaveFailsWhenTheFolderCannotBeMade(t *testing.T) {
+	blocker := filepath.Join(t.TempDir(), "file")
+	_ = os.WriteFile(blocker, nil, 0o600)
+
+	if err := filestore.New(filepath.Join(blocker, "progress.json")).Save(progress.NewBoard(nil)); err == nil {
+		t.Fatal("want an error")
+	}
+}
+
+func TestSaveFailsWhenTheTargetIsAFolder(t *testing.T) {
+	dir := t.TempDir()
+	target := filepath.Join(dir, "progress.json")
+	_ = os.MkdirAll(filepath.Join(target, "inside"), 0o700)
+
+	if err := filestore.New(target).Save(progress.NewBoard(nil)); err == nil {
+		t.Fatal("want an error")
+	}
+	files, _ := os.ReadDir(dir)
+	if len(files) != 1 {
+		t.Fatalf("files = %v", files)
+	}
+}
+
+func TestSaveFailsInAReadOnlyFolder(t *testing.T) {
+	dir := t.TempDir()
+	_ = os.Chmod(dir, 0o500)
+	t.Cleanup(func() { _ = os.Chmod(dir, 0o700) })
+	if f, err := os.CreateTemp(dir, "probe"); err == nil {
+		_ = f.Close()
+		t.Skip("folder is still writable, running as root")
+	}
+
+	if err := filestore.New(filepath.Join(dir, "progress.json")).Save(progress.NewBoard(nil)); err == nil {
+		t.Fatal("want an error")
+	}
+}
