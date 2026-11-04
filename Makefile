@@ -2,6 +2,7 @@
 
 BINARY := homerow
 PKG := ./...
+COVER_MIN ?= 90
 VERSION ?= $(shell git describe --tags --always --dirty 2>/dev/null || echo dev)
 LDFLAGS := -X main.version=$(VERSION)
 
@@ -27,15 +28,14 @@ lint:
 
 .PHONY: test
 test:
-	go test -race $(PKG)
+	go test -race -coverprofile=coverage.out $(PKG)
 
 .PHONY: cover
-cover:
-	go test -coverprofile=coverage.out $(PKG)
-	go tool cover -func=coverage.out | tail -1
+cover: test
+	@go tool cover -func=coverage.out | awk -v min=$(COVER_MIN) '/^total:/ { sub("%", "", $$3); print "coverage " $$3 "% (floor " min "%)"; if ($$3 + 0 < min) { print "coverage below floor"; exit 1 } }'
 
 .PHONY: check
-check: fmt vet lint test
+check: fmt vet lint cover
 
 .PHONY: clean
 clean:

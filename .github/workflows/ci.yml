@@ -25,7 +25,7 @@ jobs:
           version: v2.15.0
       - name: govulncheck
         run: go run golang.org/x/vuln/cmd/govulncheck@latest ./...
-      - name: test
-        run: go test -race ./...
+      - name: test and coverage floor
+        run: make cover
       - name: build
         run: go build ./...
