@@ -36,7 +36,8 @@ homerow --data FILE ...  # use another progress file
 | -------------- | -------------------------------------------------------- |
 | Lesson list    | `↑` `↓` or `k` `j` to move, `enter` to start, `q` to quit |
 | Intro pages    | `enter`, `space` or `→` for the next page                |
-| Typing, games  | just type; `esc` returns to the lesson list              |
+| Typing        | just type; `backspace` fixes a mistake, `esc` returns to the lesson list |
+| Games         | just type; `esc` returns to the lesson list              |
 | Results        | `enter` next lesson (or retry after a fail), `r` retry, `esc` list |
 
 `ctrl+c` quits from anywhere.
@@ -52,9 +53,10 @@ homerow --data FILE ...  # use another progress file
 | Hand drill| keys for one hand only                                              |
 | Play      | catch falling letters before they land; three lives, one minute     |
 
-While you type, correct characters turn green and mistakes red, the keyboard
-and hands show which finger comes next, and speed (wpm) and accuracy update
-live.
+While you type, correct characters turn green and mistakes red. Press
+backspace to fix a mistake: it turns yellow once retyped, and still counts
+against accuracy. The keyboard and hands show which finger comes next, and
+speed (wpm) and accuracy update live.
 
 ### Stars
 
