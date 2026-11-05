@@ -8,11 +8,13 @@ var (
 	colorCorrect = lipgloss.Color("#22C55E")
 	colorStar    = lipgloss.Color("#FACC15")
 	colorWrong   = lipgloss.Color("#EF4444")
+	colorFixed   = lipgloss.Color("#EAB308")
 
 	titleStyle     = lipgloss.NewStyle().Bold(true)
 	mutedStyle     = lipgloss.NewStyle().Foreground(colorMuted)
 	accentStyle    = lipgloss.NewStyle().Foreground(colorAccent).Bold(true)
 	correctStyle   = lipgloss.NewStyle().Foreground(colorCorrect)
+	correctedStyle = lipgloss.NewStyle().Foreground(colorFixed)
 	wrongTextStyle = lipgloss.NewStyle().Foreground(colorWrong)
 	wrongStyle     = lipgloss.NewStyle().Foreground(lipgloss.Color("#FFFFFF")).Background(colorWrong)
 	cursorStyle    = lipgloss.NewStyle().Underline(true).Bold(true).Foreground(colorAccent)

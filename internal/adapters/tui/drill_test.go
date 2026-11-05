@@ -6,6 +6,10 @@ import (
 	"time"
 
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/charmbracelet/lipgloss"
+	"github.com/muesli/termenv"
+
+	"github.com/helmedeiros/homerow/internal/domain/drill"
 )
 
 type fakeClock struct{ now time.Time }
@@ -71,16 +75,54 @@ func TestDrillFinishesWithTheResult(t *testing.T) {
 	}
 }
 
-func TestDrillIgnoresBackspaceAndCanBeLeft(t *testing.T) {
-	s := screen(newDrillScreen("fj", 0, newClock().Now))
+func TestDrillCanBeLeft(t *testing.T) {
+	_, cmd := newDrillScreen("fj", 0, newClock().Now).Update(special(tea.KeyEsc))
 
-	s, cmd := s.Update(special(tea.KeyBackspace))
-	if cmd != nil {
-		t.Fatalf("backspace sent %#v", message(cmd))
-	}
-	_, cmd = s.Update(special(tea.KeyEsc))
 	if _, ok := message(cmd).(leaveLessonMsg); !ok {
 		t.Fatalf("message = %#v, want leave", message(cmd))
+	}
+}
+
+func TestBackspaceStepsBackToTheMistake(t *testing.T) {
+	clock := newClock()
+	s, _ := typeText(newDrillScreen("fjf", 0, clock.Now), clock, "fd")
+
+	s, cmd := s.Update(special(tea.KeyBackspace))
+
+	if cmd != nil || !strings.Contains(s.View(), "right index") {
+		t.Fatalf("cmd = %#v, view:\n%s", message(cmd), s.View())
+	}
+}
+
+func TestBackspaceAtTheStartDoesNothing(t *testing.T) {
+	s, cmd := newDrillScreen("fj", 0, newClock().Now).Update(special(tea.KeyBackspace))
+
+	if cmd != nil || !strings.Contains(s.View(), "left index") {
+		t.Fatalf("cmd = %#v, view:\n%s", message(cmd), s.View())
+	}
+}
+
+func TestFixedMistakesStillCostAccuracy(t *testing.T) {
+	clock := newClock()
+	s, _ := typeText(newDrillScreen("fjf", 0, clock.Now), clock, "fd")
+	s, _ = s.Update(special(tea.KeyBackspace))
+	_, cmd := typeText(s, clock, "jf")
+
+	done, ok := message(cmd).(stepDoneMsg)
+	if !ok || done.result.Accuracy != 75 {
+		t.Fatalf("message = %#v, want 75%% accuracy", message(cmd))
+	}
+}
+
+func TestFixedMistakesAreYellowAndOpenOnesRed(t *testing.T) {
+	lipgloss.SetColorProfile(termenv.TrueColor)
+	t.Cleanup(func() { lipgloss.SetColorProfile(termenv.Ascii) })
+
+	if got := renderChar('f', drill.Corrected, false); !strings.Contains(got, "38;2;234;179;8") {
+		t.Errorf("corrected = %q, want yellow", got)
+	}
+	if got := renderChar('f', drill.Wrong, false); !strings.Contains(got, "48;2;239;68;68") {
+		t.Errorf("wrong = %q, want red", got)
 	}
 }
 

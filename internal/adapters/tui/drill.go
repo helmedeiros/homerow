@@ -46,6 +46,9 @@ func (d drillScreen) Update(msg tea.Msg) (screen, tea.Cmd) {
 		return d, send(leaveLessonMsg{})
 	case tea.KeyCtrlC:
 		return d, tea.Quit
+	case tea.KeyBackspace:
+		d.session.Back()
+		return d, nil
 	case tea.KeySpace:
 		return d.typed(' ')
 	case tea.KeyRunes:
@@ -102,7 +105,7 @@ func (d drillScreen) View() string {
 		stats += "   time left " + clockFace(d.timeLeft())
 	}
 	b.WriteString(mutedStyle.Render(stats) + "\n\n")
-	b.WriteString(mutedStyle.Render("esc lessons"))
+	b.WriteString(mutedStyle.Render("backspace fix   esc lessons"))
 	return b.String()
 }
 
@@ -131,6 +134,8 @@ func renderChar(r rune, mark drill.Mark, cursor bool) string {
 		return cursorStyle.Render(shown)
 	case mark == drill.Correct:
 		return correctStyle.Render(shown)
+	case mark == drill.Corrected:
+		return correctedStyle.Render(shown)
 	case mark == drill.Wrong:
 		return wrongStyle.Render(shown)
 	default:
