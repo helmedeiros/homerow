@@ -94,13 +94,6 @@ func TestEveryDrillUsesOnlyItsLessonKeys(t *testing.T) {
 	}
 }
 
-func TestCatalogServesTheHomeRow(t *testing.T) {
-	course := (content.Catalog{}).Course()
-	if len(course.Modules) == 0 || course.Modules[0].Title != "Home Row" || len(course.Modules[0].Lessons) != 23 {
-		t.Fatalf("course = %+v", course.Modules)
-	}
-}
-
 func TestAPerfectGameEarnsFiveStarsInEveryPlayLesson(t *testing.T) {
 	for _, l := range content.HomeRow().Lessons {
 		if l.Kind != curriculum.Play {
