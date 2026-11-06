@@ -72,24 +72,48 @@ func (m mapScreen) moved(burst []rune) mapScreen {
 	return m
 }
 
+const mapRows = 18
+
 func (m mapScreen) View() string {
 	var b strings.Builder
 	o := m.overview
-	fmt.Fprintf(&b, "%s  %s\n\n", titleStyle.Render("homerow · "+o.ModuleOf(m.cursor).Title),
+	section := o.ModuleOf(m.cursor)
+	fmt.Fprintf(&b, "%s  %s\n\n", titleStyle.Render("homerow"),
 		mutedStyle.Render(fmt.Sprintf("%d%% progress · %d stars", o.Percent, o.TotalStars)))
-	for i, card := range o.Lessons {
-		pointer := "  "
-		title := card.Title
-		if i == m.cursor {
-			pointer = accentStyle.Render("› ")
-			title = accentStyle.Render(fmt.Sprintf("%-26s", title))
-		} else {
-			title = fmt.Sprintf("%-26s", title)
-		}
-		fmt.Fprintf(&b, "%s%3d  %s %s\n", pointer, card.Number, title, status(card))
+	fmt.Fprintf(&b, "%s  %s\n\n", titleStyle.Render(fmt.Sprintf("Module %d · %s", section.Number, section.Title)),
+		mutedStyle.Render(fmt.Sprintf("%d%% · %d stars", section.Percent, section.Stars)))
+	top, bottom := m.window(section)
+	if top > section.First {
+		b.WriteString(mutedStyle.Render("     ↑ more") + "\n")
+	}
+	for i := top; i <= bottom; i++ {
+		b.WriteString(m.row(i) + "\n")
+	}
+	if bottom < section.Last {
+		b.WriteString(mutedStyle.Render("     ↓ more") + "\n")
 	}
 	b.WriteString("\n" + mutedStyle.Render("↑/↓ choose · enter start · q quit"))
 	return b.String()
+}
+
+func (m mapScreen) window(section app.Section) (int, int) {
+	size := section.Last - section.First + 1
+	if size <= mapRows {
+		return section.First, section.Last
+	}
+	start := min(max(m.cursor-section.First-mapRows/2, 0), size-mapRows)
+	return section.First + start, section.First + start + mapRows - 1
+}
+
+func (m mapScreen) row(i int) string {
+	card := m.overview.Lessons[i]
+	pointer := "  "
+	title := fmt.Sprintf("%-26s", card.Title)
+	if i == m.cursor {
+		pointer = accentStyle.Render("› ")
+		title = accentStyle.Render(title)
+	}
+	return fmt.Sprintf("%s%3d  %s %s", pointer, card.Number, title, status(card))
 }
 
 func status(card app.Card) string {
