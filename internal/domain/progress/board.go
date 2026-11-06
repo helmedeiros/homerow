@@ -38,24 +38,3 @@ func (b *Board) Record(lesson int, attempt Entry) bool {
 func (b *Board) Entries() map[int]Entry {
 	return maps.Clone(b.entries)
 }
-
-func (b *Board) TotalStars() int {
-	total := 0
-	for _, e := range b.entries {
-		total += e.Stars
-	}
-	return total
-}
-
-func (b *Board) Percent(lessons int) int {
-	if lessons == 0 {
-		return 0
-	}
-	done := 0
-	for _, e := range b.entries {
-		if e.Completed {
-			done++
-		}
-	}
-	return done * 100 / lessons
-}

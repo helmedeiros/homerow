@@ -80,3 +80,15 @@ func TestFinishReportsErrors(t *testing.T) {
 		t.Fatalf("err = %v, want %v", err, errDisk)
 	}
 }
+
+func TestNextLessonCrossesIntoTheNextModule(t *testing.T) {
+	trainer := app.NewTrainer(courseCatalog{twoModules()}, &memoryStore{}, fixedSeed)
+
+	out, err := trainer.Finish(4, scoring.Result{Accuracy: 98, WPM: 12})
+	if err != nil || out.Next != 5 {
+		t.Fatalf("out = %+v, err = %v", out, err)
+	}
+	if _, err := trainer.Start(6); err != nil {
+		t.Fatalf("Start(6) = %v", err)
+	}
+}

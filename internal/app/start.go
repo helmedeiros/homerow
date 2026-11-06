@@ -25,7 +25,7 @@ func (t *Trainer) Start(number int) (Plan, error) {
 }
 
 func (t *Trainer) lesson(number int) (curriculum.Lesson, error) {
-	lesson, ok := t.catalog.Module().Lesson(number)
+	lesson, _, ok := t.catalog.Course().Lesson(number)
 	if !ok {
 		return curriculum.Lesson{}, fmt.Errorf("%w: %d", ErrUnknownLesson, number)
 	}

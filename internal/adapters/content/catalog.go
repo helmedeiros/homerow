@@ -4,6 +4,6 @@ import "github.com/helmedeiros/homerow/internal/domain/curriculum"
 
 type Catalog struct{}
 
-func (Catalog) Module() curriculum.Module {
-	return HomeRow()
+func (Catalog) Course() curriculum.Course {
+	return curriculum.Course{Modules: []curriculum.Module{HomeRow()}}
 }

@@ -6,7 +6,7 @@ import (
 )
 
 type Catalog interface {
-	Module() curriculum.Module
+	Course() curriculum.Course
 }
 
 type ProgressStore interface {

@@ -23,7 +23,7 @@ func (t *Trainer) Finish(number int, result scoring.Result) (Outcome, error) {
 		return Outcome{}, err
 	}
 	out := grade(lesson, result)
-	out.Next = t.next(number)
+	out.Next = t.catalog.Course().Next(number)
 
 	board, err := t.store.Load()
 	if err != nil {
@@ -47,14 +47,4 @@ func grade(lesson curriculum.Lesson, result scoring.Result) Outcome {
 	}
 	stars := scoring.Stars(result, lesson.GoalWPM)
 	return Outcome{Result: result, Stars: stars, Scored: true, Passed: scoring.Passed(stars)}
-}
-
-func (t *Trainer) next(number int) int {
-	lessons := t.catalog.Module().Lessons
-	for i, l := range lessons {
-		if l.Number == number && i+1 < len(lessons) {
-			return lessons[i+1].Number
-		}
-	}
-	return 0
 }

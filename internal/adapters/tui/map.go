@@ -75,7 +75,7 @@ func (m mapScreen) moved(burst []rune) mapScreen {
 func (m mapScreen) View() string {
 	var b strings.Builder
 	o := m.overview
-	fmt.Fprintf(&b, "%s  %s\n\n", titleStyle.Render("homerow · "+o.Module),
+	fmt.Fprintf(&b, "%s  %s\n\n", titleStyle.Render("homerow · "+o.ModuleOf(m.cursor).Title),
 		mutedStyle.Render(fmt.Sprintf("%d%% progress · %d stars", o.Percent, o.TotalStars)))
 	for i, card := range o.Lessons {
 		pointer := "  "

@@ -9,7 +9,22 @@ import (
 
 type fixedCatalog struct{ module curriculum.Module }
 
-func (c fixedCatalog) Module() curriculum.Module { return c.module }
+func (c fixedCatalog) Course() curriculum.Course {
+	return curriculum.Course{Modules: []curriculum.Module{c.module}}
+}
+
+type courseCatalog struct{ course curriculum.Course }
+
+func (c courseCatalog) Course() curriculum.Course { return c.course }
+
+func twoModules() curriculum.Course {
+	home := sampleModule()
+	top := curriculum.Module{Number: 2, Title: "Top Row", Lessons: []curriculum.Lesson{
+		{Number: 5, Title: "Keys r and u", Kind: curriculum.NewKeys, NewKeys: []rune("ru"), Keys: []rune("fjru")},
+		{Number: 6, Title: "Review: r and u", Kind: curriculum.Review, Keys: []rune("fjru"), GoalWPM: 10},
+	}}
+	return curriculum.Course{Modules: []curriculum.Module{home, top}}
+}
 
 type memoryStore struct {
 	entries map[int]progress.Entry

@@ -13,7 +13,7 @@ import (
 
 func sampleOverview() app.Overview {
 	return app.Overview{
-		Module:     "Home Row",
+		Modules:    []app.Section{{Number: 1, Title: "Home Row", First: 0, Last: 3, Stars: 4, Percent: 75}},
 		TotalStars: 4,
 		Percent:    50,
 		Lessons: []app.Card{

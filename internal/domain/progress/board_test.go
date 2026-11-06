@@ -39,25 +39,6 @@ func TestMoreStarsImprove(t *testing.T) {
 	}
 }
 
-func TestTotalsAcrossLessons(t *testing.T) {
-	b := progress.NewBoard(map[int]progress.Entry{
-		1: {Completed: true},
-		2: {Completed: true},
-		4: {Completed: true, Stars: 5},
-		6: {Stars: 0},
-	})
-
-	if b.TotalStars() != 5 {
-		t.Errorf("TotalStars() = %d, want 5", b.TotalStars())
-	}
-	if b.Percent(12) != 25 {
-		t.Errorf("Percent(12) = %d, want 25", b.Percent(12))
-	}
-	if b.Percent(0) != 0 {
-		t.Errorf("Percent(0) = %d, want 0", b.Percent(0))
-	}
-}
-
 func TestEntriesAreACopy(t *testing.T) {
 	b := progress.NewBoard(map[int]progress.Entry{1: {Completed: true}})
 

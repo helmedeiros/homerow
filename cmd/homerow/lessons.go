@@ -14,9 +14,11 @@ func listLessons(trainer *app.Trainer, out io.Writer) error {
 	if err != nil {
 		return err
 	}
-	_, _ = fmt.Fprintf(out, "%s · %d%% progress · %d stars\n", o.Module, o.Percent, o.TotalStars)
-	for _, c := range o.Lessons {
-		_, _ = fmt.Fprintf(out, "%3d  %-26s %s\n", c.Number, c.Title, plainStatus(c))
+	for _, m := range o.Modules {
+		_, _ = fmt.Fprintf(out, "%s · %d%% progress · %d stars\n", m.Title, m.Percent, m.Stars)
+		for _, c := range o.Lessons[m.First : m.Last+1] {
+			_, _ = fmt.Fprintf(out, "%3d  %-26s %s\n", c.Number, c.Title, plainStatus(c))
+		}
 	}
 	return nil
 }

@@ -10,7 +10,6 @@ import (
 	"github.com/helmedeiros/homerow/internal/adapters/content"
 	"github.com/helmedeiros/homerow/internal/adapters/memstore"
 	"github.com/helmedeiros/homerow/internal/app"
-	"github.com/helmedeiros/homerow/internal/domain/curriculum"
 )
 
 type harness struct {
@@ -26,17 +25,13 @@ func newHarness(t *testing.T) *harness {
 
 func newHarnessWith(t *testing.T, store app.ProgressStore) *harness {
 	clock := newClock()
-	trainer := app.NewTrainer(staticCatalog{}, store, func() uint64 { return 7 })
+	trainer := app.NewTrainer(content.Catalog{}, store, func() uint64 { return 7 })
 	m, err := New(trainer, Options{Now: clock.Now, Seed: func() uint64 { return 7 }, tick: manualTicks})
 	if err != nil {
 		t.Fatal(err)
 	}
 	return &harness{t: t, model: m, clock: clock, store: store}
 }
-
-type staticCatalog struct{}
-
-func (staticCatalog) Module() curriculum.Module { return content.HomeRow() }
 
 func (h *harness) send(msg tea.Msg) {
 	h.t.Helper()

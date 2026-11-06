@@ -2,6 +2,7 @@ package app_test
 
 import (
 	"errors"
+	"slices"
 	"testing"
 
 	"github.com/helmedeiros/homerow/internal/app"
@@ -21,8 +22,8 @@ func TestOverviewListsLessonsWithSavedProgress(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if o.Module != "Home Row" || len(o.Lessons) != 4 {
-		t.Fatalf("overview = %q with %d lessons", o.Module, len(o.Lessons))
+	if len(o.Modules) != 1 || o.Modules[0].Title != "Home Row" || len(o.Lessons) != 4 {
+		t.Fatalf("overview = %+v with %d lessons", o.Modules, len(o.Lessons))
 	}
 	card := o.Lessons[2]
 	if card.Number != 3 || card.Kind != curriculum.Review || card.Entry.Stars != 4 {
@@ -41,5 +42,52 @@ func TestOverviewReportsStoreFailures(t *testing.T) {
 
 	if _, err := trainer.Overview(); !errors.Is(err, errDisk) {
 		t.Fatalf("err = %v, want %v", err, errDisk)
+	}
+}
+
+func TestOverviewSplitsTheCourseIntoModules(t *testing.T) {
+	store := &memoryStore{entries: map[int]progress.Entry{
+		1: {Completed: true},
+		5: {Completed: true},
+		6: {Completed: true, Stars: 3},
+	}}
+	trainer := app.NewTrainer(courseCatalog{twoModules()}, store, fixedSeed)
+
+	o, _ := trainer.Overview()
+
+	if len(o.Lessons) != 6 {
+		t.Fatalf("%d lessons", len(o.Lessons))
+	}
+	want := []app.Section{
+		{Number: 1, Title: "Home Row", First: 0, Last: 3, Stars: 0, Percent: 25},
+		{Number: 2, Title: "Top Row", First: 4, Last: 5, Stars: 3, Percent: 100},
+	}
+	if !slices.Equal(o.Modules, want) {
+		t.Fatalf("modules = %+v", o.Modules)
+	}
+	if o.Percent != 50 || o.TotalStars != 3 {
+		t.Fatalf("totals = %d%%, %d stars", o.Percent, o.TotalStars)
+	}
+	if o.ModuleOf(4).Title != "Top Row" || o.ModuleOf(0).Title != "Home Row" {
+		t.Fatal("ModuleOf picked the wrong module")
+	}
+}
+
+func TestOverviewIgnoresProgressForLessonsOutsideTheCourse(t *testing.T) {
+	store := &memoryStore{entries: map[int]progress.Entry{1: {Completed: true, Stars: 2}, 99: {Completed: true, Stars: 5}}}
+	trainer := app.NewTrainer(fixedCatalog{sampleModule()}, store, fixedSeed)
+
+	o, _ := trainer.Overview()
+
+	if o.Percent != 25 || o.TotalStars != 2 {
+		t.Fatalf("totals = %d%%, %d stars", o.Percent, o.TotalStars)
+	}
+}
+
+func TestOverviewOfAnEmptyCourse(t *testing.T) {
+	o, err := app.NewTrainer(courseCatalog{}, &memoryStore{}, fixedSeed).Overview()
+
+	if err != nil || len(o.Lessons) != 0 || o.Percent != 0 || o.ModuleOf(0).Title != "" {
+		t.Fatalf("overview = %+v, err = %v", o, err)
 	}
 }
