@@ -77,3 +77,39 @@ func TestScrollingShowsWhatIsBelow(t *testing.T) {
 		t.Fatalf("view:\n%s", view)
 	}
 }
+
+func TestRightJumpsToTheNextModuleAndLeftComesBack(t *testing.T) {
+	var s screen = newMapScreen(twoModuleOverview()).focus(2)
+
+	s, _ = s.Update(special(tea.KeyRight))
+	if got := s.(mapScreen).selected(); got != 5 {
+		t.Fatalf("after right selected = %d, want 5", got)
+	}
+	s, _ = s.Update(special(tea.KeyLeft))
+	if got := s.(mapScreen).selected(); got != 4 {
+		t.Fatalf("after left selected = %d, want the first unfinished lesson 4", got)
+	}
+}
+
+func TestModuleJumpsStopAtTheEnds(t *testing.T) {
+	var s screen = newMapScreen(twoModuleOverview()).focus(2)
+
+	s, _ = s.Update(special(tea.KeyLeft))
+	if got := s.(mapScreen).selected(); got != 2 {
+		t.Fatalf("left on the first module moved to %d", got)
+	}
+	s, _ = s.Update(runes("ll"))
+	if got := s.(mapScreen).selected(); got != 5 {
+		t.Fatalf("right past the last module moved to %d", got)
+	}
+	s, _ = s.Update(runes("h"))
+	if got := s.(mapScreen).selected(); got != 4 {
+		t.Fatalf("h moved to %d, want 4", got)
+	}
+}
+
+func TestMapHintMentionsModules(t *testing.T) {
+	if view := newMapScreen(twoModuleOverview()).View(); !strings.Contains(view, "←/→ module") {
+		t.Fatalf("view:\n%s", view)
+	}
+}

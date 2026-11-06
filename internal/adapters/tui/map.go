@@ -49,6 +49,10 @@ func (m mapScreen) Update(msg tea.Msg) (screen, tea.Cmd) {
 		m.cursor = max(m.cursor-1, 0)
 	case "down":
 		m.cursor = min(m.cursor+1, len(m.overview.Lessons)-1)
+	case "right":
+		m = m.jump(1)
+	case "left":
+		m = m.jump(-1)
 	case "enter":
 		return m, send(startLessonMsg{number: m.selected()})
 	case "q", "esc", "ctrl+c":
@@ -67,12 +71,41 @@ func (m mapScreen) moved(burst []rune) mapScreen {
 			m.cursor = max(m.cursor-1, 0)
 		case 'j':
 			m.cursor = min(m.cursor+1, len(m.overview.Lessons)-1)
+		case 'l':
+			m = m.jump(1)
+		case 'h':
+			m = m.jump(-1)
 		}
 	}
 	return m
 }
 
 const mapRows = 18
+
+func (m mapScreen) jump(delta int) mapScreen {
+	modules := m.overview.Modules
+	for i, section := range modules {
+		if m.cursor < section.First || m.cursor > section.Last {
+			continue
+		}
+		target := i + delta
+		if target < 0 || target >= len(modules) {
+			return m
+		}
+		m.cursor = m.firstUnfinished(modules[target])
+		return m
+	}
+	return m
+}
+
+func (m mapScreen) firstUnfinished(section app.Section) int {
+	for i := section.First; i <= section.Last; i++ {
+		if !m.overview.Lessons[i].Entry.Completed {
+			return i
+		}
+	}
+	return section.First
+}
 
 func (m mapScreen) View() string {
 	var b strings.Builder
@@ -92,7 +125,7 @@ func (m mapScreen) View() string {
 	if bottom < section.Last {
 		b.WriteString(mutedStyle.Render("     ↓ more") + "\n")
 	}
-	b.WriteString("\n" + mutedStyle.Render("↑/↓ choose · enter start · q quit"))
+	b.WriteString("\n" + mutedStyle.Render("↑/↓ choose · ←/→ module · enter start · q quit"))
 	return b.String()
 }
 
