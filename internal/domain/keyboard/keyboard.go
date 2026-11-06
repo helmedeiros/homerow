@@ -61,6 +61,8 @@ func (k Key) ShiftFinger() (Finger, bool) {
 
 var rows = []string{"1234567890-=", "qwertyuiop[]", "asdfghjkl;'", "zxcvbnm,./"}
 
+var shiftedRows = []string{"!@#$%^&*()_+", "          {}", "         :\"", "       <>?"}
+
 var columnFingers = []Finger{
 	LeftPinky, LeftRing, LeftMiddle, LeftIndex, LeftIndex,
 	RightIndex, RightIndex, RightMiddle, RightRing, RightPinky,
@@ -76,9 +78,18 @@ var keys = buildKeys()
 
 func buildKeys() map[rune]Key {
 	built := map[rune]Key{' ': {Char: ' ', Base: ' ', Finger: LeftThumb, Row: SpaceRow}}
+	built['\t'] = Key{Char: '\t', Base: '\t', Finger: LeftPinky, Row: TopRow}
 	for row, chars := range rows {
 		for column, char := range chars {
 			built[char] = Key{Char: char, Base: char, Finger: fingerForColumn(column), Row: Row(row)}
+		}
+	}
+	for row, chars := range shiftedRows {
+		for column, char := range chars {
+			if char != ' ' {
+				base := rune(rows[row][column])
+				built[char] = Key{Char: char, Base: base, Shifted: true, Finger: fingerForColumn(column), Row: Row(row)}
+			}
 		}
 	}
 	return built
