@@ -42,9 +42,21 @@ const (
 )
 
 type Key struct {
-	Char   rune
-	Finger Finger
-	Row    Row
+	Char    rune
+	Base    rune
+	Shifted bool
+	Finger  Finger
+	Row     Row
+}
+
+func (k Key) ShiftFinger() (Finger, bool) {
+	if !k.Shifted {
+		return 0, false
+	}
+	if k.Finger.Hand() == Left {
+		return RightPinky, true
+	}
+	return LeftPinky, true
 }
 
 var rows = []string{"1234567890-=", "qwertyuiop[]", "asdfghjkl;'", "zxcvbnm,./"}
@@ -63,10 +75,10 @@ var homeKeys = map[Finger]rune{
 var keys = buildKeys()
 
 func buildKeys() map[rune]Key {
-	built := map[rune]Key{' ': {Char: ' ', Finger: LeftThumb, Row: SpaceRow}}
+	built := map[rune]Key{' ': {Char: ' ', Base: ' ', Finger: LeftThumb, Row: SpaceRow}}
 	for row, chars := range rows {
 		for column, char := range chars {
-			built[char] = Key{Char: char, Finger: fingerForColumn(column), Row: Row(row)}
+			built[char] = Key{Char: char, Base: char, Finger: fingerForColumn(column), Row: Row(row)}
 		}
 	}
 	return built
@@ -81,8 +93,8 @@ func fingerForColumn(column int) Finger {
 
 func Lookup(char rune) (Key, bool) {
 	key, ok := keys[unicode.ToLower(char)]
-	if ok {
-		key.Char = char
+	if ok && char != key.Char {
+		key.Char, key.Shifted = char, true
 	}
 	return key, ok
 }
