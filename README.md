@@ -7,8 +7,8 @@ pair at a time, you drill them, review them, race the clock with them, and play
 a short game before moving on. Every exercise is scored on accuracy and speed
 and earns up to five stars.
 
-Module 1, the home row (lessons 1–23), is complete. See
-[docs/PLAN.md](docs/PLAN.md) for the full lesson map.
+The course opens with the home row: 23 lessons from `f` and `j` to the whole
+row. `homerow lessons` lists every lesson with your stars.
 
 ## Install
 
