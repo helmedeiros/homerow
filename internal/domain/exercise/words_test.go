@@ -51,3 +51,30 @@ func TestWordsAreDeterministicForASeed(t *testing.T) {
 		t.Fatalf("same seed produced %q and %q", a, b)
 	}
 }
+
+func TestEveryTopRowStageHasPlentyOfWordsWithItsNewKeys(t *testing.T) {
+	home := "asdfghjkl;"
+	stages := []struct{ learned, fresh string }{
+		{home + "ru", "ru"},
+		{home + "ruei", "ei"},
+		{home + "rueiwo", "wo"},
+		{home + "rueiwoqy", "qy"},
+		{home + "rueiwoqypt", "pt"},
+	}
+	for _, s := range stages {
+		text, err := exercise.Words(seeded(1), []rune(s.learned), 5000)
+		if err != nil {
+			t.Fatal(err)
+		}
+		distinct, fresh := map[string]bool{}, map[string]bool{}
+		for _, w := range strings.Split(text, " ") {
+			distinct[w] = true
+			if strings.ContainsAny(w, s.fresh) {
+				fresh[w] = true
+			}
+		}
+		if len(distinct) < 100 || len(fresh) < 40 {
+			t.Errorf("%s: %d words, %d with %s", s.learned, len(distinct), len(fresh), s.fresh)
+		}
+	}
+}
