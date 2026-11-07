@@ -1,0 +1,89 @@
+{
+  "version": 1,
+  "lessons": {
+    "1": {
+      "completed": true,
+      "stars": 0,
+      "wpm": 0,
+      "accuracy": 0
+    },
+    "2": {
+      "completed": true,
+      "stars": 0,
+      "wpm": 9.4,
+      "accuracy": 98.1
+    },
+    "3": {
+      "completed": true,
+      "stars": 0,
+      "wpm": 10.2,
+      "accuracy": 99
+    },
+    "4": {
+      "completed": true,
+      "stars": 4,
+      "wpm": 7.4,
+      "accuracy": 97.5
+    },
+    "5": {
+      "completed": true,
+      "stars": 0,
+      "wpm": 9.8,
+      "accuracy": 96.3
+    },
+    "6": {
+      "completed": true,
+      "stars": 3,
+      "wpm": 9,
+      "accuracy": 95.1
+    },
+    "7": {
+      "completed": true,
+      "stars": 4,
+      "wpm": 7.1,
+      "accuracy": 97.2
+    },
+    "8": {
+      "completed": true,
+      "stars": 5,
+      "wpm": 12,
+      "accuracy": 100
+    },
+    "9": {
+      "completed": true,
+      "stars": 0,
+      "wpm": 8.7,
+      "accuracy": 95.2
+    },
+    "10": {
+      "completed": true,
+      "stars": 3,
+      "wpm": 10.2,
+      "accuracy": 94.4
+    },
+    "11": {
+      "completed": true,
+      "stars": 2,
+      "wpm": 9.6,
+      "accuracy": 90.3
+    },
+    "12": {
+      "completed": true,
+      "stars": 0,
+      "wpm": 9.1,
+      "accuracy": 97.8
+    },
+    "13": {
+      "completed": true,
+      "stars": 4,
+      "wpm": 9.2,
+      "accuracy": 97.4
+    },
+    "14": {
+      "completed": true,
+      "stars": 3,
+      "wpm": 10.4,
+      "accuracy": 95.6
+    }
+  }
+}
