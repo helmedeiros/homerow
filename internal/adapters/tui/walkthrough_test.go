@@ -85,10 +85,10 @@ func moduleHeader(m curriculum.Module) string {
 
 func (h *harness) showModule(m curriculum.Module) string {
 	for range content.Course().Modules {
-		if strings.Contains(h.view(), fmt.Sprintf("Module %d ·", m.Number)) {
-			break
-		}
 		h.send(special(tea.KeyLeft))
+	}
+	for range m.Number - 1 {
+		h.send(special(tea.KeyRight))
 	}
 	return h.view()
 }
@@ -102,5 +102,22 @@ func TestPlayingTheWholeHomeRowModule(t *testing.T) {
 	view := newHarnessWith(t, filestore.New(path)).showModule(home)
 	if want := moduleHeader(home); !strings.Contains(view, want) {
 		t.Fatalf("want %q after reopening:\n%s", want, view)
+	}
+}
+
+func TestPlayingTheWholeTopRowModule(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "progress.json")
+	top := content.TopRow()
+
+	h := newHarnessWith(t, filestore.New(path))
+	h.send(special(tea.KeyRight))
+	h.playModule(top)
+
+	reopened := newHarnessWith(t, filestore.New(path))
+	if view, want := reopened.showModule(top), moduleHeader(top); !strings.Contains(view, want) {
+		t.Fatalf("want %q after reopening:\n%s", want, view)
+	}
+	if view := reopened.showModule(content.HomeRow()); !strings.Contains(view, "Module 1 · Home Row  0% · 0 stars") {
+		t.Fatalf("home row should be untouched:\n%s", view)
 	}
 }
