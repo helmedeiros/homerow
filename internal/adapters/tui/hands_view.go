@@ -22,12 +22,24 @@ var fingerColors = map[keyboard.Finger]lipgloss.Color{
 	keyboard.RightIndex: "#EF4444", keyboard.RightMiddle: "#EAB308", keyboard.RightRing: "#84CC16", keyboard.RightPinky: "#3B82F6",
 }
 
-func renderHands(active keyboard.Finger, show bool) string {
-	tips, bases, labels := blankRow(), blankRow(), blankRow()
+func renderHands(key keyboard.Key, show bool) string {
+	active := map[keyboard.Finger]bool{}
+	caption := ""
+	if show {
+		active[key.Finger] = true
+		caption = "  " + accentStyle.Render(key.Finger.String())
+		if shift, ok := key.ShiftFinger(); ok {
+			active[shift] = true
+			caption = "  " + accentStyle.Render(key.Finger.String()+" + "+shift.String()+" on shift")
+		}
+	}
+	tips, bases, labels, markers := blankRow(), blankRow(), blankRow(), blankRow()
 	for finger, column := range fingerColumns {
-		thumb := finger == keyboard.LeftThumb || finger == keyboard.RightThumb
-		style := fingerStyle(finger, show && finger == active)
-		if thumb {
+		style := fingerStyle(finger, active[finger])
+		if active[finger] {
+			markers[column] = accentStyle.Render("▲")
+		}
+		if finger == keyboard.LeftThumb || finger == keyboard.RightThumb {
 			bases[column] = style.Render("▄")
 			labels[column] = mutedStyle.Render("⎵")
 			continue
@@ -36,12 +48,7 @@ func renderHands(active keyboard.Finger, show bool) string {
 		bases[column] = style.Render("█")
 		labels[column] = mutedStyle.Render(string(keyboard.HomeKey(finger)))
 	}
-	marker, caption := "", ""
-	if show {
-		marker = strings.Repeat(" ", fingerColumns[active]) + accentStyle.Render("▲")
-		caption = "  " + accentStyle.Render(active.String())
-	}
-	return strings.Join([]string{join(tips), join(bases), join(labels), marker, caption}, "\n")
+	return strings.Join([]string{join(tips), join(bases), join(labels), join(markers), caption}, "\n")
 }
 
 func fingerStyle(f keyboard.Finger, active bool) lipgloss.Style {

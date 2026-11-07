@@ -46,7 +46,7 @@ func (k keyIntroScreen) View() string {
 	b.WriteString(mutedStyle.Render("NEW KEY") + "\n\n")
 	fmt.Fprintf(&b, "Type the %s using your %s finger.\n\n", keyName(k.key), info.Finger)
 	b.WriteString(renderKeyboard(k.key) + "\n\n")
-	b.WriteString(renderHands(info.Finger, true) + "\n\n")
+	b.WriteString(renderHands(info, true) + "\n\n")
 	if k.wrong != "" {
 		b.WriteString(wrongTextStyle.Render(fmt.Sprintf("That was %s. Reach with your %s finger.", k.wrong, info.Finger)) + "\n")
 	}

@@ -99,7 +99,7 @@ func (d drillScreen) View() string {
 	b.WriteString(d.renderText() + "\n\n")
 	next, more := d.session.Expected()
 	info, _ := keyboard.Lookup(next)
-	b.WriteString(renderHands(info.Finger, more) + "\n\n")
+	b.WriteString(renderHands(info, more) + "\n\n")
 	stats := fmt.Sprintf("speed %.0f wpm   accuracy %.0f%%", d.session.WPM(), d.session.Accuracy())
 	if d.limit > 0 {
 		stats += "   time left " + clockFace(d.timeLeft())
