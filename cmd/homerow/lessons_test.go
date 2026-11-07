@@ -7,6 +7,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/helmedeiros/homerow/internal/adapters/content"
 	"github.com/helmedeiros/homerow/internal/adapters/memstore"
 	"github.com/helmedeiros/homerow/internal/app"
 	"github.com/helmedeiros/homerow/internal/domain/curriculum"
@@ -27,8 +28,8 @@ func TestLessonsListsTheModuleWithSavedProgress(t *testing.T) {
 	}
 	text := out.String()
 	for _, want := range []string{
-		"homerow · 8% progress · 3 stars",
 		"Module 1 · Home Row · 8% · 3 stars",
+		"Module 2 · Top Row",
 		"  1  Welcome to touch typing",
 		"  4  Review: f and j",
 		"★★★☆☆",
@@ -38,8 +39,9 @@ func TestLessonsListsTheModuleWithSavedProgress(t *testing.T) {
 			t.Errorf("missing %q:\n%s", want, text)
 		}
 	}
-	if strings.Count(text, "\n") != 26 {
-		t.Errorf("expected two headers, a gap and 23 lessons:\n%s", text)
+	course := content.Course()
+	if want := 1 + 2*len(course.Modules) + len(course.Lessons()); strings.Count(text, "\n") != want {
+		t.Errorf("expected %d lines:\n%s", want, text)
 	}
 }
 

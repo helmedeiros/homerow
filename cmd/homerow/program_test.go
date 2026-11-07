@@ -43,7 +43,7 @@ func TestTheProgramRunsAnIntroLessonAndQuits(t *testing.T) {
 	}
 	waitFor(t, tm, "GOOD JOB!")
 	tm.Send(tea.KeyMsg{Type: tea.KeyEsc})
-	waitFor(t, tm, "4% progress")
+	waitFor(t, tm, "Home Row  4% · 0 stars")
 	tm.Type("q")
 	tm.WaitFinished(t, teatest.WithFinalTimeout(5*time.Second))
 

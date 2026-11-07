@@ -1,6 +1,7 @@
 package tui
 
 import (
+	"fmt"
 	"path/filepath"
 	"strconv"
 	"strings"
@@ -10,6 +11,7 @@ import (
 
 	"github.com/helmedeiros/homerow/internal/adapters/content"
 	"github.com/helmedeiros/homerow/internal/adapters/filestore"
+	"github.com/helmedeiros/homerow/internal/domain/curriculum"
 	"github.com/helmedeiros/homerow/internal/domain/scoring"
 )
 
@@ -65,24 +67,40 @@ func (h *harness) playLesson(number int) {
 	h.send(special(tea.KeyEsc))
 }
 
-func TestPlayingTheWholeHomeRowModule(t *testing.T) {
-	path := filepath.Join(t.TempDir(), "progress.json")
-	h := newHarnessWith(t, filestore.New(path))
-
-	for number := 1; number <= 23; number++ {
-		h.playLesson(number)
+func (h *harness) playModule(m curriculum.Module) {
+	for _, l := range m.Lessons {
+		h.playLesson(l.Number)
 	}
+}
 
+func moduleHeader(m curriculum.Module) string {
 	scored := 0
-	for _, l := range content.HomeRow().Lessons {
+	for _, l := range m.Lessons {
 		if l.Kind.Scored() {
 			scored++
 		}
 	}
-	reopened := newHarnessWith(t, filestore.New(path))
-	view := reopened.view()
-	want := "100% progress · " + strconv.Itoa(scored*scoring.MaxStars) + " stars"
-	if !strings.Contains(view, want) {
+	return fmt.Sprintf("Module %d · %s  100%% · %d stars", m.Number, m.Title, scored*scoring.MaxStars)
+}
+
+func (h *harness) showModule(m curriculum.Module) string {
+	for range content.Course().Modules {
+		if strings.Contains(h.view(), fmt.Sprintf("Module %d ·", m.Number)) {
+			break
+		}
+		h.send(special(tea.KeyLeft))
+	}
+	return h.view()
+}
+
+func TestPlayingTheWholeHomeRowModule(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "progress.json")
+	home := content.HomeRow()
+
+	newHarnessWith(t, filestore.New(path)).playModule(home)
+
+	view := newHarnessWith(t, filestore.New(path)).showModule(home)
+	if want := moduleHeader(home); !strings.Contains(view, want) {
 		t.Fatalf("want %q after reopening:\n%s", want, view)
 	}
 }

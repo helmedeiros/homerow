@@ -30,7 +30,7 @@ func TestResetErasesProgressOnceConfirmed(t *testing.T) {
 		if code != 0 || !strings.Contains(out, "Erase all progress? [y/N] ") || !strings.Contains(out, "progress erased") {
 			t.Errorf("%q: code = %d, out = %q", answer, code, out)
 		}
-		if !strings.Contains(list, "0% progress · 0 stars") {
+		if !strings.Contains(list, "Home Row · 0% · 0 stars") {
 			t.Errorf("%q: progress kept:\n%s", answer, list)
 		}
 	}
@@ -43,7 +43,7 @@ func TestResetKeepsProgressUnlessConfirmed(t *testing.T) {
 		if code != 0 || !strings.Contains(out, "nothing changed") {
 			t.Errorf("%q: code = %d, out = %q", answer, code, out)
 		}
-		if !strings.Contains(list, "8% progress · 3 stars") {
+		if !strings.Contains(list, "Home Row · 8% · 3 stars") {
 			t.Errorf("%q: progress lost:\n%s", answer, list)
 		}
 	}

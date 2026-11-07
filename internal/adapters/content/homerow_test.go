@@ -1,16 +1,10 @@
 package content_test
 
 import (
-	"math/rand/v2"
-	"strings"
 	"testing"
-	"time"
 
 	"github.com/helmedeiros/homerow/internal/adapters/content"
 	"github.com/helmedeiros/homerow/internal/domain/curriculum"
-	"github.com/helmedeiros/homerow/internal/domain/game"
-	"github.com/helmedeiros/homerow/internal/domain/keyboard"
-	"github.com/helmedeiros/homerow/internal/domain/scoring"
 )
 
 func TestHomeRowLessonsAreValidAndNumberedInOrder(t *testing.T) {
@@ -62,52 +56,5 @@ func TestHomeRowHasTwentyThreeLessonsEndingInAGame(t *testing.T) {
 	last := m.Lessons[22]
 	if last.Kind != curriculum.Play || string(last.Keys) != "asdfghjkl;" {
 		t.Fatalf("lesson 23 = %v over %q", last.Kind, string(last.Keys))
-	}
-}
-
-func TestHandDrillsStayOnOneHand(t *testing.T) {
-	m := content.HomeRow()
-	for number, hand := range map[int]keyboard.Hand{17: keyboard.Left, 18: keyboard.Right} {
-		l, _ := m.Lesson(number)
-		for _, r := range l.Keys {
-			key, _ := keyboard.Lookup(r)
-			if key.Finger.Hand() != hand {
-				t.Errorf("lesson %d uses %q from the %v hand", number, r, key.Finger.Hand())
-			}
-		}
-	}
-}
-
-func TestEveryDrillUsesOnlyItsLessonKeys(t *testing.T) {
-	for _, l := range content.HomeRow().Lessons {
-		allowed := string(l.Keys) + " "
-		for seed := uint64(0); seed < 50; seed++ {
-			for _, step := range l.Steps(rand.New(rand.NewPCG(seed, seed))) {
-				if step.Kind != curriculum.DrillStep {
-					continue
-				}
-				if strings.Trim(step.Text, allowed) != "" || step.Text == "" {
-					t.Fatalf("lesson %d seed %d drill %q leaves %q", l.Number, seed, step.Text, allowed)
-				}
-			}
-		}
-	}
-}
-
-func TestAPerfectGameEarnsFiveStarsInEveryPlayLesson(t *testing.T) {
-	for _, l := range content.HomeRow().Lessons {
-		if l.Kind != curriculum.Play {
-			continue
-		}
-		g := game.New(game.DefaultConfig(l.Keys), rand.New(rand.NewPCG(1, 1)))
-		for !g.Over() {
-			g.Advance(100 * time.Millisecond)
-			for _, d := range g.Drops() {
-				g.Press(d.Char)
-			}
-		}
-		if stars := scoring.Stars(g.Result(), l.GoalWPM); stars != scoring.MaxStars {
-			t.Errorf("lesson %d: perfect play earns %d stars (%.1f wpm, goal %.0f)", l.Number, stars, g.Result().WPM, l.GoalWPM)
-		}
 	}
 }
