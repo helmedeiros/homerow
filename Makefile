@@ -40,3 +40,7 @@ check: fmt vet lint cover
 .PHONY: clean
 clean:
 	rm -rf bin coverage.out
+
+.PHONY: demo
+demo: build
+	@for tape in docs/demo/*.tape; do vhs $$tape || exit 1; done

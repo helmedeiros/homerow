@@ -10,6 +10,18 @@ and earns up to five stars.
 The course opens with the home row: 23 lessons from `f` and `j` to the whole
 row. `homerow lessons` lists every lesson with your stars.
 
+![Meeting the f and j keys](docs/demo/new-keys.gif)
+
+Each new key comes with the finger that types it.
+
+![Typing a drill with a typo fixed](docs/demo/drill.gif)
+
+Mistakes turn red; backspace fixes them in yellow.
+
+![Lesson stars and the falling-letters game](docs/demo/play.gif)
+
+Earn stars, then catch falling letters.
+
 ## Install
 
 ```sh
