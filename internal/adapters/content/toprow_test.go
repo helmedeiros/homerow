@@ -95,3 +95,35 @@ func TestTopRowAddsWOThenQY(t *testing.T) {
 		}
 	}
 }
+
+func TestTopRowEndsWithTheWholeRowInPlay(t *testing.T) {
+	m := content.Course().Modules[1]
+	if len(m.Lessons) != 28 || m.Lessons[27].Number != 51 {
+		t.Fatalf("top row has %d lessons", len(m.Lessons))
+	}
+	want := map[int]struct {
+		kind curriculum.Kind
+		keys string
+	}{
+		42: {curriculum.NewKeys, "pt"},
+		45: {curriculum.Play, "qwertyuiop"},
+		47: {curriculum.Practice, "asdfghjkl;rueiwoqypt"},
+		48: {curriculum.HandDrill, "asdfgqwert"},
+		49: {curriculum.HandDrill, "hjkl;yuiop"},
+		50: {curriculum.Play, "qwertyuiop"},
+		51: {curriculum.Play, "asdfghjkl;qwertyuiop"},
+	}
+	for number, w := range want {
+		l, _ := m.Lesson(number)
+		keys := string(l.Keys)
+		if l.Kind == curriculum.NewKeys {
+			keys = string(l.NewKeys)
+		}
+		if l.Kind != w.kind || keys != w.keys {
+			t.Errorf("lesson %d = %v %q, want %v %q", number, l.Kind, keys, w.kind, w.keys)
+		}
+	}
+	if intro, _ := m.Lesson(46); intro.Kind != curriculum.Intro || len(intro.Pages) < 3 {
+		t.Errorf("lesson 46 = %+v", intro)
+	}
+}
