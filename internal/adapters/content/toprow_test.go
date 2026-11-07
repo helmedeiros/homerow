@@ -42,3 +42,15 @@ func TestTopRowKeysArriveInPairs(t *testing.T) {
 		}
 	}
 }
+
+func TestPostureIntroThenAReviewOfEverythingSoFar(t *testing.T) {
+	intro, _, _ := content.Course().Lesson(30)
+	review, _, _ := content.Course().Lesson(31)
+
+	if intro.Kind != curriculum.Intro || len(intro.Pages) < 3 {
+		t.Fatalf("lesson 30 = %+v", intro)
+	}
+	if review.Kind != curriculum.Practice || !review.Words || string(review.Focus) != "ruei" {
+		t.Fatalf("lesson 31 = %+v", review)
+	}
+}

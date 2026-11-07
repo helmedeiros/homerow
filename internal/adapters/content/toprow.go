@@ -21,5 +21,14 @@ func topRowLessons() []curriculum.Lesson {
 		newKeys(27, "Keys e and i", "ei", homeRUEI),
 		review(28, "Review: e and i", homeRUEI, "ei", topGoal),
 		practice(29, "Practice: e and i", homeRUEI, "ei", topGoal, true),
+		{Number: 30, Title: "Sit straight", Kind: curriculum.Intro, Pages: posturePages},
+		practice(31, "Review: home + ruei", homeRUEI, "ruei", topGoal, true),
 	}
+}
+
+var posturePages = []string{
+	"Sit back in your chair with your feet flat on the floor. A straight back lets your arms hang loose instead of holding you up.",
+	"Keep your elbows close to your sides and your forearms level with the keyboard. Your wrists should float, not rest on the desk.",
+	"Put the screen at eye level, about an arm's length away, so your neck stays straight while your fingers do the work.",
+	"Every half hour, stand up, roll your shoulders and look at something far away. Short breaks keep you fast.",
 }
