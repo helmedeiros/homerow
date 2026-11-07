@@ -54,3 +54,19 @@ func TestPostureIntroThenAReviewOfEverythingSoFar(t *testing.T) {
 		t.Fatalf("lesson 31 = %+v", review)
 	}
 }
+
+func TestTopRowHandDrillsAddTheNewKeysOfEachHand(t *testing.T) {
+	left, _, _ := content.Course().Lesson(32)
+	right, _, _ := content.Course().Lesson(33)
+	play, _, _ := content.Course().Lesson(34)
+
+	if left.Kind != curriculum.HandDrill || string(left.Keys) != "asdfgre" {
+		t.Errorf("lesson 32 = %+v", left)
+	}
+	if right.Kind != curriculum.HandDrill || string(right.Keys) != "hjkl;ui" {
+		t.Errorf("lesson 33 = %+v", right)
+	}
+	if play.Kind != curriculum.Play || string(play.Keys) != "ruei" {
+		t.Errorf("lesson 34 = %+v", play)
+	}
+}

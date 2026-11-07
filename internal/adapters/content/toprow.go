@@ -23,6 +23,9 @@ func topRowLessons() []curriculum.Lesson {
 		practice(29, "Practice: e and i", homeRUEI, "ei", topGoal, true),
 		{Number: 30, Title: "Sit straight", Kind: curriculum.Intro, Pages: posturePages},
 		practice(31, "Review: home + ruei", homeRUEI, "ruei", topGoal, true),
+		handDrill(32, "Top row: left hand", leftHand+"re", topGoal),
+		handDrill(33, "Top row: right hand", rightHand+"ui", topGoal),
+		play(34, "Play: ruei", "ruei"),
 	}
 }
 
