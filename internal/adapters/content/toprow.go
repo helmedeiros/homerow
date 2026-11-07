@@ -5,6 +5,9 @@ import "github.com/helmedeiros/homerow/internal/domain/curriculum"
 const (
 	homeRU   = homeRow + "ru"
 	homeRUEI = homeRU + "ei"
+	topSix   = "rueiwo"
+	homeTop6 = homeRow + topSix
+	homeQY   = homeTop6 + "qy"
 
 	topGoal = 12
 )
@@ -26,6 +29,13 @@ func topRowLessons() []curriculum.Lesson {
 		handDrill(32, "Top row: left hand", leftHand+"re", topGoal),
 		handDrill(33, "Top row: right hand", rightHand+"ui", topGoal),
 		play(34, "Play: ruei", "ruei"),
+		newKeys(35, "Keys w and o", "wo", homeTop6),
+		review(36, "Review: w and o", homeTop6, "wo", topGoal),
+		practice(37, "Practice: w and o", homeTop6, "wo", topGoal, true),
+		play(38, "Play: top six keys", topSix),
+		newKeys(39, "Keys q and y", "qy", homeQY),
+		review(40, "Review: q and y", homeQY, "qy", topGoal),
+		practice(41, "Practice: q and y", homeQY, "qy", topGoal, true),
 	}
 }
 

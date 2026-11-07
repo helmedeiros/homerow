@@ -70,3 +70,28 @@ func TestTopRowHandDrillsAddTheNewKeysOfEachHand(t *testing.T) {
 		t.Errorf("lesson 34 = %+v", play)
 	}
 }
+
+func TestTopRowAddsWOThenQY(t *testing.T) {
+	want := map[int]struct {
+		kind curriculum.Kind
+		keys string
+	}{
+		35: {curriculum.NewKeys, "wo"},
+		36: {curriculum.Review, "asdfghjkl;rueiwo"},
+		37: {curriculum.Practice, "asdfghjkl;rueiwo"},
+		38: {curriculum.Play, "rueiwo"},
+		39: {curriculum.NewKeys, "qy"},
+		40: {curriculum.Review, "asdfghjkl;rueiwoqy"},
+		41: {curriculum.Practice, "asdfghjkl;rueiwoqy"},
+	}
+	for number, w := range want {
+		l, _, _ := content.Course().Lesson(number)
+		keys := string(l.Keys)
+		if l.Kind == curriculum.NewKeys {
+			keys = string(l.NewKeys)
+		}
+		if l.Kind != w.kind || keys != w.keys {
+			t.Errorf("lesson %d = %v %q, want %v %q", number, l.Kind, keys, w.kind, w.keys)
+		}
+	}
+}
