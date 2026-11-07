@@ -68,3 +68,23 @@ func TestTheProgramIntroducesKeysAndStartsTheDrill(t *testing.T) {
 	tm.Send(tea.KeyMsg{Type: tea.KeyCtrlC})
 	tm.WaitFinished(t, teatest.WithFinalTimeout(5*time.Second))
 }
+
+func TestTheProgramOpensTheTopRowAndDrillsRAndU(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "progress.json")
+	tm := startProgram(t, path)
+	waitFor(t, tm, "Module 1 · Home Row")
+
+	tm.Send(tea.KeyMsg{Type: tea.KeyRight})
+	waitFor(t, tm, "Module 2 · Top Row")
+	tm.Send(tea.KeyMsg{Type: tea.KeyEnter})
+	waitFor(t, tm, "Lesson 24")
+	tm.Type("r")
+	waitFor(t, tm, "right index finger")
+	tm.Type("u")
+	waitFor(t, tm, "r r r rr rr rrr")
+
+	tm.Send(tea.KeyMsg{Type: tea.KeyEsc})
+	waitFor(t, tm, "Module 2 · Top Row")
+	tm.Type("q")
+	tm.WaitFinished(t, teatest.WithFinalTimeout(5*time.Second))
+}
