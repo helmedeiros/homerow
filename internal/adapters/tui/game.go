@@ -72,26 +72,38 @@ func (g gameScreen) pressed(key tea.KeyMsg) (screen, tea.Cmd) {
 
 func (g gameScreen) View() string {
 	var b strings.Builder
-	hearts := wrongTextStyle.Render(strings.Repeat("♥", g.game.Lives())) + mutedStyle.Render(strings.Repeat("♡", g.cfg.Lives-g.game.Lives()))
-	fmt.Fprintf(&b, "%s   score %d   time %s\n", hearts, g.game.Score(), clockFace(g.game.Remaining()))
+	fmt.Fprintf(&b, "%s   score %d   time %s\n", hearts(g.game.Lives(), g.cfg.Lives), g.game.Score(), clockFace(g.game.Remaining()))
 	b.WriteString(g.renderSky())
 	b.WriteString("\n" + mutedStyle.Render("type the falling letters before they land · esc lessons"))
 	return b.String()
 }
 
 func (g gameScreen) renderSky() string {
-	rows := make([][]string, g.cfg.Height)
-	for r := range rows {
-		rows[r] = strings.Split(strings.Repeat(" ", g.cfg.Width), "")
-	}
+	rows := emptySky(g.cfg.Width, g.cfg.Height)
 	for _, d := range g.game.Drops() {
 		rows[d.Row][d.Column] = accentStyle.Render(string(d.Char))
 	}
+	return framed(rows, g.cfg.Width)
+}
+
+func hearts(lives, total int) string {
+	return wrongTextStyle.Render(strings.Repeat("♥", lives)) + mutedStyle.Render(strings.Repeat("♡", total-lives))
+}
+
+func emptySky(width, height int) [][]string {
+	rows := make([][]string, height)
+	for r := range rows {
+		rows[r] = strings.Split(strings.Repeat(" ", width), "")
+	}
+	return rows
+}
+
+func framed(rows [][]string, width int) string {
 	var b strings.Builder
-	b.WriteString("┌" + strings.Repeat("─", g.cfg.Width) + "┐\n")
+	b.WriteString("┌" + strings.Repeat("─", width) + "┐\n")
 	for _, row := range rows {
 		b.WriteString("│" + strings.Join(row, "") + "│\n")
 	}
-	b.WriteString("└" + strings.Repeat("─", g.cfg.Width) + "┘")
+	b.WriteString("└" + strings.Repeat("─", width) + "┘")
 	return b.String()
 }
