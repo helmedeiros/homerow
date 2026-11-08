@@ -1,6 +1,7 @@
 package content_test
 
 import (
+	"math/rand/v2"
 	"strings"
 	"testing"
 
@@ -79,7 +80,7 @@ func TestTopRowAddsWOThenQY(t *testing.T) {
 		35: {curriculum.NewKeys, "wo"},
 		36: {curriculum.Review, "asdfghjkl;rueiwo"},
 		37: {curriculum.Practice, "asdfghjkl;rueiwo"},
-		38: {curriculum.Play, "rueiwo"},
+		38: {curriculum.Play, "asdfghjkl;rueiwo"},
 		39: {curriculum.NewKeys, "qy"},
 		40: {curriculum.Review, "asdfghjkl;rueiwoqy"},
 		41: {curriculum.Practice, "asdfghjkl;rueiwoqy"},
@@ -106,7 +107,7 @@ func TestTopRowEndsWithTheWholeRowInPlay(t *testing.T) {
 		keys string
 	}{
 		42: {curriculum.NewKeys, "pt"},
-		45: {curriculum.Play, "qwertyuiop"},
+		45: {curriculum.Play, "asdfghjkl;rueiwoqypt"},
 		47: {curriculum.Practice, "asdfghjkl;rueiwoqypt"},
 		48: {curriculum.HandDrill, "asdfgqwert"},
 		49: {curriculum.HandDrill, "hjkl;yuiop"},
@@ -125,5 +126,22 @@ func TestTopRowEndsWithTheWholeRowInPlay(t *testing.T) {
 	}
 	if intro, _ := m.Lesson(46); intro.Kind != curriculum.Intro || len(intro.Pages) < 3 {
 		t.Errorf("lesson 46 = %+v", intro)
+	}
+}
+
+func TestTopRowPlaysBalloonsWithWholeWords(t *testing.T) {
+	for number := 24; number <= 51; number++ {
+		l, _, _ := content.Course().Lesson(number)
+		balloons := number == 38 || number == 45
+		if l.Kind == curriculum.Play && (l.Game == curriculum.BalloonWords) != balloons {
+			t.Errorf("lesson %d game = %v", number, l.Game)
+		}
+		if !balloons {
+			continue
+		}
+		step := l.Steps(rand.New(rand.NewPCG(1, 1)))[0]
+		if step.Game != curriculum.BalloonWords || len(step.Words) == 0 {
+			t.Errorf("lesson %d step = %+v", number, step)
+		}
 	}
 }
