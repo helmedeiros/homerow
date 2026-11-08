@@ -90,19 +90,19 @@ func (g *Game) Advance(dt time.Duration) {
 }
 
 func (g *Game) FallInterval() time.Duration {
-	return max(g.ramped(g.cfg.FallEvery), FastestFall)
+	return max(ramped(g.cfg.FallEvery, g.elapsed, g.cfg.RampEvery, g.cfg.Ramp), FastestFall)
 }
 
 func (g *Game) SpawnInterval() time.Duration {
-	return g.ramped(g.cfg.SpawnEvery)
+	return ramped(g.cfg.SpawnEvery, g.elapsed, g.cfg.RampEvery, g.cfg.Ramp)
 }
 
-func (g *Game) ramped(interval time.Duration) time.Duration {
-	if g.cfg.RampEvery <= 0 {
+func ramped(interval, elapsed, every time.Duration, factor float64) time.Duration {
+	if every <= 0 {
 		return interval
 	}
-	for range int(g.elapsed / g.cfg.RampEvery) {
-		interval = time.Duration(float64(interval) * g.cfg.Ramp)
+	for range int(elapsed / every) {
+		interval = time.Duration(float64(interval) * factor)
 	}
 	return interval
 }
@@ -172,14 +172,17 @@ func (g *Game) Over() bool {
 const charactersPerWord = 5
 
 func (g *Game) Result() scoring.Result {
-	attempts := g.hits + g.misses + g.landed
+	return result(g.hits, g.misses+g.landed, g.elapsed)
+}
+
+func result(hits, failures int, elapsed time.Duration) scoring.Result {
 	accuracy := 100.0
-	if attempts > 0 {
-		accuracy = float64(g.hits) / float64(attempts) * 100
+	if attempts := hits + failures; attempts > 0 {
+		accuracy = float64(hits) / float64(attempts) * 100
 	}
 	wpm := 0.0
-	if minutes := g.elapsed.Minutes(); minutes > 0 {
-		wpm = float64(g.hits) / charactersPerWord / minutes
+	if minutes := elapsed.Minutes(); minutes > 0 {
+		wpm = float64(hits) / charactersPerWord / minutes
 	}
 	return scoring.Result{Accuracy: accuracy, WPM: wpm}
 }
