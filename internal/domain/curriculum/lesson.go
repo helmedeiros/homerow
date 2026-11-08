@@ -33,6 +33,13 @@ func (k Kind) String() string { return kindNames[k] }
 
 func (k Kind) Scored() bool { return k >= Review }
 
+type Game int
+
+const (
+	FallingLetters Game = iota
+	BalloonWords
+)
+
 type Lesson struct {
 	Number    int
 	Title     string
@@ -42,6 +49,7 @@ type Lesson struct {
 	Keys      []rune
 	Focus     []rune
 	Words     bool
+	Game      Game
 	GoalWPM   float64
 	TimeLimit time.Duration
 }

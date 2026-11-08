@@ -99,15 +99,25 @@ func (m Model) screenFor(lesson curriculum.Lesson, step curriculum.Step) screen 
 	case curriculum.KeyIntroStep:
 		return newKeyIntroScreen(step.Key)
 	case curriculum.GameStep:
-		seed := m.opts.Seed()
-		g := newGameScreen(game.DefaultConfig(step.Keys), rand.New(rand.NewPCG(seed, seed)), m.opts.Now)
-		g.tick = m.opts.ticker()
-		return g
+		return m.gameFor(step)
 	default:
 		d := newDrillScreen(step.Text, lesson.TimeLimit, m.opts.Now)
 		d.tick = m.opts.ticker()
 		return d
 	}
+}
+
+func (m Model) gameFor(step curriculum.Step) screen {
+	seed := m.opts.Seed()
+	rng := rand.New(rand.NewPCG(seed, seed))
+	if step.Game == curriculum.BalloonWords {
+		b := newBalloonScreen(game.DefaultBalloons(step.Words), rng, m.opts.Now)
+		b.tick = m.opts.ticker()
+		return b
+	}
+	g := newGameScreen(game.DefaultConfig(step.Keys), rng, m.opts.Now)
+	g.tick = m.opts.ticker()
+	return g
 }
 
 func (m Model) stepDone(msg stepDoneMsg) (tea.Model, tea.Cmd) {

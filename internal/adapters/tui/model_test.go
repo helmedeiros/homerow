@@ -10,6 +10,7 @@ import (
 	"github.com/helmedeiros/homerow/internal/adapters/content"
 	"github.com/helmedeiros/homerow/internal/adapters/memstore"
 	"github.com/helmedeiros/homerow/internal/app"
+	"github.com/helmedeiros/homerow/internal/domain/curriculum"
 )
 
 type harness struct {
@@ -201,5 +202,15 @@ func TestTheMapMovesOnAfterAPassedLesson(t *testing.T) {
 
 	if got := h.current().(mapScreen).selected(); got != 5 {
 		t.Fatalf("selected = %d, want 5", got)
+	}
+}
+
+func TestABalloonStepOpensTheBalloonGame(t *testing.T) {
+	m := newHarness(t).model.(Model)
+
+	s := m.screenFor(curriculum.Lesson{}, curriculum.Step{Kind: curriculum.GameStep, Game: curriculum.BalloonWords, Words: []string{"sad"}})
+
+	if _, ok := s.(balloonScreen); !ok {
+		t.Fatalf("screen = %T", s)
 	}
 }

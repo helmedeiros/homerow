@@ -20,14 +20,17 @@ const (
 	warmUpGroups   = 10
 	reviewGroups   = 16
 	practiceGroups = 22
+	balloonWords   = 40
 )
 
 type Step struct {
-	Kind StepKind
-	Page string
-	Key  rune
-	Text string
-	Keys []rune
+	Kind  StepKind
+	Page  string
+	Key   rune
+	Text  string
+	Keys  []rune
+	Game  Game
+	Words []string
 }
 
 func (l Lesson) Steps(rng *rand.Rand) []Step {
@@ -39,10 +42,24 @@ func (l Lesson) Steps(rng *rand.Rand) []Step {
 	case Practice:
 		return []Step{drill(l.practiceText(rng))}
 	case Play:
-		return []Step{{Kind: GameStep, Keys: l.letters()}}
+		return []Step{l.gameStep(rng)}
 	default:
 		return []Step{drill(exercise.Groups(rng, l.mix(), reviewGroups))}
 	}
+}
+
+func (l Lesson) gameStep(rng *rand.Rand) Step {
+	step := Step{Kind: GameStep, Keys: l.letters()}
+	if l.Game != BalloonWords {
+		return step
+	}
+	text, err := exercise.Words(rng, l.letters(), balloonWords)
+	if err != nil {
+		return step
+	}
+	step.Game = BalloonWords
+	step.Words = strings.Fields(text)
+	return step
 }
 
 func (l Lesson) pageSteps() []Step {

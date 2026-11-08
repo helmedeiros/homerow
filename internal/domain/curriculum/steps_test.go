@@ -109,3 +109,29 @@ func TestPlayIsAGameOverTheLessonKeys(t *testing.T) {
 		t.Fatalf("game keys = %q", string(steps[0].Keys))
 	}
 }
+
+func TestABalloonPlayRisesWordsMadeOfTheLessonKeys(t *testing.T) {
+	l := curriculum.Lesson{Kind: curriculum.Play, Game: curriculum.BalloonWords, Keys: []rune("asdfjkl;")}
+
+	steps := l.Steps(rng())
+
+	sameKinds(t, steps, curriculum.GameStep)
+	if steps[0].Game != curriculum.BalloonWords || len(steps[0].Words) != 40 {
+		t.Fatalf("step = %+v", steps[0])
+	}
+	for _, w := range steps[0].Words {
+		if strings.Trim(w, "asdfjkl;") != "" {
+			t.Fatalf("word %q uses keys outside the lesson", w)
+		}
+	}
+}
+
+func TestABalloonPlayWithoutWordsFallsBackToFallingLetters(t *testing.T) {
+	l := curriculum.Lesson{Kind: curriculum.Play, Game: curriculum.BalloonWords, Keys: []rune("fj")}
+
+	step := l.Steps(rng())[0]
+
+	if step.Game != curriculum.FallingLetters || step.Words != nil || string(step.Keys) != "fj" {
+		t.Fatalf("step = %+v", step)
+	}
+}
