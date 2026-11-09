@@ -92,6 +92,10 @@ func play(number int, title, keys string) curriculum.Lesson {
 	return curriculum.Lesson{Number: number, Title: title, Kind: curriculum.Play, Keys: []rune(keys), GoalWPM: playGoal}
 }
 
+func travel(number int, title, keys, homes string, goal float64) curriculum.Lesson {
+	return curriculum.Lesson{Number: number, Title: title, Kind: curriculum.Travel, Keys: []rune(keys), Focus: []rune(homes), GoalWPM: goal}
+}
+
 func popUps(number int, title, keys string) curriculum.Lesson {
 	l := play(number, title, keys)
 	l.Game = curriculum.PopUpWarmUp

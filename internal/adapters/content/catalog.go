@@ -9,5 +9,5 @@ func (Catalog) Course() curriculum.Course {
 }
 
 func Course() curriculum.Course {
-	return curriculum.Course{Modules: []curriculum.Module{HomeRow(), TopRow()}}
+	return curriculum.Course{Modules: []curriculum.Module{HomeRow(), TopRow(), BottomRow()}}
 }
