@@ -135,3 +135,17 @@ func TestABalloonPlayWithoutWordsFallsBackToFallingLetters(t *testing.T) {
 		t.Fatalf("step = %+v", step)
 	}
 }
+
+func TestAPopUpPlayWarmsUpBeforeTheScoredGame(t *testing.T) {
+	l := curriculum.Lesson{Kind: curriculum.Play, Game: curriculum.PopUpWarmUp, Keys: []rune("fj")}
+
+	steps := l.Steps(rng())
+
+	sameKinds(t, steps, curriculum.GameStep, curriculum.GameStep)
+	if steps[0].Game != curriculum.PopUpWarmUp || steps[1].Game != curriculum.FallingLetters {
+		t.Fatalf("steps = %+v", steps)
+	}
+	if string(steps[0].Keys) != "fj" || string(steps[1].Keys) != "fj" {
+		t.Fatalf("keys = %q, %q", string(steps[0].Keys), string(steps[1].Keys))
+	}
+}

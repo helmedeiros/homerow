@@ -38,6 +38,7 @@ type Game int
 const (
 	FallingLetters Game = iota
 	BalloonWords
+	PopUpWarmUp
 )
 
 type Lesson struct {

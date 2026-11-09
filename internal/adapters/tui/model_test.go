@@ -214,3 +214,13 @@ func TestABalloonStepOpensTheBalloonGame(t *testing.T) {
 		t.Fatalf("screen = %T", s)
 	}
 }
+
+func TestAPopUpStepOpensTheWarmUp(t *testing.T) {
+	m := newHarness(t).model.(Model)
+
+	s := m.screenFor(curriculum.Lesson{}, curriculum.Step{Kind: curriculum.GameStep, Game: curriculum.PopUpWarmUp, Keys: []rune("fj")})
+
+	if _, ok := s.(popUpScreen); !ok {
+		t.Fatalf("screen = %T", s)
+	}
+}

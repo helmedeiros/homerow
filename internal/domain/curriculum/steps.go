@@ -42,10 +42,17 @@ func (l Lesson) Steps(rng *rand.Rand) []Step {
 	case Practice:
 		return []Step{drill(l.practiceText(rng))}
 	case Play:
-		return []Step{l.gameStep(rng)}
+		return l.playSteps(rng)
 	default:
 		return []Step{drill(exercise.Groups(rng, l.mix(), reviewGroups))}
 	}
+}
+
+func (l Lesson) playSteps(rng *rand.Rand) []Step {
+	if l.Game == PopUpWarmUp {
+		return []Step{{Kind: GameStep, Game: PopUpWarmUp, Keys: l.letters()}, {Kind: GameStep, Keys: l.letters()}}
+	}
+	return []Step{l.gameStep(rng)}
 }
 
 func (l Lesson) gameStep(rng *rand.Rand) Step {

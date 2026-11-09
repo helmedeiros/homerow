@@ -110,10 +110,15 @@ func (m Model) screenFor(lesson curriculum.Lesson, step curriculum.Step) screen 
 func (m Model) gameFor(step curriculum.Step) screen {
 	seed := m.opts.Seed()
 	rng := rand.New(rand.NewPCG(seed, seed))
-	if step.Game == curriculum.BalloonWords {
+	switch step.Game {
+	case curriculum.BalloonWords:
 		b := newBalloonScreen(game.DefaultBalloons(step.Words), rng, m.opts.Now)
 		b.tick = m.opts.ticker()
 		return b
+	case curriculum.PopUpWarmUp:
+		p := newPopUpScreen(game.DefaultPopUps(step.Keys), rng, m.opts.Now)
+		p.tick = m.opts.ticker()
+		return p
 	}
 	g := newGameScreen(game.DefaultConfig(step.Keys), rng, m.opts.Now)
 	g.tick = m.opts.ticker()

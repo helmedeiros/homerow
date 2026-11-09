@@ -145,3 +145,13 @@ func TestTopRowPlaysBalloonsWithWholeWords(t *testing.T) {
 		}
 	}
 }
+
+func TestLessonFiftyWarmsUpWithPopUpKeys(t *testing.T) {
+	l, _, _ := content.Course().Lesson(50)
+
+	steps := l.Steps(rand.New(rand.NewPCG(1, 1)))
+
+	if l.Game != curriculum.PopUpWarmUp || len(steps) != 2 || steps[0].Game != curriculum.PopUpWarmUp {
+		t.Fatalf("lesson 50 = %+v, steps = %+v", l, steps)
+	}
+}

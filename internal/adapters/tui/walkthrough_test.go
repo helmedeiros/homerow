@@ -28,7 +28,7 @@ func (h *harness) finishStep() {
 		}
 	case drillScreen:
 		h.typeDrill()
-	case gameScreen, balloonScreen:
+	case gameScreen, balloonScreen, popUpScreen:
 		h.playPerfectly()
 	default:
 		h.t.Fatalf("unexpected screen %T:\n%s", s, h.view())
@@ -41,6 +41,10 @@ func (h *harness) playPerfectly() {
 		case gameScreen:
 			for _, d := range s.game.Drops() {
 				h.send(runes(string(d.Char)))
+			}
+		case popUpScreen:
+			for _, p := range s.game.Shown() {
+				h.send(runes(string(p.Char)))
 			}
 		case balloonScreen:
 			for _, b := range s.game.Balloons() {

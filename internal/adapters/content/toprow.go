@@ -46,7 +46,7 @@ func topRowLessons() []curriculum.Lesson {
 		practice(47, "Review: home + top", homeTop, "", topGoal, true),
 		handDrill(48, "Top row: left hand", leftHand+"qwert", topGoal),
 		handDrill(49, "Top row: right hand", rightHand+"yuiop", topGoal),
-		play(50, "Play: top row", topRow),
+		popUps(50, "Play: top row", topRow),
 		play(51, "Play: home and top rows", homeRow+topRow),
 	}
 }
