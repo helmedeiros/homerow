@@ -15,6 +15,7 @@ func TestOnlyPractisingKindsAreScored(t *testing.T) {
 		curriculum.Practice:  true,
 		curriculum.HandDrill: true,
 		curriculum.Play:      true,
+		curriculum.Travel:    true,
 	}
 	for kind, want := range scored {
 		if kind.Scored() != want {
@@ -24,7 +25,7 @@ func TestOnlyPractisingKindsAreScored(t *testing.T) {
 }
 
 func TestKindNames(t *testing.T) {
-	if curriculum.HandDrill.String() != "hand drill" || curriculum.Play.String() != "play" {
+	if curriculum.HandDrill.String() != "hand drill" || curriculum.Play.String() != "play" || curriculum.Travel.String() != "travel" {
 		t.Fatalf("names = %q, %q", curriculum.HandDrill, curriculum.Play)
 	}
 }
@@ -50,6 +51,7 @@ func TestInvalidLessons(t *testing.T) {
 		"focus key not allowed": {Number: 4, Title: "x", Kind: curriculum.Review, Keys: []rune("fj"), Focus: []rune("k"), GoalWPM: 8},
 		"scored without goal":   {Number: 5, Title: "x", Kind: curriculum.Practice, Keys: []rune("fj")},
 		"no title":              {Number: 6, Kind: curriculum.Intro, Pages: []string{"hi"}},
+		"travel without a home": {Number: 7, Title: "x", Kind: curriculum.Travel, Keys: []rune("jum"), GoalWPM: 8},
 	}
 	for name, l := range cases {
 		if err := l.Validate(); !errors.Is(err, curriculum.ErrInvalidLesson) {

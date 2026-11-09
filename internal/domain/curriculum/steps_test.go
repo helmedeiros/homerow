@@ -149,3 +149,14 @@ func TestAPopUpPlayWarmsUpBeforeTheScoredGame(t *testing.T) {
 		t.Fatalf("keys = %q, %q", string(steps[0].Keys), string(steps[1].Keys))
 	}
 }
+
+func TestTravelIsOneDrillThatStartsFromTheHomeKeys(t *testing.T) {
+	l := curriculum.Lesson{Kind: curriculum.Travel, Keys: []rune("jum"), Focus: []rune("j"), GoalWPM: 8}
+
+	steps := l.Steps(rng())
+
+	sameKinds(t, steps, curriculum.DrillStep)
+	if !strings.ContainsRune(steps[0].Text, 'j') || strings.Trim(steps[0].Text, "jum ") != "" {
+		t.Fatalf("drill = %q", steps[0].Text)
+	}
+}

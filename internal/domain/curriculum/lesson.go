@@ -18,6 +18,7 @@ const (
 	Practice
 	HandDrill
 	Play
+	Travel
 )
 
 var kindNames = [...]string{
@@ -27,6 +28,7 @@ var kindNames = [...]string{
 	Practice:  "practice",
 	HandDrill: "hand drill",
 	Play:      "play",
+	Travel:    "travel",
 }
 
 func (k Kind) String() string { return kindNames[k] }
@@ -67,6 +69,8 @@ func (l Lesson) Validate() error {
 		return l.invalid("introduces keys it does not allow")
 	case !subset(l.Focus, l.Keys):
 		return l.invalid("focuses on keys it does not allow")
+	case l.Kind == Travel && len(l.Focus) == 0:
+		return l.invalid("travels without a home key to start from")
 	case l.Kind.Scored() && l.GoalWPM <= 0:
 		return l.invalid("is scored without a speed goal")
 	}
