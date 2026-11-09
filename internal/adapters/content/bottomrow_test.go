@@ -35,6 +35,8 @@ func TestIndexFingersTravelToTheirReaches(t *testing.T) {
 	want := map[int]struct{ home, reaches string }{
 		55: {"j", "uyhm"},
 		56: {"f", "rtgv"},
+		60: {"k", "i,"},
+		61: {"d", "ec"},
 	}
 	for number, w := range want {
 		l, _, _ := content.Course().Lesson(number)
@@ -46,5 +48,25 @@ func TestIndexFingersTravelToTheirReaches(t *testing.T) {
 				t.Fatalf("lesson %d group %q", number, g)
 			}
 		}
+	}
+}
+
+func TestCAndCommaArriveBeforeTheBalloons(t *testing.T) {
+	keys, _, _ := content.Course().Lesson(57)
+	if keys.Kind != curriculum.NewKeys || string(keys.NewKeys) != "c," {
+		t.Fatalf("lesson 57 = %v %q", keys.Kind, string(keys.NewKeys))
+	}
+	for _, number := range []int{58, 59} {
+		l, _, _ := content.Course().Lesson(number)
+		if string(l.Focus) != "c," {
+			t.Errorf("lesson %d focus = %q", number, string(l.Focus))
+		}
+	}
+	play, _, _ := content.Course().Lesson(62)
+	if play.Kind != curriculum.Play || play.Game != curriculum.BalloonWords || !strings.ContainsAny(string(play.Keys), "vmc") {
+		t.Fatalf("lesson 62 = %+v", play)
+	}
+	if step := play.Steps(rand.New(rand.NewPCG(1, 1)))[0]; step.Game != curriculum.BalloonWords {
+		t.Fatalf("lesson 62 step = %+v", step)
 	}
 }
