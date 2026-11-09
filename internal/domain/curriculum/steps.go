@@ -43,6 +43,8 @@ func (l Lesson) Steps(rng *rand.Rand) []Step {
 		return []Step{drill(l.practiceText(rng))}
 	case Play:
 		return l.playSteps(rng)
+	case Travel:
+		return []Step{drill(exercise.Travel(rng, l.Focus, l.letters(), reviewGroups))}
 	default:
 		return []Step{drill(exercise.Groups(rng, l.mix(), reviewGroups))}
 	}

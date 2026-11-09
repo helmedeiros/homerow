@@ -156,7 +156,9 @@ func TestTravelIsOneDrillThatStartsFromTheHomeKeys(t *testing.T) {
 	steps := l.Steps(rng())
 
 	sameKinds(t, steps, curriculum.DrillStep)
-	if !strings.ContainsRune(steps[0].Text, 'j') || strings.Trim(steps[0].Text, "jum ") != "" {
-		t.Fatalf("drill = %q", steps[0].Text)
+	for _, g := range strings.Fields(steps[0].Text) {
+		if g != "juj" && g != "jmj" {
+			t.Fatalf("drill = %q", steps[0].Text)
+		}
 	}
 }
