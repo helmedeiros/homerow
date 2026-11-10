@@ -135,3 +135,30 @@ func TestBottomRowHandDrillsAndPractice(t *testing.T) {
 		}
 	}
 }
+
+func TestBottomRowPlaysThenTravelsWithEveryFinger(t *testing.T) {
+	popUp, _, _ := content.Course().Lesson(82)
+	if popUp.Game != curriculum.PopUpWarmUp || string(popUp.Keys) != "zxcvbnm,./" {
+		t.Fatalf("lesson 82 = %+v", popUp)
+	}
+	falling, _, _ := content.Course().Lesson(83)
+	if falling.Kind != curriculum.Play || falling.Game != curriculum.FallingLetters {
+		t.Fatalf("lesson 83 = %+v", falling)
+	}
+	for number, homes := range map[int]string{84: "jkl;", 85: "asdf"} {
+		l, _, _ := content.Course().Lesson(number)
+		if l.Kind != curriculum.Travel || string(l.Focus) != homes {
+			t.Fatalf("lesson %d = %v from %q", number, l.Kind, string(l.Focus))
+		}
+		starts := map[byte]bool{}
+		for _, g := range strings.Fields(l.Steps(rand.New(rand.NewPCG(1, 1)))[0].Text) {
+			if g[0] != g[2] || !strings.Contains(homes, g[:1]) {
+				t.Fatalf("lesson %d group %q", number, g)
+			}
+			starts[g[0]] = true
+		}
+		if len(starts) != 4 {
+			t.Fatalf("lesson %d travels from %d home keys", number, len(starts))
+		}
+	}
+}

@@ -49,6 +49,10 @@ func bottomRowLessons() []curriculum.Lesson {
 		handDrill(79, "Bottom row: left hand", leftHand+"zxcvb", bottomGoal),
 		handDrill(80, "Bottom row: right hand", rightHand+"nm,./", bottomGoal),
 		practice(81, "Practice: bottom row", allRows, bottomRow, bottomGoal, true),
+		popUps(82, "Play: bottom row", bottomRow),
+		play(83, "Play: every letter", allRows),
+		travel(84, "Travel: right hand, all fingers", allRows, "jkl;", bottomGoal),
+		travel(85, "Travel: left hand, all fingers", allRows, "asdf", bottomGoal),
 	}
 }
 
