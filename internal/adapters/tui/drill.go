@@ -51,6 +51,8 @@ func (d drillScreen) Update(msg tea.Msg) (screen, tea.Cmd) {
 		return d, nil
 	case tea.KeySpace:
 		return d.typed(' ')
+	case tea.KeyTab:
+		return d.typed('\t')
 	case tea.KeyRunes:
 		return d.typed(key.Runes...)
 	}
@@ -126,6 +128,9 @@ func (d drillScreen) renderText() string {
 
 func renderChar(r rune, mark drill.Mark, cursor bool) string {
 	shown := string(r)
+	if r == '\t' {
+		shown = "→"
+	}
 	switch {
 	case cursor:
 		if r == ' ' {
