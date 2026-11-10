@@ -6,6 +6,7 @@ const (
 	homeTopVM = homeTop + "vm"
 	homeTopC  = homeTopVM + "c,"
 	homeTopX  = homeTopC + "x."
+	homeTopZ  = homeTopX + "z/"
 
 	bottomGoal = 12
 )
@@ -33,6 +34,12 @@ func bottomRowLessons() []curriculum.Lesson {
 		practice(66, "Practice: x and period", homeTopX, "x.", bottomGoal, true),
 		travel(67, "Travel: right ring", homeTopX, "l", bottomGoal),
 		travel(68, "Travel: left ring", homeTopX, "s", bottomGoal),
+		newKeys(69, "Keys z and slash", "z/", homeTopZ),
+		review(70, "Review: z and slash", homeTopZ, "z/", bottomGoal),
+		practice(71, "Practice: z and slash", homeTopZ, "z/", bottomGoal, true),
+		travel(72, "Travel: right pinky", homeTopZ, ";", bottomGoal),
+		travel(73, "Travel: left pinky", homeTopZ, "a", bottomGoal),
+		balloons(74, "Play: bottom row", homeTopZ),
 	}
 }
 

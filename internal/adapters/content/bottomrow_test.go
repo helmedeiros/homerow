@@ -39,6 +39,8 @@ func TestIndexFingersTravelToTheirReaches(t *testing.T) {
 		61: {"d", "ec"},
 		67: {"l", "o."},
 		68: {"s", "wx"},
+		72: {";", "p/"},
+		73: {"a", "qz"},
 	}
 	for number, w := range want {
 		l, _, _ := content.Course().Lesson(number)
@@ -87,5 +89,16 @@ func TestQwertyHistoryComesBeforeXAndPeriod(t *testing.T) {
 		if string(l.Focus) != "x." {
 			t.Errorf("lesson %d focus = %q", number, string(l.Focus))
 		}
+	}
+}
+
+func TestZAndSlashLeadToTheBottomRowBalloons(t *testing.T) {
+	keys, _, _ := content.Course().Lesson(69)
+	if keys.Kind != curriculum.NewKeys || string(keys.NewKeys) != "z/" {
+		t.Fatalf("lesson 69 = %v %q", keys.Kind, string(keys.NewKeys))
+	}
+	play, _, _ := content.Course().Lesson(74)
+	if play.Game != curriculum.BalloonWords || !strings.Contains(string(play.Keys), "vmc,x.z/") {
+		t.Fatalf("lesson 74 = %+v", play)
 	}
 }
