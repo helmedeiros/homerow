@@ -37,6 +37,8 @@ func TestIndexFingersTravelToTheirReaches(t *testing.T) {
 		56: {"f", "rtgv"},
 		60: {"k", "i,"},
 		61: {"d", "ec"},
+		67: {"l", "o."},
+		68: {"s", "wx"},
 	}
 	for number, w := range want {
 		l, _, _ := content.Course().Lesson(number)
@@ -68,5 +70,22 @@ func TestCAndCommaArriveBeforeTheBalloons(t *testing.T) {
 	}
 	if step := play.Steps(rand.New(rand.NewPCG(1, 1)))[0]; step.Game != curriculum.BalloonWords {
 		t.Fatalf("lesson 62 step = %+v", step)
+	}
+}
+
+func TestQwertyHistoryComesBeforeXAndPeriod(t *testing.T) {
+	intro, _, _ := content.Course().Lesson(63)
+	if intro.Kind != curriculum.Intro || intro.Title != "History of QWERTY" || len(intro.Pages) == 0 {
+		t.Fatalf("lesson 63 = %+v", intro)
+	}
+	keys, _, _ := content.Course().Lesson(64)
+	if keys.Kind != curriculum.NewKeys || string(keys.NewKeys) != "x." {
+		t.Fatalf("lesson 64 = %v %q", keys.Kind, string(keys.NewKeys))
+	}
+	for _, number := range []int{65, 66} {
+		l, _, _ := content.Course().Lesson(number)
+		if string(l.Focus) != "x." {
+			t.Errorf("lesson %d focus = %q", number, string(l.Focus))
+		}
 	}
 }
