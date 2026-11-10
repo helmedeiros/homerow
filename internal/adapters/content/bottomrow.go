@@ -7,6 +7,8 @@ const (
 	homeTopC  = homeTopVM + "c,"
 	homeTopX  = homeTopC + "x."
 	homeTopZ  = homeTopX + "z/"
+	allRows   = homeTopZ + "bn"
+	bottomRow = "zxcvbnm,./"
 
 	bottomGoal = 12
 )
@@ -40,6 +42,13 @@ func bottomRowLessons() []curriculum.Lesson {
 		travel(72, "Travel: right pinky", homeTopZ, ";", bottomGoal),
 		travel(73, "Travel: left pinky", homeTopZ, "a", bottomGoal),
 		balloons(74, "Play: bottom row", homeTopZ),
+		newKeys(75, "Keys b and n", "bn", allRows),
+		review(76, "Review: b and n", allRows, "bn", bottomGoal),
+		practice(77, "Practice: b and n", allRows, "bn", bottomGoal, true),
+		{Number: 78, Title: "Take a break", Kind: curriculum.Intro, Pages: breakPages},
+		handDrill(79, "Bottom row: left hand", leftHand+"zxcvb", bottomGoal),
+		handDrill(80, "Bottom row: right hand", rightHand+"nm,./", bottomGoal),
+		practice(81, "Practice: bottom row", allRows, bottomRow, bottomGoal, true),
 	}
 }
 
@@ -48,4 +57,11 @@ var qwertyPages = []string{
 	"Early typewriters jammed when neighbouring type bars swung up together, so common letter pairs were spread across the keyboard.",
 	"Jams are long gone, but the layout stayed. Millions of people already knew it, and every keyboard since has followed.",
 	"Your fingers do not care where the letters came from. Learn each reach once and QWERTY becomes second nature.",
+}
+
+var breakPages = []string{
+	"You now know every letter key. That is a good moment to stop for a minute and let your hands rest.",
+	"Shake out your hands, stretch your fingers wide, then make loose fists a few times. Tight hands type slower.",
+	"Look away from the screen at something far off and blink a few times. Your eyes work hard while you learn.",
+	"When you come back, place your fingers on the home row, feel the bumps on f and j, and carry on.",
 }

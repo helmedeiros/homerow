@@ -102,3 +102,36 @@ func TestZAndSlashLeadToTheBottomRowBalloons(t *testing.T) {
 		t.Fatalf("lesson 74 = %+v", play)
 	}
 }
+
+func TestBAndNCompleteTheLettersBeforeABreak(t *testing.T) {
+	keys, _, _ := content.Course().Lesson(75)
+	if keys.Kind != curriculum.NewKeys || string(keys.NewKeys) != "bn" {
+		t.Fatalf("lesson 75 = %v %q", keys.Kind, string(keys.NewKeys))
+	}
+	for _, r := range "abcdefghijklmnopqrstuvwxyz" {
+		if !strings.ContainsRune(string(keys.Keys), r) {
+			t.Fatalf("lesson 75 is missing %q", r)
+		}
+	}
+	rest, _, _ := content.Course().Lesson(78)
+	if rest.Kind != curriculum.Intro || rest.Title != "Take a break" {
+		t.Fatalf("lesson 78 = %+v", rest)
+	}
+}
+
+func TestBottomRowHandDrillsAndPractice(t *testing.T) {
+	want := map[int]struct {
+		kind curriculum.Kind
+		keys string
+	}{
+		79: {curriculum.HandDrill, "asdfgzxcvb"},
+		80: {curriculum.HandDrill, "hjkl;nm,./"},
+		81: {curriculum.Practice, "asdfghjkl;rueiwoqyptvmc,x.z/bn"},
+	}
+	for number, w := range want {
+		l, _, _ := content.Course().Lesson(number)
+		if l.Kind != w.kind || string(l.Keys) != w.keys {
+			t.Errorf("lesson %d = %v %q", number, l.Kind, string(l.Keys))
+		}
+	}
+}
