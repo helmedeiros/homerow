@@ -162,3 +162,19 @@ func TestTravelIsOneDrillThatStartsFromTheHomeKeys(t *testing.T) {
 		}
 	}
 }
+
+func TestWordPracticePrefersTheFocusKeys(t *testing.T) {
+	l := curriculum.Lesson{Kind: curriculum.Practice, Keys: []rune("asdfghjkl;qwertyuiopvm"), Focus: []rune("vm"), Words: true, GoalWPM: 8}
+
+	words := strings.Fields(l.Steps(rng())[0].Text)
+
+	focused := 0
+	for _, w := range words {
+		if strings.ContainsAny(w, "vm") {
+			focused++
+		}
+	}
+	if focused*2 < len(words) {
+		t.Fatalf("%d of %d words use v or m", focused, len(words))
+	}
+}

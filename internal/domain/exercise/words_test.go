@@ -78,3 +78,36 @@ func TestEveryTopRowStageHasPlentyOfWordsWithItsNewKeys(t *testing.T) {
 		}
 	}
 }
+
+func TestFocusedWordsMostlyUseTheNewKeys(t *testing.T) {
+	keys := []rune("asdfghjkl;qwertyuiopvm")
+	text, err := exercise.FocusedWords(seeded(3), keys, []rune("vm"), 300)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	words := strings.Split(text, " ")
+	focused := 0
+	for _, w := range words {
+		if strings.Trim(w, string(keys)) != "" {
+			t.Fatalf("%q uses keys outside the lesson", w)
+		}
+		if strings.ContainsAny(w, "vm") {
+			focused++
+		}
+	}
+	if focused < 180 || focused == len(words) {
+		t.Fatalf("%d of %d words use v or m, want most but not all", focused, len(words))
+	}
+}
+
+func TestFocusedWordsFallBackToAnyWordWhenNoneUseTheFocus(t *testing.T) {
+	text, err := exercise.FocusedWords(seeded(3), []rune("asdfjkl;"), []rune("z"), 20)
+
+	if err != nil || len(strings.Split(text, " ")) != 20 {
+		t.Fatalf("text = %q, err = %v", text, err)
+	}
+	if _, err := exercise.FocusedWords(seeded(3), []rune("fj"), []rune("f"), 5); !errors.Is(err, exercise.ErrNoWords) {
+		t.Fatalf("err = %v, want ErrNoWords", err)
+	}
+}

@@ -14,16 +14,37 @@ var wordList string
 
 var dictionary = uniqueWords(wordList)
 
+const focusedShare = 3
+
 func Words(rng *rand.Rand, keys []rune, count int) (string, error) {
+	return FocusedWords(rng, keys, nil, count)
+}
+
+func FocusedWords(rng *rand.Rand, keys, focus []rune, count int) (string, error) {
 	candidates := typeable(keys)
 	if len(candidates) == 0 {
 		return "", ErrNoWords
 	}
+	focused := using(candidates, focus)
 	words := make([]string, count)
 	for i := range words {
-		words[i] = candidates[rng.IntN(len(candidates))]
+		pool := candidates
+		if len(focused) > 0 && rng.IntN(focusedShare) > 0 {
+			pool = focused
+		}
+		words[i] = pool[rng.IntN(len(pool))]
 	}
 	return strings.Join(words, " "), nil
+}
+
+func using(words []string, focus []rune) []string {
+	var fits []string
+	for _, w := range words {
+		if strings.ContainsAny(w, string(focus)) {
+			fits = append(fits, w)
+		}
+	}
+	return fits
 }
 
 func typeable(keys []rune) []string {

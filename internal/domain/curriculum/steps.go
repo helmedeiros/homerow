@@ -94,7 +94,7 @@ func (l Lesson) newKeySteps(rng *rand.Rand) []Step {
 
 func (l Lesson) practiceText(rng *rand.Rand) string {
 	if l.Words {
-		if text, err := exercise.Words(rng, l.letters(), practiceGroups); err == nil {
+		if text, err := exercise.FocusedWords(rng, l.letters(), l.Focus, practiceGroups); err == nil {
 			return text
 		}
 	}
