@@ -53,6 +53,16 @@ func (s *Session) Type(r rune, at time.Time) bool {
 	return correct
 }
 
+func (s *Session) Mistakes() map[rune]int {
+	mistakes := map[rune]int{}
+	for i, missed := range s.missed {
+		if missed {
+			mistakes[s.target[i]]++
+		}
+	}
+	return mistakes
+}
+
 func (s *Session) Back() bool {
 	if s.pos == 0 {
 		return false

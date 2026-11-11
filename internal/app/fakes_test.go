@@ -27,16 +27,19 @@ func twoModules() curriculum.Course {
 }
 
 type memoryStore struct {
-	entries map[int]progress.Entry
-	saves   int
-	failing error
+	entries  map[int]progress.Entry
+	mistakes map[rune]int
+	saves    int
+	failing  error
 }
 
 func (s *memoryStore) Load() (*progress.Board, error) {
 	if s.failing != nil {
 		return nil, s.failing
 	}
-	return progress.NewBoard(s.entries), nil
+	board := progress.NewBoard(s.entries)
+	board.AddMistakes(s.mistakes)
+	return board, nil
 }
 
 func (s *memoryStore) Save(b *progress.Board) error {
@@ -45,6 +48,7 @@ func (s *memoryStore) Save(b *progress.Board) error {
 	}
 	s.saves++
 	s.entries = b.Entries()
+	s.mistakes = b.Mistakes()
 	return nil
 }
 

@@ -150,13 +150,16 @@ func average(results []scoring.Result) scoring.Result {
 	if len(results) == 0 {
 		return scoring.Result{}
 	}
-	var sum scoring.Result
+	sum := scoring.Result{Mistakes: map[rune]int{}}
 	for _, r := range results {
 		sum.Accuracy += r.Accuracy
 		sum.WPM += r.WPM
+		for key, n := range r.Mistakes {
+			sum.Mistakes[key] += n
+		}
 	}
 	n := float64(len(results))
-	return scoring.Result{Accuracy: sum.Accuracy / n, WPM: sum.WPM / n}
+	return scoring.Result{Accuracy: sum.Accuracy / n, WPM: sum.WPM / n, Mistakes: sum.Mistakes}
 }
 
 func (m Model) showMap() (tea.Model, tea.Cmd) {

@@ -5,6 +5,7 @@ const MaxStars = 5
 type Result struct {
 	Accuracy float64
 	WPM      float64
+	Mistakes map[rune]int
 }
 
 var accuracyBands = []float64{80, 88, 94, 97}

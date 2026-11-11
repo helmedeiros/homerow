@@ -91,7 +91,7 @@ func (d drillScreen) typed(burst ...rune) (screen, tea.Cmd) {
 
 func (d drillScreen) finished() stepDoneMsg {
 	return stepDoneMsg{
-		result: scoring.Result{Accuracy: d.session.Accuracy(), WPM: d.session.WPM()},
+		result: scoring.Result{Accuracy: d.session.Accuracy(), WPM: d.session.WPM(), Mistakes: d.session.Mistakes()},
 		scored: true,
 	}
 }

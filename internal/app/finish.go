@@ -35,6 +35,7 @@ func (t *Trainer) Finish(number int, result scoring.Result) (Outcome, error) {
 		WPM:       result.WPM,
 		Accuracy:  result.Accuracy,
 	})
+	board.AddMistakes(result.Mistakes)
 	if err := t.store.Save(board); err != nil {
 		return Outcome{}, fmt.Errorf("saving progress: %w", err)
 	}

@@ -73,6 +73,9 @@ func TestDrillFinishesWithTheResult(t *testing.T) {
 	if done.result.Accuracy != 80 || done.result.WPM <= 0 || !done.scored {
 		t.Fatalf("result = %+v", done)
 	}
+	if len(done.result.Mistakes) != 1 || done.result.Mistakes['j'] != 1 {
+		t.Fatalf("mistakes = %v", done.result.Mistakes)
+	}
 }
 
 func TestDrillCanBeLeft(t *testing.T) {
