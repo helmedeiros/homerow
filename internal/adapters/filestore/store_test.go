@@ -37,7 +37,7 @@ func TestFileIsReadableJSON(t *testing.T) {
 	_ = filestore.New(path).Save(progress.NewBoard(map[int]progress.Entry{2: {Completed: true}}))
 
 	raw, _ := os.ReadFile(path)
-	if !strings.Contains(string(raw), `"version": 1`) || !strings.Contains(string(raw), `"2": {`) {
+	if !strings.Contains(string(raw), `"version": 2`) || !strings.Contains(string(raw), `"2": {`) {
 		t.Fatalf("file = %s", raw)
 	}
 }
@@ -113,5 +113,44 @@ func TestSaveFailsInAReadOnlyFolder(t *testing.T) {
 
 	if err := filestore.New(filepath.Join(dir, "progress.json")).Save(progress.NewBoard(nil)); err == nil {
 		t.Fatal("want an error")
+	}
+}
+
+func TestMistakesAreStoredByKey(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "progress.json")
+	board := progress.NewBoard(nil)
+	board.AddMistakes(map[rune]int{'f': 3, ';': 1})
+	_ = filestore.New(path).Save(board)
+
+	raw, _ := os.ReadFile(path)
+	if !strings.Contains(string(raw), `"f": 3`) || !strings.Contains(string(raw), `";": 1`) {
+		t.Fatalf("file = %s", raw)
+	}
+}
+
+func TestVersionOneFilesStillLoad(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "progress.json")
+	_ = os.WriteFile(path, []byte(`{"version":1,"lessons":{"4":{"completed":true,"stars":3,"wpm":11,"accuracy":96}}}`), 0o600)
+
+	board, err := filestore.New(path).Load()
+	if err != nil {
+		t.Fatal(err)
+	}
+	if board.Entry(4).Stars != 3 || len(board.Mistakes()) != 0 {
+		t.Fatalf("entry = %+v, mistakes = %v", board.Entry(4), board.Mistakes())
+	}
+}
+
+func TestNewerFilesAndBadMistakeKeysAreCorrupt(t *testing.T) {
+	for name, raw := range map[string]string{
+		"newer version": `{"version":3,"lessons":{}}`,
+		"long key":      `{"version":2,"lessons":{},"mistakes":{"fj":1}}`,
+	} {
+		path := filepath.Join(t.TempDir(), "progress.json")
+		_ = os.WriteFile(path, []byte(raw), 0o600)
+
+		if _, err := filestore.New(path).Load(); !errors.Is(err, filestore.ErrCorrupt) {
+			t.Errorf("%s: err = %v, want ErrCorrupt", name, err)
+		}
 	}
 }

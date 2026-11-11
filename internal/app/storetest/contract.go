@@ -48,4 +48,23 @@ func Contract(t *testing.T, open func(t *testing.T) app.ProgressStore) {
 			t.Fatalf("loaded %v", got)
 		}
 	})
+
+	t.Run("keeps mistakes per key", func(t *testing.T) { keepsMistakes(t, open(t)) })
+}
+
+func keepsMistakes(t *testing.T, store app.ProgressStore) {
+	t.Helper()
+	board := progress.NewBoard(nil)
+	board.AddMistakes(map[rune]int{'f': 2, '\t': 1})
+	if err := store.Save(board); err != nil {
+		t.Fatal(err)
+	}
+
+	loaded, err := store.Load()
+	if err != nil {
+		t.Fatal(err)
+	}
+	if got := loaded.Mistakes(); len(got) != 2 || got['f'] != 2 || got['\t'] != 1 {
+		t.Fatalf("mistakes = %v", got)
+	}
 }
