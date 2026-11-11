@@ -43,6 +43,8 @@ func (l Lesson) Steps(rng *rand.Rand) []Step {
 		return []Step{drill(l.practiceText(rng))}
 	case Play:
 		return l.playSteps(rng)
+	case Dynamic:
+		return l.DynamicSteps(rng, nil)
 	case Tab:
 		return []Step{drill(l.tabText(rng))}
 	case Travel:
@@ -101,6 +103,10 @@ func (l Lesson) practiceText(rng *rand.Rand) string {
 		}
 	}
 	return exercise.Groups(rng, l.mix(), practiceGroups)
+}
+
+func (l Lesson) DynamicSteps(rng *rand.Rand, weak []rune) []Step {
+	return []Step{drill(exercise.Dynamic(rng, l.letters(), weak, practiceGroups))}
 }
 
 func (l Lesson) tabText(rng *rand.Rand) string {

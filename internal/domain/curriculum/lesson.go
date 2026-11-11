@@ -20,6 +20,7 @@ const (
 	Play
 	Travel
 	Tab
+	Dynamic
 )
 
 var kindNames = [...]string{
@@ -31,6 +32,7 @@ var kindNames = [...]string{
 	Play:      "play",
 	Travel:    "travel",
 	Tab:       "tab",
+	Dynamic:   "dynamic",
 }
 
 func (k Kind) String() string { return kindNames[k] }

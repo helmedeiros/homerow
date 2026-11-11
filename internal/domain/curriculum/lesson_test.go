@@ -17,6 +17,7 @@ func TestOnlyPractisingKindsAreScored(t *testing.T) {
 		curriculum.Play:      true,
 		curriculum.Travel:    true,
 		curriculum.Tab:       true,
+		curriculum.Dynamic:   true,
 	}
 	for kind, want := range scored {
 		if kind.Scored() != want {

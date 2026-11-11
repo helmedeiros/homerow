@@ -196,3 +196,14 @@ func TestTabPracticeWithoutWordsUsesGroups(t *testing.T) {
 		t.Fatalf("text = %q", text)
 	}
 }
+
+func TestDynamicPracticeWithoutHistoryMixesEveryKey(t *testing.T) {
+	l := curriculum.Lesson{Kind: curriculum.Dynamic, Keys: []rune("fj"), GoalWPM: 8}
+
+	steps := l.Steps(rng())
+
+	sameKinds(t, steps, curriculum.DrillStep)
+	if strings.Trim(steps[0].Text, "fj ") != "" {
+		t.Fatalf("drill = %q", steps[0].Text)
+	}
+}
