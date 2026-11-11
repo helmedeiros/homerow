@@ -162,3 +162,15 @@ func TestBottomRowPlaysThenTravelsWithEveryFinger(t *testing.T) {
 		}
 	}
 }
+
+func TestTheBottomRowEndsWithTheTabKey(t *testing.T) {
+	intro, _, _ := content.Course().Lesson(86)
+	if intro.Kind != curriculum.Intro || len(intro.Pages) == 0 {
+		t.Fatalf("lesson 86 = %+v", intro)
+	}
+	tab, _, _ := content.Course().Lesson(87)
+	text := tab.Steps(rand.New(rand.NewPCG(1, 1)))[0].Text
+	if tab.Kind != curriculum.Tab || !strings.Contains(text, "\t") {
+		t.Fatalf("lesson 87 = %v %q", tab.Kind, text)
+	}
+}

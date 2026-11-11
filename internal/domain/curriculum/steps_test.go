@@ -178,3 +178,21 @@ func TestWordPracticePrefersTheFocusKeys(t *testing.T) {
 		t.Fatalf("%d of %d words use v or m", focused, len(words))
 	}
 }
+
+func TestTabPracticeSplitsWordPairsWithTabs(t *testing.T) {
+	l := curriculum.Lesson{Kind: curriculum.Tab, Keys: []rune("asdfghjkl;\t"), GoalWPM: 8}
+
+	text := l.Steps(rng())[0].Text
+
+	if strings.Count(text, "\t") != 16 || strings.Trim(text, "asdfghjkl;\t ") != "" {
+		t.Fatalf("text = %q", text)
+	}
+}
+
+func TestTabPracticeWithoutWordsUsesGroups(t *testing.T) {
+	l := curriculum.Lesson{Kind: curriculum.Tab, Keys: []rune("fj\t"), GoalWPM: 8}
+
+	if text := l.Steps(rng())[0].Text; strings.Trim(text, "fj\t ") != "" || text == "" {
+		t.Fatalf("text = %q", text)
+	}
+}

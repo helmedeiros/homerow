@@ -43,6 +43,8 @@ func (l Lesson) Steps(rng *rand.Rand) []Step {
 		return []Step{drill(l.practiceText(rng))}
 	case Play:
 		return l.playSteps(rng)
+	case Tab:
+		return []Step{drill(l.tabText(rng))}
 	case Travel:
 		return []Step{drill(exercise.Travel(rng, l.Focus, l.letters(), reviewGroups))}
 	default:
@@ -99,6 +101,13 @@ func (l Lesson) practiceText(rng *rand.Rand) string {
 		}
 	}
 	return exercise.Groups(rng, l.mix(), practiceGroups)
+}
+
+func (l Lesson) tabText(rng *rand.Rand) string {
+	if text, err := exercise.Tabbed(rng, l.letters(), reviewGroups); err == nil {
+		return text
+	}
+	return exercise.Groups(rng, l.mix(), reviewGroups)
 }
 
 func (l Lesson) mix() exercise.Mix {

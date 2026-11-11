@@ -53,6 +53,8 @@ func bottomRowLessons() []curriculum.Lesson {
 		play(83, "Play: every letter", allRows),
 		travel(84, "Travel: right hand, all fingers", allRows, "jkl;", bottomGoal),
 		travel(85, "Travel: left hand, all fingers", allRows, "asdf", bottomGoal),
+		{Number: 86, Title: "One small space: the tab key", Kind: curriculum.Intro, Pages: tabPages},
+		{Number: 87, Title: "Practice: tab", Kind: curriculum.Tab, Keys: []rune(allRows + "\t"), GoalWPM: bottomGoal},
 	}
 }
 
@@ -68,4 +70,10 @@ var breakPages = []string{
 	"Shake out your hands, stretch your fingers wide, then make loose fists a few times. Tight hands type slower.",
 	"Look away from the screen at something far off and blink a few times. Your eyes work hard while you learn.",
 	"When you come back, place your fingers on the home row, feel the bumps on f and j, and carry on.",
+}
+
+var tabPages = []string{
+	"The tab key sits left of q. Reach it with your left pinky, then bring the pinky straight back to a.",
+	"Tab jumps to the next column. You use it to line up tables, to move between form fields and to indent code.",
+	"In the next lesson each pair of words is split by a tab, shown as an arrow. Press tab when you reach the arrow.",
 }

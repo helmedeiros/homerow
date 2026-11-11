@@ -19,6 +19,7 @@ const (
 	HandDrill
 	Play
 	Travel
+	Tab
 )
 
 var kindNames = [...]string{
@@ -29,6 +30,7 @@ var kindNames = [...]string{
 	HandDrill: "hand drill",
 	Play:      "play",
 	Travel:    "travel",
+	Tab:       "tab",
 }
 
 func (k Kind) String() string { return kindNames[k] }
