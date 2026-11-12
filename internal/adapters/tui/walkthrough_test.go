@@ -130,3 +130,21 @@ func TestPlayingTheWholeTopRowModule(t *testing.T) {
 		t.Fatalf("home row should be untouched:\n%s", view)
 	}
 }
+
+func TestPlayingTheWholeBottomRowModule(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "progress.json")
+	bottom := content.BottomRow()
+
+	h := newHarnessWith(t, filestore.New(path))
+	h.send(special(tea.KeyRight))
+	h.send(special(tea.KeyRight))
+	h.playModule(bottom)
+
+	reopened := newHarnessWith(t, filestore.New(path))
+	if view, want := reopened.showModule(bottom), moduleHeader(bottom); !strings.Contains(view, want) {
+		t.Fatalf("want %q after reopening:\n%s", want, view)
+	}
+	if view := reopened.showModule(content.TopRow()); !strings.Contains(view, "Module 2 · Top Row  0% · 0 stars") {
+		t.Fatalf("top row should be untouched:\n%s", view)
+	}
+}
