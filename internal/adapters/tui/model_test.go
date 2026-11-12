@@ -175,7 +175,7 @@ func TestPlayLessonRunsTheGame(t *testing.T) {
 func TestUnknownLessonKeepsTheMapWithAnError(t *testing.T) {
 	h := newHarness(t)
 
-	h.send(startLessonMsg{number: 99})
+	h.send(startLessonMsg{number: 999})
 
 	if _, ok := h.current().(mapScreen); !ok || !strings.Contains(h.view(), "unknown lesson") {
 		t.Fatalf("view:\n%s", h.view())

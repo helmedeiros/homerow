@@ -5,6 +5,8 @@ import "github.com/helmedeiros/homerow/internal/domain/curriculum"
 const (
 	capsFJ = allRows + "FJ"
 	capsDK = capsFJ + "DK"
+	capsSL = capsDK + "SL"
+	capsA  = capsSL + "A:"
 
 	shiftGoal = 12
 )
@@ -23,6 +25,13 @@ func shiftKeyLessons() []curriculum.Lesson {
 		review(94, "Review: D and K", capsDK, "DK", shiftGoal),
 		practice(95, "Practice: D and K", capsDK, "DK", shiftGoal, true),
 		play(96, "Play: F J D K", "fjdkFJDK"),
+		newKeys(97, "Capitals S and L", "SL", capsSL),
+		review(98, "Review: S and L", capsSL, "SL", shiftGoal),
+		practice(99, "Practice: S and L", capsSL, "SL", shiftGoal, true),
+		newKeys(100, "Capital A and colon", "A:", capsA),
+		review(101, "Review: A and colon", capsA, "A:", shiftGoal),
+		practice(102, "Practice: A and colon", capsA, "A:", shiftGoal, true),
+		popUps(103, "Play: home row capitals", firstHome+"FJDKSLA:"),
 	}
 }
 
