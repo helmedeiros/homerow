@@ -37,6 +37,7 @@ func TestValidLessons(t *testing.T) {
 		{Number: 1, Title: "Welcome", Kind: curriculum.Intro, Pages: []string{"hi"}},
 		{Number: 2, Title: "Keys f and j", Kind: curriculum.NewKeys, NewKeys: []rune("fj"), Keys: []rune("fj")},
 		{Number: 4, Title: "Review", Kind: curriculum.Review, Keys: []rune("fj"), Focus: []rune("f"), GoalWPM: 8},
+		{Number: 5, Title: "Capitals", Kind: curriculum.NewKeys, NewKeys: []rune("F:"), Keys: []rune("fj;F:")},
 	}
 	for _, l := range lessons {
 		if err := l.Validate(); err != nil {
@@ -47,13 +48,15 @@ func TestValidLessons(t *testing.T) {
 
 func TestInvalidLessons(t *testing.T) {
 	cases := map[string]curriculum.Lesson{
-		"intro without pages":   {Number: 1, Title: "x", Kind: curriculum.Intro},
-		"drill without keys":    {Number: 2, Title: "x", Kind: curriculum.Review, GoalWPM: 8},
-		"new key not allowed":   {Number: 3, Title: "x", Kind: curriculum.NewKeys, NewKeys: []rune("d"), Keys: []rune("fj")},
-		"focus key not allowed": {Number: 4, Title: "x", Kind: curriculum.Review, Keys: []rune("fj"), Focus: []rune("k"), GoalWPM: 8},
-		"scored without goal":   {Number: 5, Title: "x", Kind: curriculum.Practice, Keys: []rune("fj")},
-		"no title":              {Number: 6, Kind: curriculum.Intro, Pages: []string{"hi"}},
-		"travel without a home": {Number: 7, Title: "x", Kind: curriculum.Travel, Keys: []rune("jum"), GoalWPM: 8},
+		"intro without pages":    {Number: 1, Title: "x", Kind: curriculum.Intro},
+		"drill without keys":     {Number: 2, Title: "x", Kind: curriculum.Review, GoalWPM: 8},
+		"new key not allowed":    {Number: 3, Title: "x", Kind: curriculum.NewKeys, NewKeys: []rune("d"), Keys: []rune("fj")},
+		"focus key not allowed":  {Number: 4, Title: "x", Kind: curriculum.Review, Keys: []rune("fj"), Focus: []rune("k"), GoalWPM: 8},
+		"scored without goal":    {Number: 5, Title: "x", Kind: curriculum.Practice, Keys: []rune("fj")},
+		"no title":               {Number: 6, Kind: curriculum.Intro, Pages: []string{"hi"}},
+		"travel without a home":  {Number: 7, Title: "x", Kind: curriculum.Travel, Keys: []rune("jum"), GoalWPM: 8},
+		"capital before letter":  {Number: 8, Title: "x", Kind: curriculum.NewKeys, NewKeys: []rune("K"), Keys: []rune("fjK")},
+		"colon before semicolon": {Number: 9, Title: "x", Kind: curriculum.NewKeys, NewKeys: []rune(":"), Keys: []rune("fj:")},
 	}
 	for name, l := range cases {
 		if err := l.Validate(); !errors.Is(err, curriculum.ErrInvalidLesson) {
