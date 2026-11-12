@@ -67,3 +67,30 @@ func TestKeyIntroFinishesWhenABurstContainsTheKey(t *testing.T) {
 		t.Fatalf("message = %#v, want step done", message(cmd))
 	}
 }
+
+func TestKeyIntroForACapitalNamesTheShiftOfTheOtherHand(t *testing.T) {
+	cases := map[rune]string{
+		'F': "Hold the right shift key with your right pinky.",
+		'J': "Hold the left shift key with your left pinky.",
+		':': "Hold the left shift key with your left pinky.",
+	}
+	for key, want := range cases {
+		if view := newKeyIntroScreen(key).View(); !strings.Contains(view, want) {
+			t.Errorf("%q: missing %q:\n%s", key, want, view)
+		}
+	}
+}
+
+func TestKeyIntroForALowercaseKeyDoesNotMentionShift(t *testing.T) {
+	if view := newKeyIntroScreen('f').View(); strings.Contains(view, "Hold the") {
+		t.Fatalf("view:\n%s", view)
+	}
+}
+
+func TestKeyIntroRemindsAboutShiftAfterALowercaseLetter(t *testing.T) {
+	s, _ := newKeyIntroScreen('F').Update(runes("f"))
+
+	if want := "That was f. Hold the right shift key with your right pinky."; !strings.Contains(s.View(), want) {
+		t.Fatalf("missing %q:\n%s", want, s.View())
+	}
+}

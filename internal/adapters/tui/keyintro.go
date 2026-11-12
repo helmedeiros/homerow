@@ -44,11 +44,16 @@ func (k keyIntroScreen) View() string {
 	info, _ := keyboard.Lookup(k.key)
 	var b strings.Builder
 	b.WriteString(mutedStyle.Render("NEW KEY") + "\n\n")
-	fmt.Fprintf(&b, "Type the %s using your %s finger.\n\n", keyName(k.key), info.Finger)
+	fmt.Fprintf(&b, "Type the %s using your %s finger.\n", keyName(k.key), info.Finger)
+	hint, shifted := shiftHint(info)
+	if shifted {
+		b.WriteString(hint + "\n")
+	}
+	b.WriteString("\n")
 	b.WriteString(renderKeyboard(k.key) + "\n\n")
 	b.WriteString(renderHands(info, true) + "\n\n")
 	if k.wrong != "" {
-		b.WriteString(wrongTextStyle.Render(fmt.Sprintf("That was %s. Reach with your %s finger.", k.wrong, info.Finger)) + "\n")
+		b.WriteString(wrongTextStyle.Render(k.wrongHint(info, hint, shifted)) + "\n")
 	}
 	b.WriteString(mutedStyle.Render("esc lessons"))
 	return b.String()
@@ -59,4 +64,20 @@ func keyName(k rune) string {
 		return pressStyle.Render(" space bar ")
 	}
 	return pressStyle.Render(" "+string(k)+" ") + " key"
+}
+
+func (k keyIntroScreen) wrongHint(info keyboard.Key, hint string, shifted bool) string {
+	if shifted && k.wrong == string(info.Base) {
+		return fmt.Sprintf("That was %s. %s", k.wrong, hint)
+	}
+	return fmt.Sprintf("That was %s. Reach with your %s finger.", k.wrong, info.Finger)
+}
+
+func shiftHint(info keyboard.Key) (string, bool) {
+	shift, ok := info.ShiftFinger()
+	side := "left"
+	if shift.Hand() == keyboard.Right {
+		side = "right"
+	}
+	return fmt.Sprintf("Hold the %s shift key with your %s.", side, shift), ok
 }
