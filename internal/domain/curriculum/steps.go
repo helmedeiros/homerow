@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/helmedeiros/homerow/internal/domain/exercise"
+	"github.com/helmedeiros/homerow/internal/domain/keyboard"
 )
 
 type StepKind int
@@ -50,7 +51,7 @@ func (l Lesson) Steps(rng *rand.Rand) []Step {
 	case Travel:
 		return []Step{drill(exercise.Travel(rng, l.Focus, l.letters(), reviewGroups))}
 	default:
-		return []Step{drill(exercise.Groups(rng, l.mix(), reviewGroups))}
+		return []Step{drill(l.reviewText(rng))}
 	}
 }
 
@@ -96,7 +97,17 @@ func (l Lesson) newKeySteps(rng *rand.Rand) []Step {
 	return append(steps, drill(exercise.Groups(rng, warmUp, warmUpGroups)))
 }
 
+func (l Lesson) reviewText(rng *rand.Rand) string {
+	if capitals := l.capitals(); len(capitals) > 0 {
+		return exercise.CapitalGroups(rng, l.letters(), capitals, reviewGroups)
+	}
+	return exercise.Groups(rng, l.mix(), reviewGroups)
+}
+
 func (l Lesson) practiceText(rng *rand.Rand) string {
+	if capitals := l.capitals(); len(capitals) > 0 && l.Words {
+		return exercise.CapitalWords(rng, l.letters(), capitals, practiceGroups)
+	}
 	if l.Words {
 		if text, err := exercise.FocusedWords(rng, l.letters(), l.Focus, practiceGroups); err == nil {
 			return text
@@ -118,6 +129,16 @@ func (l Lesson) tabText(rng *rand.Rand) string {
 
 func (l Lesson) mix() exercise.Mix {
 	return exercise.Mix{Keys: l.letters(), Focus: l.Focus}
+}
+
+func (l Lesson) capitals() []rune {
+	var capitals []rune
+	for _, r := range l.Focus {
+		if key, ok := keyboard.Lookup(r); ok && key.Shifted {
+			capitals = append(capitals, r)
+		}
+	}
+	return capitals
 }
 
 func (l Lesson) letters() []rune {

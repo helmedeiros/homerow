@@ -207,3 +207,30 @@ func TestDynamicPracticeWithoutHistoryMixesEveryKey(t *testing.T) {
 		t.Fatalf("drill = %q", steps[0].Text)
 	}
 }
+
+func TestCapitalReviewStartsEachGroupWithACapital(t *testing.T) {
+	l := curriculum.Lesson{Kind: curriculum.Review, Keys: []rune("asdfjkl;FJ"), Focus: []rune("FJ"), GoalWPM: 8}
+
+	for _, g := range strings.Fields(l.Steps(rng())[0].Text) {
+		if !strings.ContainsRune("FJ", rune(g[0])) {
+			t.Fatalf("group %q does not start with a capital", g)
+		}
+	}
+}
+
+func TestCapitalPracticeCapitalisesRealWords(t *testing.T) {
+	l := curriculum.Lesson{Kind: curriculum.Practice, Keys: []rune("asdfghjkl;FJ"), Focus: []rune("FJ"), Words: true, GoalWPM: 8}
+
+	capitals := 0
+	for _, w := range strings.Fields(l.Steps(rng())[0].Text) {
+		if strings.ContainsAny(w[1:], "FJ") {
+			t.Fatalf("%q has a capital inside", w)
+		}
+		if strings.ContainsRune("FJ", rune(w[0])) {
+			capitals++
+		}
+	}
+	if capitals == 0 {
+		t.Fatal("no capitalised words")
+	}
+}
