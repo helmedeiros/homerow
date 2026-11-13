@@ -77,6 +77,10 @@ func shiftKeyLessons() []curriculum.Lesson {
 		newKeys(136, "Capitals X and B", "XB", capsXB),
 		review(137, "Review: X and B", capsXB, "XB", shiftGoal),
 		practice(138, "Practice: X and B", capsXB, "XB", shiftGoal, true),
+		travel(139, "Travel: middle fingers", capsXB, "dk", shiftGoal),
+		travel(140, "Travel: ring fingers", capsXB, "sl", shiftGoal),
+		travel(141, "Travel: pinkies", capsXB, "a;", shiftGoal),
+		{Number: 142, Title: "Dynamic practice", Kind: curriculum.Dynamic, Keys: []rune(capsXB), GoalWPM: shiftGoal},
 	}
 }
 

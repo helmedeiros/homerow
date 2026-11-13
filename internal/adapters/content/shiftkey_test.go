@@ -121,3 +121,16 @@ func TestVAndMThenIndexTravelThenCAndQuestionMark(t *testing.T) {
 func TestZAndNThenXAndB(t *testing.T) {
 	introduces(t, map[int]string{133: "ZN", 136: "XB"})
 }
+
+func TestShiftKeyEndsWithTravelAndDynamicPractice(t *testing.T) {
+	for number, homes := range map[int]string{139: "dk", 140: "sl", 141: "a;"} {
+		l, _, _ := content.Course().Lesson(number)
+		if l.Kind != curriculum.Travel || string(l.Focus) != homes {
+			t.Errorf("lesson %d = %v from %q", number, l.Kind, string(l.Focus))
+		}
+	}
+	last := content.ShiftKey().Lessons[len(content.ShiftKey().Lessons)-1]
+	if last.Number != 142 || last.Kind != curriculum.Dynamic || !strings.Contains(string(last.Keys), "XB") {
+		t.Fatalf("last lesson = %d %v %q", last.Number, last.Kind, string(last.Keys))
+	}
+}
