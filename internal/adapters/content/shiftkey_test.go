@@ -101,3 +101,8 @@ func TestRAndUThenEAndI(t *testing.T) {
 	introduces(t, map[int]string{111: "RU", 114: "EI"})
 	plays(t, 117, curriculum.PopUpWarmUp, "RUEI")
 }
+
+func TestWAndOThenQAndP(t *testing.T) {
+	introduces(t, map[int]string{118: "WO", 121: "QP"})
+	plays(t, 124, curriculum.BalloonWords, "WOQP")
+}
