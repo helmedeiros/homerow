@@ -73,3 +73,26 @@ func TestHomeRowCapitalsWarmUpWithPopUps(t *testing.T) {
 		t.Fatalf("lesson 103 = %v %v %q", l.Kind, l.Game, string(l.Keys))
 	}
 }
+
+func introduces(t *testing.T, want map[int]string) {
+	t.Helper()
+	for number, keys := range want {
+		l, _, _ := content.Course().Lesson(number)
+		if l.Kind != curriculum.NewKeys || string(l.NewKeys) != keys {
+			t.Errorf("lesson %d = %v introducing %q", number, l.Kind, string(l.NewKeys))
+		}
+	}
+}
+
+func plays(t *testing.T, number int, game curriculum.Game, keys string) {
+	t.Helper()
+	l, _, _ := content.Course().Lesson(number)
+	if l.Kind != curriculum.Play || l.Game != game || !strings.Contains(string(l.Keys), keys) {
+		t.Fatalf("lesson %d = %v %v %q", number, l.Kind, l.Game, string(l.Keys))
+	}
+}
+
+func TestGAndHThenTAndY(t *testing.T) {
+	introduces(t, map[int]string{104: "GH", 107: "TY"})
+	plays(t, 110, curriculum.BalloonWords, "GHTY")
+}

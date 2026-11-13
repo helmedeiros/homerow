@@ -7,6 +7,8 @@ const (
 	capsDK = capsFJ + "DK"
 	capsSL = capsDK + "SL"
 	capsA  = capsSL + "A:"
+	capsGH = capsA + "GH"
+	capsTY = capsGH + "TY"
 
 	shiftGoal = 12
 )
@@ -32,6 +34,13 @@ func shiftKeyLessons() []curriculum.Lesson {
 		review(101, "Review: A and colon", capsA, "A:", shiftGoal),
 		practice(102, "Practice: A and colon", capsA, "A:", shiftGoal, true),
 		popUps(103, "Play: home row capitals", firstHome+"FJDKSLA:"),
+		newKeys(104, "Capitals G and H", "GH", capsGH),
+		review(105, "Review: G and H", capsGH, "GH", shiftGoal),
+		practice(106, "Practice: G and H", capsGH, "GH", shiftGoal, true),
+		newKeys(107, "Capitals T and Y", "TY", capsTY),
+		review(108, "Review: T and Y", capsTY, "TY", shiftGoal),
+		practice(109, "Practice: T and Y", capsTY, "TY", shiftGoal, true),
+		balloons(110, "Play: G H T Y", homeTop+"GHTY"),
 	}
 }
 

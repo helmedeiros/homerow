@@ -126,6 +126,25 @@ func TestABalloonPlayRisesWordsMadeOfTheLessonKeys(t *testing.T) {
 	}
 }
 
+func TestABalloonPlayWithCapitalsRisesCapitalisedWords(t *testing.T) {
+	l := curriculum.Lesson{Kind: curriculum.Play, Game: curriculum.BalloonWords, Keys: []rune("asdfghjkl;GH")}
+
+	step := l.Steps(rng())[0]
+
+	if step.Game != curriculum.BalloonWords || len(step.Words) != 40 {
+		t.Fatalf("step = %+v", step)
+	}
+	capitals := 0
+	for _, w := range step.Words {
+		if strings.ContainsAny(w[:1], "GH") {
+			capitals++
+		}
+	}
+	if capitals == 0 {
+		t.Fatalf("no capitalised words in %v", step.Words)
+	}
+}
+
 func TestABalloonPlayWithoutWordsFallsBackToFallingLetters(t *testing.T) {
 	l := curriculum.Lesson{Kind: curriculum.Play, Game: curriculum.BalloonWords, Keys: []rune("fj")}
 

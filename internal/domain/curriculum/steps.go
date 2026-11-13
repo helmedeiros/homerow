@@ -67,13 +67,20 @@ func (l Lesson) gameStep(rng *rand.Rand) Step {
 	if l.Game != BalloonWords {
 		return step
 	}
-	text, err := exercise.Words(rng, l.letters(), balloonWords)
+	text, err := l.balloonText(rng)
 	if err != nil {
 		return step
 	}
 	step.Game = BalloonWords
 	step.Words = strings.Fields(text)
 	return step
+}
+
+func (l Lesson) balloonText(rng *rand.Rand) (string, error) {
+	if capitals := shifted(l.letters()); len(capitals) > 0 {
+		return exercise.CapitalWords(rng, l.letters(), capitals, balloonWords), nil
+	}
+	return exercise.Words(rng, l.letters(), balloonWords)
 }
 
 func (l Lesson) pageSteps() []Step {
@@ -132,8 +139,12 @@ func (l Lesson) mix() exercise.Mix {
 }
 
 func (l Lesson) capitals() []rune {
+	return shifted(l.Focus)
+}
+
+func shifted(keys []rune) []rune {
 	var capitals []rune
-	for _, r := range l.Focus {
+	for _, r := range keys {
 		if key, ok := keyboard.Lookup(r); ok && key.Shifted {
 			capitals = append(capitals, r)
 		}
