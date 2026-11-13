@@ -117,3 +117,7 @@ func TestVAndMThenIndexTravelThenCAndQuestionMark(t *testing.T) {
 		t.Fatalf("lesson 128 = %v from %q: %q", l.Kind, string(l.Focus), text)
 	}
 }
+
+func TestZAndNThenXAndB(t *testing.T) {
+	introduces(t, map[int]string{133: "ZN", 136: "XB"})
+}
