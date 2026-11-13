@@ -27,7 +27,7 @@ func reachesOf(home rune, keys []rune) []rune {
 	}
 	var reaches []rune
 	for _, k := range keys {
-		if to, ok := keyboard.Lookup(k); ok && k != home && !to.Shifted && to.Finger == from.Finger {
+		if to, ok := keyboard.Lookup(k); ok && k != home && to.Finger == from.Finger {
 			reaches = append(reaches, k)
 		}
 	}

@@ -48,3 +48,13 @@ func TestTravelWithoutReachesStaysHome(t *testing.T) {
 		t.Fatalf("text = %q", text)
 	}
 }
+
+func TestTravelReachesCapitalsOnTheSameFinger(t *testing.T) {
+	text := exercise.Travel(rand.New(rand.NewPCG(3, 3)), []rune("j"), []rune("asdfjkl;umUM"), 60)
+
+	for _, r := range "UM" {
+		if !strings.Contains(text, "j"+string(r)+"j") {
+			t.Fatalf("no reach to %q in %q", r, text)
+		}
+	}
+}

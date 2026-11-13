@@ -106,3 +106,14 @@ func TestWAndOThenQAndP(t *testing.T) {
 	introduces(t, map[int]string{118: "WO", 121: "QP"})
 	plays(t, 124, curriculum.BalloonWords, "WOQP")
 }
+
+func TestVAndMThenIndexTravelThenCAndQuestionMark(t *testing.T) {
+	introduces(t, map[int]string{125: "VM", 129: "C?"})
+	plays(t, 132, curriculum.BalloonWords, "VMC?")
+
+	l, _, _ := content.Course().Lesson(128)
+	text := l.Steps(rand.New(rand.NewPCG(1, 1)))[0].Text
+	if l.Kind != curriculum.Travel || string(l.Focus) != "fj" || !strings.ContainsAny(text, "RTGVUYHM") {
+		t.Fatalf("lesson 128 = %v from %q: %q", l.Kind, string(l.Focus), text)
+	}
+}

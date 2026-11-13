@@ -13,6 +13,8 @@ const (
 	capsEI = capsRU + "EI"
 	capsWO = capsEI + "WO"
 	capsQP = capsWO + "QP"
+	capsVM = capsQP + "VM"
+	capsC  = capsVM + "C?"
 
 	shiftGoal = 12
 )
@@ -59,6 +61,14 @@ func shiftKeyLessons() []curriculum.Lesson {
 		review(122, "Review: Q and P", capsQP, "QP", shiftGoal),
 		practice(123, "Practice: Q and P", capsQP, "QP", shiftGoal, true),
 		balloons(124, "Play: W O Q P", homeTop+"WOQP"),
+		newKeys(125, "Capitals V and M", "VM", capsVM),
+		review(126, "Review: V and M", capsVM, "VM", shiftGoal),
+		practice(127, "Practice: V and M", capsVM, "VM", shiftGoal, true),
+		travel(128, "Travel: index fingers", capsVM, "fj", shiftGoal),
+		newKeys(129, "Capital C and question mark", "C?", capsC),
+		review(130, "Review: C and question mark", capsC, "C?", shiftGoal),
+		practice(131, "Practice: C and question mark", capsC, "C?", shiftGoal, true),
+		balloons(132, "Play: V M C ?", allRows+"VMC?"),
 	}
 }
 
