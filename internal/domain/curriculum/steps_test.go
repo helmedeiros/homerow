@@ -263,3 +263,13 @@ func TestNumberPracticeMixesNumbersWithWords(t *testing.T) {
 		t.Fatalf("text = %q", text)
 	}
 }
+
+func TestSymbolPracticeSetsSymbolsAroundNumbersAndWords(t *testing.T) {
+	l := curriculum.Lesson{Kind: curriculum.Practice, Keys: []rune("asdfghjkl;1234567890$&"), Focus: []rune("$&"), Words: true, GoalWPM: 8}
+
+	for _, item := range strings.Fields(l.Steps(rng())[0].Text) {
+		if strings.HasSuffix(item, "$") || strings.Contains(item[1:], "$") {
+			t.Fatalf("dollar should lead a number: %q", item)
+		}
+	}
+}

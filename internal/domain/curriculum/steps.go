@@ -113,6 +113,9 @@ func (l Lesson) reviewText(rng *rand.Rand) string {
 }
 
 func (l Lesson) practiceText(rng *rand.Rand) string {
+	if symbols := l.symbols(); len(symbols) > 0 && l.Words {
+		return exercise.SymbolWords(rng, l.letters(), symbols, practiceGroups)
+	}
 	if numbers := l.numbers(); len(numbers) > 0 && l.Words {
 		return exercise.NumberWords(rng, l.letters(), numbers, practiceGroups)
 	}
@@ -144,6 +147,16 @@ func (l Lesson) mix() exercise.Mix {
 
 func (l Lesson) capitals() []rune {
 	return shifted(l.Focus)
+}
+
+func (l Lesson) symbols() []rune {
+	var symbols []rune
+	for _, r := range shifted(l.Focus) {
+		if key, _ := keyboard.Lookup(r); key.Row == keyboard.NumberRow {
+			symbols = append(symbols, r)
+		}
+	}
+	return symbols
 }
 
 func (l Lesson) numbers() []rune {
