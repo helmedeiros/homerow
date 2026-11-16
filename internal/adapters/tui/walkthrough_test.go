@@ -167,3 +167,22 @@ func TestPlayingTheWholeShiftKeyModule(t *testing.T) {
 		t.Fatalf("bottom row should be untouched:\n%s", view)
 	}
 }
+
+func TestPlayingTheWholeNumbersModule(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "progress.json")
+	numbers := content.Numbers()
+
+	h := newHarnessWith(t, filestore.New(path))
+	for range numbers.Number - 1 {
+		h.send(special(tea.KeyRight))
+	}
+	h.playModule(numbers)
+
+	reopened := newHarnessWith(t, filestore.New(path))
+	if view, want := reopened.showModule(numbers), moduleHeader(numbers); !strings.Contains(view, want) {
+		t.Fatalf("want %q after reopening:\n%s", want, view)
+	}
+	if view := reopened.showModule(content.ShiftKey()); !strings.Contains(view, "Module 4 · Shift Key  0% · 0 stars") {
+		t.Fatalf("shift key should be untouched:\n%s", view)
+	}
+}
