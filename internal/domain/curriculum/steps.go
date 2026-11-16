@@ -3,6 +3,7 @@ package curriculum
 import (
 	"math/rand/v2"
 	"strings"
+	"unicode"
 
 	"github.com/helmedeiros/homerow/internal/domain/exercise"
 	"github.com/helmedeiros/homerow/internal/domain/keyboard"
@@ -112,6 +113,9 @@ func (l Lesson) reviewText(rng *rand.Rand) string {
 }
 
 func (l Lesson) practiceText(rng *rand.Rand) string {
+	if numbers := l.numbers(); len(numbers) > 0 && l.Words {
+		return exercise.NumberWords(rng, l.letters(), numbers, practiceGroups)
+	}
 	if capitals := l.capitals(); len(capitals) > 0 && l.Words {
 		return exercise.CapitalWords(rng, l.letters(), capitals, practiceGroups)
 	}
@@ -140,6 +144,16 @@ func (l Lesson) mix() exercise.Mix {
 
 func (l Lesson) capitals() []rune {
 	return shifted(l.Focus)
+}
+
+func (l Lesson) numbers() []rune {
+	var numbers []rune
+	for _, r := range l.Focus {
+		if unicode.IsDigit(r) {
+			numbers = append(numbers, r)
+		}
+	}
+	return numbers
 }
 
 func shifted(keys []rune) []rune {

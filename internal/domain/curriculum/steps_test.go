@@ -253,3 +253,13 @@ func TestCapitalPracticeCapitalisesRealWords(t *testing.T) {
 		t.Fatal("no capitalised words")
 	}
 }
+
+func TestNumberPracticeMixesNumbersWithWords(t *testing.T) {
+	l := curriculum.Lesson{Kind: curriculum.Practice, Keys: []rune("asdfghjkl;47"), Focus: []rune("47"), Words: true, GoalWPM: 8}
+
+	text := l.Steps(rng())[0].Text
+
+	if !strings.ContainsAny(text, "47") || !strings.ContainsAny(text, "asdfghjkl") {
+		t.Fatalf("text = %q", text)
+	}
+}
