@@ -148,3 +148,22 @@ func TestPlayingTheWholeBottomRowModule(t *testing.T) {
 		t.Fatalf("top row should be untouched:\n%s", view)
 	}
 }
+
+func TestPlayingTheWholeShiftKeyModule(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "progress.json")
+	shift := content.ShiftKey()
+
+	h := newHarnessWith(t, filestore.New(path))
+	for range shift.Number - 1 {
+		h.send(special(tea.KeyRight))
+	}
+	h.playModule(shift)
+
+	reopened := newHarnessWith(t, filestore.New(path))
+	if view, want := reopened.showModule(shift), moduleHeader(shift); !strings.Contains(view, want) {
+		t.Fatalf("want %q after reopening:\n%s", want, view)
+	}
+	if view := reopened.showModule(content.BottomRow()); !strings.Contains(view, "Module 3 · Bottom Row  0% · 0 stars") {
+		t.Fatalf("bottom row should be untouched:\n%s", view)
+	}
+}
