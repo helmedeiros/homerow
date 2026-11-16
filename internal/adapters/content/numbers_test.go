@@ -29,3 +29,12 @@ func TestNumberPracticeMixesDigitsAndWords(t *testing.T) {
 		t.Fatalf("lesson 148 = %v: %q", l.Kind, text)
 	}
 }
+
+func TestTwoAndNineThenOneAndZeroThenFiveAndSix(t *testing.T) {
+	introduces(t, map[int]string{149: "29", 152: "10", 155: "56"})
+
+	last := content.Numbers().Lessons[len(content.Numbers().Lessons)-1]
+	if last.Number != 157 || last.Kind != curriculum.Practice || !strings.Contains(string(last.Keys), "1234567890") {
+		t.Fatalf("last lesson = %d %v %q", last.Number, last.Kind, string(last.Keys))
+	}
+}
