@@ -26,3 +26,7 @@ func TestDollarAndAmpersandThenHashAndStar(t *testing.T) {
 		t.Fatalf("lesson 160 = %v: %q", l.Kind, text)
 	}
 }
+
+func TestAtAndOpenBracketThenBangAndCloseBracket(t *testing.T) {
+	introduces(t, map[int]string{164: "@(", 167: "!)"})
+}
