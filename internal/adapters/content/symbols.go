@@ -45,5 +45,9 @@ func symbolLessons() []curriculum.Lesson {
 		travel(181, "Travel: (", "l9(", "l", symbolGoal),
 		travel(182, "Travel: )", ";0)", ";", symbolGoal),
 		travel(183, "Travel: ^", "j6^", "j", symbolGoal),
+		travel(184, "Travel: left hand", "asdf12345!@#$%", "asdf", symbolGoal),
+		travel(185, "Travel: right hand", "jkl;67890^&*()", "jkl;", symbolGoal),
+		review(186, "Review: every symbol", allSymbols, symbols, symbolGoal),
+		practice(187, "Practice: every symbol", allSymbols, symbols, symbolGoal, true),
 	}
 }

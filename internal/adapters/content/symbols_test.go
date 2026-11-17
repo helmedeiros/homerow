@@ -58,3 +58,21 @@ func TestEachSymbolHasATravelLessonFromItsHomeKey(t *testing.T) {
 		}
 	}
 }
+
+func TestSymbolsEndWithBothHandsThenReviewAndPractice(t *testing.T) {
+	for number, homes := range map[int]string{184: "asdf", 185: "jkl;"} {
+		l, _, _ := content.Course().Lesson(number)
+		if l.Kind != curriculum.Travel || string(l.Focus) != homes {
+			t.Errorf("lesson %d = %v from %q", number, l.Kind, string(l.Focus))
+		}
+	}
+	for number, kind := range map[int]curriculum.Kind{186: curriculum.Review, 187: curriculum.Practice} {
+		l, _, _ := content.Course().Lesson(number)
+		if l.Kind != kind || string(l.Focus) != "$&#*@(!)%^" {
+			t.Errorf("lesson %d = %v focusing on %q", number, l.Kind, string(l.Focus))
+		}
+	}
+	if n := len(content.Course().Lessons()); n != 187 {
+		t.Fatalf("course has %d lessons, want 187", n)
+	}
+}
