@@ -3,10 +3,12 @@ package content
 import "github.com/helmedeiros/homerow/internal/domain/curriculum"
 
 const (
-	symbolsDA = allKeys + "$&"
-	symbolsHS = symbolsDA + "#*"
-	symbolsAO = symbolsHS + "@("
-	symbolsBC = symbolsAO + "!)"
+	symbolsDA  = allKeys + "$&"
+	symbolsHS  = symbolsDA + "#*"
+	symbolsAO  = symbolsHS + "@("
+	symbolsBC  = symbolsAO + "!)"
+	symbols    = "$&#*@(!)%^"
+	allSymbols = allKeys + symbols
 
 	symbolGoal = 8
 )
@@ -29,5 +31,9 @@ func symbolLessons() []curriculum.Lesson {
 		newKeys(167, "Keys ! and )", "!)", symbolsBC),
 		review(168, "Review: ! and )", symbolsBC, "!)", symbolGoal),
 		practice(169, "Practice: ! and )", symbolsBC, "!)", symbolGoal, true),
+		newKeys(170, "Keys % and ^", "%^", allSymbols),
+		review(171, "Review: % and ^", allSymbols, "%^", symbolGoal),
+		practice(172, "Practice: % and ^", allSymbols, "%^", symbolGoal, true),
+		balloons(173, "Play: every symbol", allSymbols),
 	}
 }

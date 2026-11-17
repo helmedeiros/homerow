@@ -78,6 +78,9 @@ func (l Lesson) gameStep(rng *rand.Rand) Step {
 }
 
 func (l Lesson) balloonText(rng *rand.Rand) (string, error) {
+	if symbols := numberRowSymbols(l.letters()); len(symbols) > 0 {
+		return exercise.SymbolWords(rng, l.letters(), symbols, balloonWords), nil
+	}
 	if capitals := shifted(l.letters()); len(capitals) > 0 {
 		return exercise.CapitalWords(rng, l.letters(), capitals, balloonWords), nil
 	}
@@ -150,8 +153,12 @@ func (l Lesson) capitals() []rune {
 }
 
 func (l Lesson) symbols() []rune {
+	return numberRowSymbols(l.Focus)
+}
+
+func numberRowSymbols(keys []rune) []rune {
 	var symbols []rune
-	for _, r := range shifted(l.Focus) {
+	for _, r := range shifted(keys) {
 		if key, _ := keyboard.Lookup(r); key.Row == keyboard.NumberRow {
 			symbols = append(symbols, r)
 		}

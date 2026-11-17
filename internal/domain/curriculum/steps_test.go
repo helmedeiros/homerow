@@ -273,3 +273,22 @@ func TestSymbolPracticeSetsSymbolsAroundNumbersAndWords(t *testing.T) {
 		}
 	}
 }
+
+func TestABalloonPlayWithSymbolsSetsThemAroundNumbersAndWords(t *testing.T) {
+	l := curriculum.Lesson{Kind: curriculum.Play, Game: curriculum.BalloonWords, Keys: []rune("asdfghjkl;1234567890$%")}
+
+	step := l.Steps(rng())[0]
+
+	symbols := 0
+	for _, w := range step.Words {
+		if strings.ContainsAny(w, "$%") {
+			symbols++
+		}
+		if strings.Contains(w[1:], "$") || strings.HasPrefix(w, "%") {
+			t.Fatalf("misplaced symbol in %q", w)
+		}
+	}
+	if step.Game != curriculum.BalloonWords || symbols == 0 {
+		t.Fatalf("step = %+v", step)
+	}
+}

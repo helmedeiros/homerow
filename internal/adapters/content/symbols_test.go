@@ -30,3 +30,8 @@ func TestDollarAndAmpersandThenHashAndStar(t *testing.T) {
 func TestAtAndOpenBracketThenBangAndCloseBracket(t *testing.T) {
 	introduces(t, map[int]string{164: "@(", 167: "!)"})
 }
+
+func TestPercentAndCaretThenPlayEverySymbol(t *testing.T) {
+	introduces(t, map[int]string{170: "%^"})
+	plays(t, 173, curriculum.BalloonWords, "$&#*@(!)%^")
+}
