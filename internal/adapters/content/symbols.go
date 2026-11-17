@@ -35,5 +35,15 @@ func symbolLessons() []curriculum.Lesson {
 		review(171, "Review: % and ^", allSymbols, "%^", symbolGoal),
 		practice(172, "Practice: % and ^", allSymbols, "%^", symbolGoal, true),
 		balloons(173, "Play: every symbol", allSymbols),
+		travel(174, "Travel: $", "f4$", "f", symbolGoal),
+		travel(175, "Travel: #", "d3#", "d", symbolGoal),
+		travel(176, "Travel: @", "s2@", "s", symbolGoal),
+		travel(177, "Travel: !", "a1!", "a", symbolGoal),
+		travel(178, "Travel: %", "f5%", "f", symbolGoal),
+		travel(179, "Travel: &", "j7&", "j", symbolGoal),
+		travel(180, "Travel: *", "k8*", "k", symbolGoal),
+		travel(181, "Travel: (", "l9(", "l", symbolGoal),
+		travel(182, "Travel: )", ";0)", ";", symbolGoal),
+		travel(183, "Travel: ^", "j6^", "j", symbolGoal),
 	}
 }
