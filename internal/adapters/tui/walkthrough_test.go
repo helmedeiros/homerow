@@ -205,3 +205,26 @@ func TestPlayingTheWholeSymbolsModule(t *testing.T) {
 		t.Fatalf("numbers should be untouched:\n%s", view)
 	}
 }
+
+func TestWalkingTheWholeCourseAndReopeningTheProgressFile(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "progress.json")
+	course := content.Course()
+	if n := len(course.Lessons()); n != 187 {
+		t.Fatalf("course has %d lessons, want 187", n)
+	}
+
+	h := newHarnessWith(t, filestore.New(path))
+	for _, m := range course.Modules {
+		h.playModule(m)
+	}
+
+	reopened := newHarnessWith(t, filestore.New(path))
+	for _, m := range course.Modules {
+		if view, want := reopened.showModule(m), moduleHeader(m); !strings.Contains(view, want) {
+			t.Fatalf("want %q after reopening:\n%s", want, view)
+		}
+	}
+	if view := reopened.view(); !strings.Contains(view, "100% progress") {
+		t.Fatalf("the course should be complete:\n%s", view)
+	}
+}
