@@ -121,3 +121,5 @@ make build   # ./bin/homerow
 
 The design is hexagonal: see
 [docs/adr/0001-hexagonal-architecture.md](docs/adr/0001-hexagonal-architecture.md).
+How lessons and games fit in is in
+[docs/adr/0002-lesson-kinds-and-games.md](docs/adr/0002-lesson-kinds-and-games.md).
