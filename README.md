@@ -7,8 +7,17 @@ pair at a time, you drill them, review them, race the clock with them, and play
 a short game before moving on. Every exercise is scored on accuracy and speed
 and earns up to five stars.
 
-The course opens with the home row: 23 lessons from `f` and `j` to the whole
-row. `homerow lessons` lists every lesson with your stars.
+The course has 187 lessons in six modules. `homerow lessons` lists every
+lesson with your stars, grouped by module.
+
+| Module      | Lessons | Keys                                  |
+| ----------- | ------- | ------------------------------------- |
+| Home Row    | 1–23    | `a s d f g h j k l ;` and space       |
+| Top Row     | 24–51   | `q w e r t y u i o p`                 |
+| Bottom Row  | 52–88   | `z x c v b n m , . /` and tab         |
+| Shift Key   | 89–142  | every capital, `:` and `?`            |
+| Numbers     | 143–157 | `1` to `0`                            |
+| Symbols     | 158–187 | `! @ # $ % ^ & * ( )`                 |
 
 ![Meeting the f and j keys](docs/demo/new-keys.gif)
 
@@ -46,7 +55,7 @@ homerow --data FILE ...  # use another progress file
 
 | Where          | Keys                                                     |
 | -------------- | -------------------------------------------------------- |
-| Lesson list    | `↑` `↓` or `k` `j` to move, `enter` to start, `q` to quit |
+| Lesson list    | `↑` `↓` or `k` `j` to move, `←` `→` to switch module, `enter` to start, `q` to quit |
 | Intro pages    | `enter`, `space` or `→` for the next page                |
 | Typing        | just type; `backspace` fixes a mistake, `esc` returns to the lesson list |
 | Games         | just type; `esc` returns to the lesson list              |
@@ -58,12 +67,27 @@ homerow --data FILE ...  # use another progress file
 
 | Type      | What happens                                                        |
 | --------- | ------------------------------------------------------------------- |
-| Intro     | a few pages on posture and where your fingers rest                  |
+| Intro     | a few pages on posture, breaks, the keyboard and the keys to come   |
 | New keys  | each new key with the finger that types it, then a warm-up drill    |
 | Review    | a drill that mixes the new keys with the ones you already know      |
 | Practice  | a one-minute timed drill, with real words once there are enough keys |
 | Hand drill| keys for one hand only                                              |
-| Play      | catch falling letters before they land; three lives, one minute     |
+| Travel    | reach from a home key to its neighbours and back, e.g. `juj jmj jhj` |
+| Tab       | pairs of words split by a tab, shown as `→`                         |
+| Dynamic   | a drill weighted towards the keys you miss most                     |
+| Play      | a short game over the keys you know                                 |
+
+Capitals come with the shift key of the other hand, and the hands show both
+fingers. Numbers are mixed with words, and symbols sit where they are usually
+typed: `$47`, `40%`, `@name`, `wow!`.
+
+### Games
+
+| Game            | How it plays                                                   |
+| --------------- | -------------------------------------------------------------- |
+| Falling letters | catch letters before they land; three lives, one minute        |
+| Balloons        | type whole words before they float away; three lives, one minute |
+| Pop-up          | catch keys before they hide again; an unscored warm-up         |
 
 While you type, correct characters turn green and mistakes red. Press
 backspace to fix a mistake: it turns yellow once retyped, and still counts
@@ -79,7 +103,8 @@ finishing them. Your best result for each lesson is kept.
 
 ## Progress
 
-Progress is saved as JSON in the first of:
+Progress, including how often you miss each key, is saved as JSON in the
+first of:
 
 1. the `--data FILE` flag
 2. the `HOMEROW_DATA` environment variable
