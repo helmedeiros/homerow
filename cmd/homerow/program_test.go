@@ -88,3 +88,26 @@ func TestTheProgramOpensTheTopRowAndDrillsRAndU(t *testing.T) {
 	tm.Type("q")
 	tm.WaitFinished(t, teatest.WithFinalTimeout(5*time.Second))
 }
+
+func TestTheProgramSwitchesModulesAndOpensTheNumbers(t *testing.T) {
+	tm := startProgram(t, filepath.Join(t.TempDir(), "progress.json"))
+	waitFor(t, tm, "Module 1 · Home Row")
+
+	for range 7 {
+		tm.Send(tea.KeyMsg{Type: tea.KeyRight})
+	}
+	waitFor(t, tm, "Module 6 · Symbols")
+	tm.Send(tea.KeyMsg{Type: tea.KeyLeft})
+	waitFor(t, tm, "Module 5 · Numbers")
+	tm.Send(tea.KeyMsg{Type: tea.KeyEnter})
+	waitFor(t, tm, "Lesson 143")
+	tm.Type("4")
+	waitFor(t, tm, "right index finger")
+	tm.Type("7")
+	waitFor(t, tm, "4 4 4 44 44 444")
+
+	tm.Send(tea.KeyMsg{Type: tea.KeyEsc})
+	waitFor(t, tm, "Module 5 · Numbers")
+	tm.Type("q")
+	tm.WaitFinished(t, teatest.WithFinalTimeout(5*time.Second))
+}
