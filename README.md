@@ -33,6 +33,14 @@ Earn stars, then catch falling letters.
 
 ## Install
 
+With Homebrew on macOS or Linux:
+
+```sh
+brew install helmedeiros/tap/homerow
+```
+
+With Go:
+
 ```sh
 go install github.com/helmedeiros/homerow/cmd/homerow@latest
 ```
