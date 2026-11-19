@@ -1,0 +1,70 @@
+version: 2
+
+project_name: homerow
+
+builds:
+  - main: ./cmd/homerow
+    binary: homerow
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - darwin
+      - windows
+    goarch:
+      - amd64
+      - arm64
+    ignore:
+      - goos: windows
+        goarch: arm64
+    ldflags:
+      - -s -w -X main.version={{.Version}}
+
+archives:
+  - name_template: "homerow_{{ .Os }}_{{ .Arch }}"
+    format_overrides:
+      - goos: windows
+        formats: [zip]
+    files:
+      - README.md
+      - LICENSE
+
+checksum:
+  name_template: "checksums.txt"
+
+snapshot:
+  version_template: "{{ incpatch .Version }}-next"
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - "^docs"
+      - "^test"
+      - "^ci"
+      - "^build"
+
+release:
+  github:
+    owner: helmedeiros
+    name: homerow
+  prerelease: auto
+
+homebrew_casks:
+  - name: homerow
+    repository:
+      owner: helmedeiros
+      name: homebrew-tap
+      token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
+    directory: Casks
+    homepage: https://github.com/helmedeiros/homerow
+    description: Learn touch typing in your terminal, one row at a time
+    license: MIT
+    binaries:
+      - homerow
+    hooks:
+      post:
+        install_steps: |
+          if OS.mac?
+            system_command "/usr/bin/xattr", args: ["-dr", "com.apple.quarantine", "#{staged_path}/homerow"]
+          end
