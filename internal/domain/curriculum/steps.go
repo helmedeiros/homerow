@@ -23,6 +23,8 @@ const (
 	reviewGroups   = 16
 	practiceGroups = 22
 	balloonWords   = 40
+
+	punctuationMarks = "-'[]=\\_+{}\"|<>`~"
 )
 
 type Step struct {
@@ -78,6 +80,9 @@ func (l Lesson) gameStep(rng *rand.Rand) Step {
 }
 
 func (l Lesson) balloonText(rng *rand.Rand) (string, error) {
+	if marks := punctuation(l.letters()); len(marks) > 0 {
+		return exercise.PunctuationWords(rng, l.letters(), marks, balloonWords), nil
+	}
 	if symbols := numberRowSymbols(l.letters()); len(symbols) > 0 {
 		return exercise.SymbolWords(rng, l.letters(), symbols, balloonWords), nil
 	}
@@ -116,6 +121,9 @@ func (l Lesson) reviewText(rng *rand.Rand) string {
 }
 
 func (l Lesson) practiceText(rng *rand.Rand) string {
+	if marks := punctuation(l.Focus); len(marks) > 0 && l.Words {
+		return exercise.PunctuationWords(rng, l.letters(), marks, practiceGroups)
+	}
 	if symbols := l.symbols(); len(symbols) > 0 && l.Words {
 		return exercise.SymbolWords(rng, l.letters(), symbols, practiceGroups)
 	}
@@ -164,6 +172,16 @@ func numberRowSymbols(keys []rune) []rune {
 		}
 	}
 	return symbols
+}
+
+func punctuation(keys []rune) []rune {
+	var marks []rune
+	for _, r := range keys {
+		if strings.ContainsRune(punctuationMarks, r) {
+			marks = append(marks, r)
+		}
+	}
+	return marks
 }
 
 func (l Lesson) numbers() []rune {

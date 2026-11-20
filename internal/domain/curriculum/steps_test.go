@@ -292,3 +292,45 @@ func TestABalloonPlayWithSymbolsSetsThemAroundNumbersAndWords(t *testing.T) {
 		t.Fatalf("step = %+v", step)
 	}
 }
+
+func TestPunctuationPracticeWrapsAndJoinsWords(t *testing.T) {
+	l := curriculum.Lesson{Kind: curriculum.Practice, Keys: []rune("asdfghjkl;qwertyuiop[]-"), Focus: []rune("[]-"), Words: true, GoalWPM: 8}
+
+	marked := 0
+	for _, item := range strings.Fields(l.Steps(rng())[0].Text) {
+		switch {
+		case strings.HasPrefix(item, "["):
+			if !strings.HasSuffix(item, "]") {
+				t.Fatalf("bracket should wrap a word: %q", item)
+			}
+			marked++
+		case strings.Contains(item, "-"):
+			if strings.HasPrefix(item, "-") || strings.HasSuffix(item, "-") {
+				t.Fatalf("dash should join two words: %q", item)
+			}
+			marked++
+		}
+	}
+	if marked == 0 {
+		t.Fatal("no punctuation")
+	}
+}
+
+func TestABalloonPlayWithPunctuationWrapsAndJoinsWords(t *testing.T) {
+	l := curriculum.Lesson{Kind: curriculum.Play, Game: curriculum.BalloonWords, Keys: []rune("asdfghjkl;qwertyuiop1234567890$%{}=")}
+
+	step := l.Steps(rng())[0]
+
+	marked := 0
+	for _, w := range step.Words {
+		if strings.ContainsAny(w, "$%") {
+			t.Fatalf("number-row symbols should give way to punctuation: %q", w)
+		}
+		if strings.ContainsAny(w, "{}=") {
+			marked++
+		}
+	}
+	if step.Game != curriculum.BalloonWords || marked == 0 {
+		t.Fatalf("step = %+v", step)
+	}
+}
