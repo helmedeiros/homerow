@@ -3,7 +3,9 @@ package content
 import "github.com/helmedeiros/homerow/internal/domain/curriculum"
 
 const (
-	marksDash = allSymbols + "-'"
+	marksDash     = allSymbols + "-'"
+	marksBrackets = marksDash + "[]"
+	marksEquals   = marksBrackets + "=\\"
 
 	punctuationGoal = 8
 )
@@ -18,6 +20,12 @@ func punctuationLessons() []curriculum.Lesson {
 		newKeys(189, "Keys - and '", "-'", marksDash),
 		review(190, "Review: - and '", marksDash, "-'", punctuationGoal),
 		practice(191, "Practice: - and '", marksDash, "-'", punctuationGoal, true),
+		newKeys(192, "Keys [ and ]", "[]", marksBrackets),
+		review(193, "Review: [ and ]", marksBrackets, "[]", punctuationGoal),
+		practice(194, "Practice: [ and ]", marksBrackets, "[]", punctuationGoal, true),
+		newKeys(195, "Keys = and \\", "=\\", marksEquals),
+		review(196, "Review: = and \\", marksEquals, "=\\", punctuationGoal),
+		practice(197, "Practice: = and \\", marksEquals, "=\\", punctuationGoal, true),
 	}
 }
 

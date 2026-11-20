@@ -34,3 +34,17 @@ func TestDashAndApostrophe(t *testing.T) {
 		t.Fatalf("lesson 191 = %v: %q", l.Kind, text)
 	}
 }
+
+func TestBracketsThenEqualsAndBackslash(t *testing.T) {
+	introduces(t, map[int]string{192: "[]", 195: "=\\"})
+
+	l, _, _ := content.Course().Lesson(194)
+	text := l.Steps(rand.New(rand.NewPCG(1, 1)))[0].Text
+	if l.Kind != curriculum.Practice || !strings.Contains(text, "[") || !strings.Contains(text, "]") {
+		t.Fatalf("lesson 194 = %v: %q", l.Kind, text)
+	}
+	l, _, _ = content.Course().Lesson(196)
+	if l.Kind != curriculum.Review || string(l.Focus) != "=\\" {
+		t.Fatalf("lesson 196 = %v focusing on %q", l.Kind, string(l.Focus))
+	}
+}
