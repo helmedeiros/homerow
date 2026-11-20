@@ -59,9 +59,9 @@ func (k Key) ShiftFinger() (Finger, bool) {
 	return LeftPinky, true
 }
 
-var rows = []string{"1234567890-=", "qwertyuiop[]", "asdfghjkl;'", "zxcvbnm,./"}
+var rows = []string{"1234567890-=", "qwertyuiop[]\\", "asdfghjkl;'", "zxcvbnm,./"}
 
-var shiftedRows = []string{"!@#$%^&*()_+", "          {}", "         :\"", "       <>?"}
+var shiftedRows = []string{"!@#$%^&*()_+", "          {}|", "         :\"", "       <>?"}
 
 var columnFingers = []Finger{
 	LeftPinky, LeftRing, LeftMiddle, LeftIndex, LeftIndex,
@@ -79,6 +79,8 @@ var keys = buildKeys()
 func buildKeys() map[rune]Key {
 	built := map[rune]Key{' ': {Char: ' ', Base: ' ', Finger: LeftThumb, Row: SpaceRow}}
 	built['\t'] = Key{Char: '\t', Base: '\t', Finger: LeftPinky, Row: TopRow}
+	built['`'] = Key{Char: '`', Base: '`', Finger: LeftPinky, Row: NumberRow}
+	built['~'] = Key{Char: '~', Base: '`', Shifted: true, Finger: LeftPinky, Row: NumberRow}
 	for row, chars := range rows {
 		for column, char := range chars {
 			built[char] = Key{Char: char, Base: char, Finger: fingerForColumn(column), Row: Row(row)}

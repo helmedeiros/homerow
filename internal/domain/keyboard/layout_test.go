@@ -12,6 +12,7 @@ func TestEveryRowKeyHasAFingerAndRow(t *testing.T) {
 		finger keyboard.Finger
 		row    keyboard.Row
 	}{
+		{'`', keyboard.LeftPinky, keyboard.NumberRow},
 		{'1', keyboard.LeftPinky, keyboard.NumberRow},
 		{'5', keyboard.LeftIndex, keyboard.NumberRow},
 		{'6', keyboard.RightIndex, keyboard.NumberRow},
@@ -20,6 +21,7 @@ func TestEveryRowKeyHasAFingerAndRow(t *testing.T) {
 		{'t', keyboard.LeftIndex, keyboard.TopRow},
 		{'y', keyboard.RightIndex, keyboard.TopRow},
 		{'p', keyboard.RightPinky, keyboard.TopRow},
+		{'\\', keyboard.RightPinky, keyboard.TopRow},
 		{'\'', keyboard.RightPinky, keyboard.HomeRow},
 		{'z', keyboard.LeftPinky, keyboard.BottomRow},
 		{'b', keyboard.LeftIndex, keyboard.BottomRow},
@@ -47,7 +49,7 @@ func TestUppercaseLettersUseTheSameFinger(t *testing.T) {
 
 func TestRowsListTheKeysInOrder(t *testing.T) {
 	rows := keyboard.Rows()
-	want := []string{"1234567890-=", "qwertyuiop[]", "asdfghjkl;'", "zxcvbnm,./"}
+	want := []string{"1234567890-=", "qwertyuiop[]\\", "asdfghjkl;'", "zxcvbnm,./"}
 	if len(rows) != len(want) {
 		t.Fatalf("len(Rows()) = %d, want %d", len(rows), len(want))
 	}

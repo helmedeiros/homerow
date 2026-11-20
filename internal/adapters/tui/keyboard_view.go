@@ -20,11 +20,16 @@ func renderKeyboard(press rune) string {
 	shift, shifted := key.ShiftFinger()
 	leftShift := renderKey("shift", shifted && shift == keyboard.LeftPinky)
 	rightShift := renderKey("shift", shifted && shift == keyboard.RightPinky)
-	edges := []string{"", renderKey("tab", known && press == '\t'), "", leftShift}
+	edges := []string{renderKey("`", known && key.Base == '`'), renderKey("tab", known && press == '\t'), "", leftShift}
 	var lines []string
 	for i, row := range keyboard.Rows() {
 		var b strings.Builder
-		b.WriteString(edges[i] + strings.Repeat(" ", edgeWidth-lipgloss.Width(edges[i])+rowIndent[i]))
+		pad := strings.Repeat(" ", edgeWidth-lipgloss.Width(edges[i])+rowIndent[i])
+		if i == 0 {
+			b.WriteString(pad + edges[i])
+		} else {
+			b.WriteString(edges[i] + pad)
+		}
 		for _, k := range row {
 			b.WriteString(renderKey(string(k), known && k == key.Base))
 		}

@@ -28,6 +28,12 @@ func TestShiftedSymbolsSitOnTheirBaseKey(t *testing.T) {
 		{'<', ',', keyboard.RightMiddle, keyboard.LeftPinky},
 		{'>', '.', keyboard.RightRing, keyboard.LeftPinky},
 		{'"', '\'', keyboard.RightPinky, keyboard.LeftPinky},
+		{'_', '-', keyboard.RightPinky, keyboard.LeftPinky},
+		{'+', '=', keyboard.RightPinky, keyboard.LeftPinky},
+		{'{', '[', keyboard.RightPinky, keyboard.LeftPinky},
+		{'}', ']', keyboard.RightPinky, keyboard.LeftPinky},
+		{'|', '\\', keyboard.RightPinky, keyboard.LeftPinky},
+		{'~', '`', keyboard.LeftPinky, keyboard.RightPinky},
 	}
 	for _, c := range cases {
 		key, ok := keyboard.Lookup(c.char)

@@ -8,7 +8,7 @@ import (
 func TestKeyboardShowsEveryRow(t *testing.T) {
 	view := renderKeyboard(0)
 
-	for _, key := range []string{"[1]", "[q]", "[a]", "[;]", "[z]", "[/]", "space"} {
+	for _, key := range []string{"[1]", "[q]", "[a]", "[;]", "[z]", "[/]", "[`]", "[\\]", "space"} {
 		if !strings.Contains(view, key) {
 			t.Errorf("keyboard is missing %s:\n%s", key, view)
 		}
@@ -70,5 +70,25 @@ func TestShiftedSymbolsMarkTheirBaseKeyAndShift(t *testing.T) {
 func TestKeyboardMarksTab(t *testing.T) {
 	if view := renderKeyboard('\t'); !strings.Contains(view, "‹tab›") {
 		t.Fatalf("tab should be marked:\n%s", view)
+	}
+}
+
+func TestTildeMarksTheBacktickKeyAndTheRightShift(t *testing.T) {
+	view := renderKeyboard('~')
+
+	if !strings.Contains(view, "‹`›") || !strings.HasSuffix(bottomRow(view), "‹shift›") {
+		t.Fatalf("` and right shift should be marked:\n%s", view)
+	}
+}
+
+func TestPipeMarksTheBackslashKey(t *testing.T) {
+	if view := renderKeyboard('|'); !strings.Contains(view, "‹\\›") {
+		t.Fatalf("\\ should be marked:\n%s", view)
+	}
+}
+
+func TestBacktickSitsNextToOne(t *testing.T) {
+	if view := renderKeyboard(0); !strings.Contains(view, "[`][1]") {
+		t.Fatalf("view:\n%s", view)
 	}
 }
