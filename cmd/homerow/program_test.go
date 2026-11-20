@@ -93,7 +93,7 @@ func TestTheProgramSwitchesModulesAndOpensTheNumbers(t *testing.T) {
 	tm := startProgram(t, filepath.Join(t.TempDir(), "progress.json"))
 	waitFor(t, tm, "Module 1 · Home Row")
 
-	for range 7 {
+	for range 5 {
 		tm.Send(tea.KeyMsg{Type: tea.KeyRight})
 	}
 	waitFor(t, tm, "Module 6 · Symbols")

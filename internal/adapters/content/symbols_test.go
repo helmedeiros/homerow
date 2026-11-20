@@ -72,7 +72,7 @@ func TestSymbolsEndWithBothHandsThenReviewAndPractice(t *testing.T) {
 			t.Errorf("lesson %d = %v focusing on %q", number, l.Kind, string(l.Focus))
 		}
 	}
-	if n := len(content.Course().Lessons()); n != 187 {
-		t.Fatalf("course has %d lessons, want 187", n)
+	if last := content.Symbols().Lessons[29]; last.Number != 187 {
+		t.Fatalf("symbols end at lesson %d, want 187", last.Number)
 	}
 }

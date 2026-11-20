@@ -209,8 +209,9 @@ func TestPlayingTheWholeSymbolsModule(t *testing.T) {
 func TestWalkingTheWholeCourseAndReopeningTheProgressFile(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "progress.json")
 	course := content.Course()
-	if n := len(course.Lessons()); n != 187 {
-		t.Fatalf("course has %d lessons, want 187", n)
+	lessons := course.Lessons()
+	if last := lessons[len(lessons)-1].Number; last != len(lessons) {
+		t.Fatalf("course has %d lessons ending at %d", len(lessons), last)
 	}
 
 	h := newHarnessWith(t, filestore.New(path))
