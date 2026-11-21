@@ -94,3 +94,16 @@ func TestKeyIntroRemindsAboutShiftAfterALowercaseLetter(t *testing.T) {
 		t.Fatalf("missing %q:\n%s", want, s.View())
 	}
 }
+
+func TestKeyIntroNamesAndAcceptsTheTabKey(t *testing.T) {
+	s := newKeyIntroScreen('\t')
+	if view := s.View(); !strings.Contains(view, " tab  key") || !strings.Contains(view, "left pinky") {
+		t.Fatalf("view:\n%s", view)
+	}
+
+	_, cmd := s.Update(special(tea.KeyTab))
+
+	if _, ok := message(cmd).(stepDoneMsg); !ok {
+		t.Fatalf("message = %#v, want step done", message(cmd))
+	}
+}

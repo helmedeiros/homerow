@@ -21,9 +21,12 @@ func (h *harness) finishStep() {
 	case pageScreen:
 		h.send(special(tea.KeyEnter))
 	case keyIntroScreen:
-		if s.key == ' ' {
+		switch s.key {
+		case ' ':
 			h.send(special(tea.KeySpace))
-		} else {
+		case '\t':
+			h.send(special(tea.KeyTab))
+		default:
 			h.send(runes(string(s.key)))
 		}
 	case drillScreen:

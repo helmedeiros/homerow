@@ -334,3 +334,14 @@ func TestABalloonPlayWithPunctuationWrapsAndJoinsWords(t *testing.T) {
 		t.Fatalf("step = %+v", step)
 	}
 }
+
+func TestTabPracticeIntroducesItsNewKeyFirst(t *testing.T) {
+	l := curriculum.Lesson{Kind: curriculum.Tab, NewKeys: []rune("\t"), Keys: []rune("fj\t"), GoalWPM: 8}
+
+	steps := l.Steps(rng())
+
+	sameKinds(t, steps, curriculum.KeyIntroStep, curriculum.DrillStep)
+	if steps[0].Key != '\t' {
+		t.Fatalf("intro key = %q", steps[0].Key)
+	}
+}

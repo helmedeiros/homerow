@@ -54,7 +54,7 @@ func bottomRowLessons() []curriculum.Lesson {
 		travel(84, "Travel: right hand, all fingers", allRows, "jkl;", bottomGoal),
 		travel(85, "Travel: left hand, all fingers", allRows, "asdf", bottomGoal),
 		{Number: 86, Title: "One small space: the tab key", Kind: curriculum.Intro, Pages: tabPages},
-		{Number: 87, Title: "Practice: tab", Kind: curriculum.Tab, Keys: []rune(allRows + "\t"), GoalWPM: bottomGoal},
+		{Number: 87, Title: "Practice: tab", Kind: curriculum.Tab, NewKeys: []rune("\t"), Keys: []rune(allRows + "\t"), GoalWPM: bottomGoal},
 		{Number: 88, Title: "Dynamic practice", Kind: curriculum.Dynamic, Keys: []rune(allRows), GoalWPM: bottomGoal},
 	}
 }

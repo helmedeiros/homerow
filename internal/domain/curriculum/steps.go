@@ -50,7 +50,7 @@ func (l Lesson) Steps(rng *rand.Rand) []Step {
 	case Dynamic:
 		return l.DynamicSteps(rng, nil)
 	case Tab:
-		return []Step{drill(l.tabText(rng))}
+		return append(l.keyIntros(), drill(l.tabText(rng)))
 	case Travel:
 		return []Step{drill(exercise.Travel(rng, l.Focus, l.letters(), reviewGroups))}
 	default:
@@ -100,11 +100,16 @@ func (l Lesson) pageSteps() []Step {
 	return steps
 }
 
-func (l Lesson) newKeySteps(rng *rand.Rand) []Step {
+func (l Lesson) keyIntros() []Step {
 	var steps []Step
 	for _, k := range l.NewKeys {
 		steps = append(steps, Step{Kind: KeyIntroStep, Key: k})
 	}
+	return steps
+}
+
+func (l Lesson) newKeySteps(rng *rand.Rand) []Step {
+	steps := l.keyIntros()
 	newLetters := strings.ReplaceAll(string(l.NewKeys), " ", "")
 	if newLetters != "" {
 		steps = append(steps, drill(exercise.Introduce([]rune(newLetters))))

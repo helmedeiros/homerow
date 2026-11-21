@@ -169,7 +169,7 @@ func TestTheBottomRowEndsWithTheTabKey(t *testing.T) {
 		t.Fatalf("lesson 86 = %+v", intro)
 	}
 	tab, _, _ := content.Course().Lesson(87)
-	text := tab.Steps(rand.New(rand.NewPCG(1, 1)))[0].Text
+	text := tab.Steps(rand.New(rand.NewPCG(1, 1)))[1].Text
 	if tab.Kind != curriculum.Tab || !strings.Contains(text, "\t") {
 		t.Fatalf("lesson 87 = %v %q", tab.Kind, text)
 	}
@@ -179,5 +179,13 @@ func TestTheBottomRowClosesWithDynamicPractice(t *testing.T) {
 	l, m, _ := content.Course().Lesson(88)
 	if l.Kind != curriculum.Dynamic || m.Lessons[len(m.Lessons)-1].Number != 88 {
 		t.Fatalf("lesson 88 = %+v", l)
+	}
+}
+
+func TestTheTabPracticeIntroducesTheTabKey(t *testing.T) {
+	l, _ := content.BottomRow().Lesson(87)
+
+	if l.Kind != curriculum.Tab || string(l.NewKeys) != "\t" {
+		t.Fatalf("lesson 87 = %v new %q", l.Kind, string(l.NewKeys))
 	}
 }
