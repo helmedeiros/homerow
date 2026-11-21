@@ -28,8 +28,8 @@ func TestHomeRowStartsWithFAndJ(t *testing.T) {
 		keys   string
 	}{
 		{1, curriculum.Intro, ""},
-		{2, curriculum.NewKeys, "fj"},
-		{3, curriculum.NewKeys, " "},
+		{2, curriculum.NewKeys, "fj "},
+		{3, curriculum.Practice, ""},
 		{4, curriculum.Review, ""},
 		{5, curriculum.NewKeys, "dk"},
 		{8, curriculum.Play, ""},
@@ -56,5 +56,13 @@ func TestHomeRowHasTwentyThreeLessonsEndingInAGame(t *testing.T) {
 	last := m.Lessons[22]
 	if last.Kind != curriculum.Play || string(last.Keys) != "asdfghjkl;" {
 		t.Fatalf("lesson 23 = %v over %q", last.Kind, string(last.Keys))
+	}
+}
+
+func TestTheFirstKeysLessonIntroducesTheSpaceThatSeparatesItsGroups(t *testing.T) {
+	l, _ := content.HomeRow().Lesson(2)
+
+	if l.Title != "Keys f, j and space" || string(l.NewKeys) != "fj " || string(l.Keys) != "fj " {
+		t.Fatalf("lesson 2 = %q new %q keys %q", l.Title, string(l.NewKeys), string(l.Keys))
 	}
 }

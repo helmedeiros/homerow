@@ -113,6 +113,7 @@ func TestNewKeyLessonWalksThroughIntroAndDrills(t *testing.T) {
 
 	h.send(runes("f"))
 	h.send(runes("j"))
+	h.send(special(tea.KeySpace))
 	h.typeDrill()
 	h.typeDrill()
 
@@ -120,7 +121,7 @@ func TestNewKeyLessonWalksThroughIntroAndDrills(t *testing.T) {
 		t.Fatalf("view:\n%s", h.view())
 	}
 	h.send(special(tea.KeyEnter))
-	if !strings.Contains(h.view(), "Lesson 3") || !strings.Contains(h.view(), "space bar") {
+	if !strings.Contains(h.view(), "Lesson 3 · Practice: f, j and space") {
 		t.Fatalf("view:\n%s", h.view())
 	}
 }

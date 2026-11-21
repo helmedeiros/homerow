@@ -63,6 +63,8 @@ func TestTheProgramIntroducesKeysAndStartsTheDrill(t *testing.T) {
 	tm.Type("f")
 	waitFor(t, tm, "right index finger")
 	tm.Type("j")
+	waitFor(t, tm, "left thumb")
+	tm.Send(tea.KeyMsg{Type: tea.KeySpace})
 	waitFor(t, tm, "f f f ff ff fff")
 
 	tm.Send(tea.KeyMsg{Type: tea.KeyCtrlC})

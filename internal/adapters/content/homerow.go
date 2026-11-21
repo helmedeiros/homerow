@@ -30,8 +30,8 @@ func HomeRow() curriculum.Module {
 func homeRowLessons() []curriculum.Lesson {
 	return []curriculum.Lesson{
 		{Number: 1, Title: "Welcome to touch typing", Kind: curriculum.Intro, Pages: welcomePages},
-		newKeys(2, "Keys f and j", fj, fj),
-		newKeys(3, "Space bar", " ", fj+" "),
+		newKeys(2, "Keys f, j and space", fj+" ", fj+" "),
+		practice(3, "Practice: f, j and space", fj+" ", "", starterGoal, false),
 		review(4, "Review: f and j", fj, fj, starterGoal),
 		newKeys(5, "Keys d and k", "dk", fjdk),
 		review(6, "Review: d and k", fjdk, "dk", starterGoal),
