@@ -66,3 +66,13 @@ func TestTheFirstKeysLessonIntroducesTheSpaceThatSeparatesItsGroups(t *testing.T
 		t.Fatalf("lesson 2 = %q new %q keys %q", l.Title, string(l.NewKeys), string(l.Keys))
 	}
 }
+
+func TestTheFirstHandDrillsKeepToTheKeysLearnedSoFar(t *testing.T) {
+	m := content.HomeRow()
+	for number, keys := range map[int]string{17: "asdf", 18: "jkl;"} {
+		l, _ := m.Lesson(number)
+		if l.Kind != curriculum.HandDrill || string(l.Keys) != keys {
+			t.Errorf("lesson %d = %v over %q, want %q", number, l.Kind, string(l.Keys), keys)
+		}
+	}
+}
