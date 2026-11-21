@@ -3,6 +3,9 @@ package tui
 import (
 	"strings"
 	"testing"
+
+	"github.com/charmbracelet/lipgloss"
+	"github.com/muesli/termenv"
 )
 
 func TestKeyboardShowsEveryRow(t *testing.T) {
@@ -90,5 +93,28 @@ func TestPipeMarksTheBackslashKey(t *testing.T) {
 func TestBacktickSitsNextToOne(t *testing.T) {
 	if view := renderKeyboard(0); !strings.Contains(view, "[`][1]") {
 		t.Fatalf("view:\n%s", view)
+	}
+}
+
+func TestEveryKeyTakesTheColourOfItsFinger(t *testing.T) {
+	for finger, colour := range fingerColors {
+		idle, pressed := keyCapStyle(finger, false), keyCapStyle(finger, true)
+		if idle.GetForeground() != colour || !idle.GetFaint() {
+			t.Errorf("%v idle key = %v faint %v, want %v", finger, idle.GetForeground(), idle.GetFaint(), colour)
+		}
+		if pressed.GetBackground() != colour || !pressed.GetBold() {
+			t.Errorf("%v pressed key background = %v, want %v", finger, pressed.GetBackground(), colour)
+		}
+	}
+}
+
+func TestTheKeyToPressShowsTheColourOfItsFinger(t *testing.T) {
+	lipgloss.SetColorProfile(termenv.TrueColor)
+	t.Cleanup(func() { lipgloss.SetColorProfile(termenv.Ascii) })
+
+	for press, background := range map[rune]string{'g': "48;2;239;68;68", 'h': "48;2;239;68;68", 'a': "48;2;59;130;246", ' ': "48;2;147;163;184"} {
+		if view := renderKeyboard(press); !strings.Contains(view, background) {
+			t.Errorf("%q is not shown in its finger's colour", press)
+		}
 	}
 }

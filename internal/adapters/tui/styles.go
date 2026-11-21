@@ -3,12 +3,13 @@ package tui
 import "github.com/charmbracelet/lipgloss"
 
 var (
-	colorMuted   = lipgloss.Color("244")
-	colorAccent  = lipgloss.Color("#3B82F6")
-	colorCorrect = lipgloss.Color("#22C55E")
-	colorStar    = lipgloss.Color("#FACC15")
-	colorWrong   = lipgloss.Color("#EF4444")
-	colorFixed   = lipgloss.Color("#EAB308")
+	colorMuted    = lipgloss.Color("244")
+	colorAccent   = lipgloss.Color("#3B82F6")
+	colorCorrect  = lipgloss.Color("#22C55E")
+	colorStar     = lipgloss.Color("#FACC15")
+	colorWrong    = lipgloss.Color("#EF4444")
+	colorFixed    = lipgloss.Color("#EAB308")
+	colorOnFinger = lipgloss.Color("#0F172A")
 
 	titleStyle     = lipgloss.NewStyle().Bold(true)
 	mutedStyle     = lipgloss.NewStyle().Foreground(colorMuted)
@@ -20,6 +21,5 @@ var (
 	cursorStyle    = lipgloss.NewStyle().Underline(true).Bold(true).Foreground(colorAccent)
 	pendingStyle   = lipgloss.NewStyle()
 	starStyle      = lipgloss.NewStyle().Foreground(colorStar)
-	keyStyle       = lipgloss.NewStyle().Foreground(colorMuted)
 	pressStyle     = lipgloss.NewStyle().Foreground(lipgloss.Color("#FFFFFF")).Background(colorAccent).Bold(true)
 )

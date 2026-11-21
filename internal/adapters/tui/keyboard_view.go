@@ -18,9 +18,13 @@ const (
 func renderKeyboard(press rune) string {
 	key, known := keyboard.Lookup(press)
 	shift, shifted := key.ShiftFinger()
-	leftShift := renderKey("shift", shifted && shift == keyboard.LeftPinky)
-	rightShift := renderKey("shift", shifted && shift == keyboard.RightPinky)
-	edges := []string{renderKey("`", known && key.Base == '`'), renderKey("tab", known && press == '\t'), "", leftShift}
+	leftShift := renderKey("shift", keyboard.LeftPinky, shifted && shift == keyboard.LeftPinky)
+	rightShift := renderKey("shift", keyboard.RightPinky, shifted && shift == keyboard.RightPinky)
+	edges := []string{
+		renderKey("`", keyboard.LeftPinky, known && key.Base == '`'),
+		renderKey("tab", keyboard.LeftPinky, known && press == '\t'),
+		"", leftShift,
+	}
 	var lines []string
 	for i, row := range keyboard.Rows() {
 		var b strings.Builder
@@ -31,20 +35,32 @@ func renderKeyboard(press rune) string {
 			b.WriteString(edges[i] + pad)
 		}
 		for _, k := range row {
-			b.WriteString(renderKey(string(k), known && k == key.Base))
+			b.WriteString(renderKey(string(k), fingerOf(k), known && k == key.Base))
 		}
 		if i == len(edges)-1 {
 			b.WriteString(rightShift)
 		}
 		lines = append(lines, b.String())
 	}
-	spaceBar := strings.Repeat(" ", spaceBarIndent) + renderKey("        space        ", press == ' ')
+	spaceBar := strings.Repeat(" ", spaceBarIndent) + renderKey("        space        ", fingerOf(' '), press == ' ')
 	return strings.Join(append(lines, spaceBar), "\n")
 }
 
-func renderKey(label string, pressed bool) string {
+func renderKey(label string, finger keyboard.Finger, pressed bool) string {
 	if pressed {
-		return pressStyle.Render("‹" + label + "›")
+		return keyCapStyle(finger, true).Render("‹" + label + "›")
 	}
-	return keyStyle.Render("[" + label + "]")
+	return keyCapStyle(finger, false).Render("[" + label + "]")
+}
+
+func keyCapStyle(finger keyboard.Finger, pressed bool) lipgloss.Style {
+	if pressed {
+		return lipgloss.NewStyle().Foreground(colorOnFinger).Background(fingerColors[finger]).Bold(true)
+	}
+	return lipgloss.NewStyle().Foreground(fingerColors[finger]).Faint(true)
+}
+
+func fingerOf(r rune) keyboard.Finger {
+	key, _ := keyboard.Lookup(r)
+	return key.Finger
 }
