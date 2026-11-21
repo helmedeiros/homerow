@@ -33,7 +33,7 @@ func renderHands(key keyboard.Key, show bool) string {
 			caption = "  " + accentStyle.Render(key.Finger.String()+" + "+shift.String()+" on shift")
 		}
 	}
-	tips, bases, labels, markers := blankRow(), blankRow(), blankRow(), blankRow()
+	tips, bases, markers := blankRow(), blankRow(), blankRow()
 	for finger, column := range fingerColumns {
 		style := fingerStyle(finger, active[finger])
 		if active[finger] {
@@ -41,14 +41,12 @@ func renderHands(key keyboard.Key, show bool) string {
 		}
 		if finger == keyboard.LeftThumb || finger == keyboard.RightThumb {
 			bases[column] = style.Render("▄")
-			labels[column] = mutedStyle.Render("⎵")
 			continue
 		}
 		tips[column] = style.Render("▄")
 		bases[column] = style.Render("█")
-		labels[column] = mutedStyle.Render(string(keyboard.HomeKey(finger)))
 	}
-	return strings.Join([]string{join(tips), join(bases), join(labels), join(markers), caption}, "\n")
+	return strings.Join([]string{join(tips), join(bases), join(markers), caption}, "\n")
 }
 
 func fingerStyle(f keyboard.Finger, active bool) lipgloss.Style {
