@@ -90,3 +90,15 @@ func TestHandsShowFingersWithoutLetters(t *testing.T) {
 		}
 	}
 }
+
+func TestEveryFingerKeepsItsColourAndOnlyTheOneToUseLightsUp(t *testing.T) {
+	for finger, colour := range fingerColors {
+		idle, active := fingerStyle(finger, false), fingerStyle(finger, true)
+		if idle.GetForeground() != colour || active.GetForeground() != colour {
+			t.Errorf("%v colours = %v, %v, want %v", finger, idle.GetForeground(), active.GetForeground(), colour)
+		}
+		if !idle.GetFaint() || active.GetFaint() || !active.GetBold() {
+			t.Errorf("%v: idle should be faint, active bright", finger)
+		}
+	}
+}

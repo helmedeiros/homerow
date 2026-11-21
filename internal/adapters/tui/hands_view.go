@@ -50,10 +50,11 @@ func renderHands(key keyboard.Key, show bool) string {
 }
 
 func fingerStyle(f keyboard.Finger, active bool) lipgloss.Style {
+	style := lipgloss.NewStyle().Foreground(fingerColors[f])
 	if active {
-		return lipgloss.NewStyle().Foreground(fingerColors[f]).Bold(true)
+		return style.Bold(true)
 	}
-	return mutedStyle
+	return style.Faint(true)
 }
 
 func blankRow() []string {
