@@ -48,6 +48,11 @@ func punctuationLessons() []curriculum.Lesson {
 		review(211, "Review: ` and ~", allMarks, "`~", punctuationGoal),
 		practice(212, "Practice: ` and ~", allMarks, "`~", punctuationGoal, true),
 		balloons(213, "Play: every punctuation key", allMarks),
+		travel(214, "Travel: right pinky", ";p0/-=[]\\'_+{}|\"", ";", punctuationGoal),
+		travel(215, "Travel: left pinky", "aq1z`~", "a", punctuationGoal),
+		review(216, "Review: every punctuation key", allMarks, marks, punctuationGoal),
+		practice(217, "Practice: every punctuation key", allMarks, marks, punctuationGoal, true),
+		{Number: 218, Title: "Dynamic practice", Kind: curriculum.Dynamic, Keys: []rune(allMarks), GoalWPM: punctuationGoal},
 	}
 }
 

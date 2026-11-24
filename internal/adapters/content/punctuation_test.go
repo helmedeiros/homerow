@@ -84,3 +84,31 @@ func TestBacktickAndTildeThenPlayEveryPunctuationKey(t *testing.T) {
 		t.Fatal("no punctuation in the balloons")
 	}
 }
+
+func TestPunctuationEndsWithPinkyTravelReviewPracticeAndDynamic(t *testing.T) {
+	for number, w := range map[int]struct{ home, reaches string }{
+		214: {";", "-=[]\\'_+{}|\""},
+		215: {"a", "`~"},
+	} {
+		l, _, _ := content.Course().Lesson(number)
+		if l.Kind != curriculum.Travel || string(l.Focus) != w.home {
+			t.Fatalf("lesson %d = %v from %q", number, l.Kind, string(l.Focus))
+		}
+		for _, r := range w.reaches {
+			if !strings.ContainsRune(string(l.Keys), r) {
+				t.Fatalf("lesson %d never reaches %q", number, r)
+			}
+		}
+	}
+	for number, kind := range map[int]curriculum.Kind{216: curriculum.Review, 217: curriculum.Practice} {
+		l, _, _ := content.Course().Lesson(number)
+		if l.Kind != kind || string(l.Focus) != "-'[]=\\_+{}\"|<>`~" {
+			t.Errorf("lesson %d = %v focusing on %q", number, l.Kind, string(l.Focus))
+		}
+	}
+	lessons := content.Punctuation().Lessons
+	last := lessons[len(lessons)-1]
+	if last.Number != 218 || last.Kind != curriculum.Dynamic || !strings.Contains(string(last.Keys), "`~") {
+		t.Fatalf("last lesson = %d %v", last.Number, last.Kind)
+	}
+}
