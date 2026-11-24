@@ -209,6 +209,25 @@ func TestPlayingTheWholeSymbolsModule(t *testing.T) {
 	}
 }
 
+func TestPlayingTheWholePunctuationModule(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "progress.json")
+	punctuation := content.Punctuation()
+
+	h := newHarnessWith(t, filestore.New(path))
+	for range punctuation.Number - 1 {
+		h.send(special(tea.KeyRight))
+	}
+	h.playModule(punctuation)
+
+	reopened := newHarnessWith(t, filestore.New(path))
+	if view, want := reopened.showModule(punctuation), moduleHeader(punctuation); !strings.Contains(view, want) {
+		t.Fatalf("want %q after reopening:\n%s", want, view)
+	}
+	if view := reopened.showModule(content.Symbols()); !strings.Contains(view, "Module 6 · Symbols  0% · 0 stars") {
+		t.Fatalf("symbols should be untouched:\n%s", view)
+	}
+}
+
 func TestWalkingTheWholeCourseAndReopeningTheProgressFile(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "progress.json")
 	course := content.Course()
