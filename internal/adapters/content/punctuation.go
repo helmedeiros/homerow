@@ -10,6 +10,8 @@ const (
 	marksBraces   = marksPlus + "{}"
 	marksQuote    = marksBraces + "\"|"
 	marksAngles   = marksQuote + "<>"
+	marks         = "-'[]=\\_+{}\"|<>`~"
+	allMarks      = allSymbols + marks
 
 	punctuationGoal = 8
 )
@@ -42,6 +44,10 @@ func punctuationLessons() []curriculum.Lesson {
 		newKeys(207, "Keys < and >", "<>", marksAngles),
 		review(208, "Review: < and >", marksAngles, "<>", punctuationGoal),
 		practice(209, "Practice: < and >", marksAngles, "<>", punctuationGoal, true),
+		newKeys(210, "Keys ` and ~", "`~", allMarks),
+		review(211, "Review: ` and ~", allMarks, "`~", punctuationGoal),
+		practice(212, "Practice: ` and ~", allMarks, "`~", punctuationGoal, true),
+		balloons(213, "Play: every punctuation key", allMarks),
 	}
 }
 

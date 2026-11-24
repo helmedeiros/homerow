@@ -68,3 +68,19 @@ func TestQuoteAndPipeThenAngleBrackets(t *testing.T) {
 		t.Fatalf("lesson 209 = %v: %q", l.Kind, text)
 	}
 }
+
+func TestBacktickAndTildeThenPlayEveryPunctuationKey(t *testing.T) {
+	introduces(t, map[int]string{210: "`~"})
+	plays(t, 213, curriculum.BalloonWords, "-'[]=\\_+{}\"|<>`~")
+
+	l, _, _ := content.Course().Lesson(213)
+	marked := 0
+	for _, w := range l.Steps(rand.New(rand.NewPCG(1, 1)))[0].Words {
+		if strings.ContainsAny(w, "-'[]=\\_+{}\"|<>`~") {
+			marked++
+		}
+	}
+	if marked == 0 {
+		t.Fatal("no punctuation in the balloons")
+	}
+}
