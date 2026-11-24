@@ -6,6 +6,8 @@ const (
 	marksDash     = allSymbols + "-'"
 	marksBrackets = marksDash + "[]"
 	marksEquals   = marksBrackets + "=\\"
+	marksPlus     = marksEquals + "_+"
+	marksBraces   = marksPlus + "{}"
 
 	punctuationGoal = 8
 )
@@ -26,6 +28,12 @@ func punctuationLessons() []curriculum.Lesson {
 		newKeys(195, "Keys = and \\", "=\\", marksEquals),
 		review(196, "Review: = and \\", marksEquals, "=\\", punctuationGoal),
 		practice(197, "Practice: = and \\", marksEquals, "=\\", punctuationGoal, true),
+		newKeys(198, "Keys _ and +", "_+", marksPlus),
+		review(199, "Review: _ and +", marksPlus, "_+", punctuationGoal),
+		practice(200, "Practice: _ and +", marksPlus, "_+", punctuationGoal, true),
+		newKeys(201, "Keys { and }", "{}", marksBraces),
+		review(202, "Review: { and }", marksBraces, "{}", punctuationGoal),
+		practice(203, "Practice: { and }", marksBraces, "{}", punctuationGoal, true),
 	}
 }
 

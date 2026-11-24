@@ -48,3 +48,13 @@ func TestBracketsThenEqualsAndBackslash(t *testing.T) {
 		t.Fatalf("lesson 196 = %v focusing on %q", l.Kind, string(l.Focus))
 	}
 }
+
+func TestUnderscoreAndPlusThenBraces(t *testing.T) {
+	introduces(t, map[int]string{198: "_+", 201: "{}"})
+
+	l, _, _ := content.Course().Lesson(200)
+	text := l.Steps(rand.New(rand.NewPCG(1, 1)))[0].Text
+	if l.Kind != curriculum.Practice || !strings.ContainsAny(text, "_+") {
+		t.Fatalf("lesson 200 = %v: %q", l.Kind, text)
+	}
+}
