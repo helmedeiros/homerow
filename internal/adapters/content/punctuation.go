@@ -8,6 +8,8 @@ const (
 	marksEquals   = marksBrackets + "=\\"
 	marksPlus     = marksEquals + "_+"
 	marksBraces   = marksPlus + "{}"
+	marksQuote    = marksBraces + "\"|"
+	marksAngles   = marksQuote + "<>"
 
 	punctuationGoal = 8
 )
@@ -34,6 +36,12 @@ func punctuationLessons() []curriculum.Lesson {
 		newKeys(201, "Keys { and }", "{}", marksBraces),
 		review(202, "Review: { and }", marksBraces, "{}", punctuationGoal),
 		practice(203, "Practice: { and }", marksBraces, "{}", punctuationGoal, true),
+		newKeys(204, "Keys \" and |", "\"|", marksQuote),
+		review(205, "Review: \" and |", marksQuote, "\"|", punctuationGoal),
+		practice(206, "Practice: \" and |", marksQuote, "\"|", punctuationGoal, true),
+		newKeys(207, "Keys < and >", "<>", marksAngles),
+		review(208, "Review: < and >", marksAngles, "<>", punctuationGoal),
+		practice(209, "Practice: < and >", marksAngles, "<>", punctuationGoal, true),
 	}
 }
 

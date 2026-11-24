@@ -58,3 +58,13 @@ func TestUnderscoreAndPlusThenBraces(t *testing.T) {
 		t.Fatalf("lesson 200 = %v: %q", l.Kind, text)
 	}
 }
+
+func TestQuoteAndPipeThenAngleBrackets(t *testing.T) {
+	introduces(t, map[int]string{204: "\"|", 207: "<>"})
+
+	l, _, _ := content.Course().Lesson(209)
+	text := l.Steps(rand.New(rand.NewPCG(1, 1)))[0].Text
+	if l.Kind != curriculum.Practice || !strings.Contains(text, "<") || !strings.Contains(text, ">") {
+		t.Fatalf("lesson 209 = %v: %q", l.Kind, text)
+	}
+}
