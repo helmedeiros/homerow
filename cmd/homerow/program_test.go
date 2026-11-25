@@ -113,3 +113,29 @@ func TestTheProgramSwitchesModulesAndOpensTheNumbers(t *testing.T) {
 	tm.Type("q")
 	tm.WaitFinished(t, teatest.WithFinalTimeout(5*time.Second))
 }
+
+func TestTheProgramOpensThePunctuationAndDrillsTheDash(t *testing.T) {
+	tm := startProgram(t, filepath.Join(t.TempDir(), "progress.json"))
+	waitFor(t, tm, "Module 1 · Home Row")
+
+	for range 6 {
+		tm.Send(tea.KeyMsg{Type: tea.KeyRight})
+	}
+	waitFor(t, tm, "Module 7 · Punctuation")
+	tm.Send(tea.KeyMsg{Type: tea.KeyEnter})
+	waitFor(t, tm, "Most punctuation sits to the right")
+	tm.Send(tea.KeyMsg{Type: tea.KeyEsc})
+	waitFor(t, tm, "Module 7 · Punctuation")
+	tm.Send(tea.KeyMsg{Type: tea.KeyDown})
+	tm.Send(tea.KeyMsg{Type: tea.KeyEnter})
+	waitFor(t, tm, "Lesson 189")
+	tm.Type("-")
+	waitFor(t, tm, "right pinky finger")
+	tm.Type("'")
+	waitFor(t, tm, "- - - -- -- ---")
+
+	tm.Send(tea.KeyMsg{Type: tea.KeyEsc})
+	waitFor(t, tm, "Module 7 · Punctuation")
+	tm.Type("q")
+	tm.WaitFinished(t, teatest.WithFinalTimeout(5*time.Second))
+}
