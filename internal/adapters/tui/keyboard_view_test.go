@@ -118,3 +118,12 @@ func TestTheKeyToPressShowsTheColourOfItsFinger(t *testing.T) {
 		}
 	}
 }
+
+func TestEnterSitsAtTheEndOfTheHomeRow(t *testing.T) {
+	if view := renderKeyboard(0); !strings.Contains(view, "['][enter]") {
+		t.Fatalf("view:\n%s", view)
+	}
+	if view := renderKeyboard('\n'); !strings.Contains(view, "[']‹enter›") {
+		t.Fatalf("enter should be marked:\n%s", view)
+	}
+}

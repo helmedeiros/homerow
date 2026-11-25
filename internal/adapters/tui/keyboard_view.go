@@ -13,6 +13,7 @@ var rowIndent = []int{0, 2, 3, 5}
 const (
 	edgeWidth      = 8
 	spaceBarIndent = 20
+	homeRow        = 2
 )
 
 func renderKeyboard(press rune) string {
@@ -36,6 +37,9 @@ func renderKeyboard(press rune) string {
 		}
 		for _, k := range row {
 			b.WriteString(renderKey(string(k), fingerOf(k), known && k == key.Base))
+		}
+		if i == homeRow {
+			b.WriteString(renderKey("enter", keyboard.RightPinky, known && press == '\n'))
 		}
 		if i == len(edges)-1 {
 			b.WriteString(rightShift)
