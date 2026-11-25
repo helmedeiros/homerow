@@ -9,6 +9,7 @@ const (
 	Correct
 	Wrong
 	Corrected
+	Skipped
 )
 
 const charactersPerWord = 5
@@ -50,7 +51,17 @@ func (s *Session) Type(r rune, at time.Time) bool {
 		s.marks[s.pos] = Correct
 	}
 	s.pos++
+	if s.target[s.pos-1] == '\n' {
+		s.skipIndentation()
+	}
 	return correct
+}
+
+func (s *Session) skipIndentation() {
+	for !s.Done() && (s.target[s.pos] == ' ' || s.target[s.pos] == '\t') {
+		s.marks[s.pos] = Skipped
+		s.pos++
+	}
 }
 
 func (s *Session) Mistakes() map[rune]int {
@@ -68,6 +79,10 @@ func (s *Session) Back() bool {
 		return false
 	}
 	s.pos--
+	for s.pos > 0 && s.marks[s.pos] == Skipped {
+		s.marks[s.pos] = Pending
+		s.pos--
+	}
 	s.marks[s.pos] = Pending
 	return true
 }
