@@ -121,10 +121,10 @@ func TestFixedMistakesAreYellowAndOpenOnesRed(t *testing.T) {
 	lipgloss.SetColorProfile(termenv.TrueColor)
 	t.Cleanup(func() { lipgloss.SetColorProfile(termenv.Ascii) })
 
-	if got := renderChar('f', drill.Corrected, false); !strings.Contains(got, "38;2;234;179;8") {
+	if got := renderChar('f', drill.Corrected, false, false); !strings.Contains(got, "38;2;234;179;8") {
 		t.Errorf("corrected = %q, want yellow", got)
 	}
-	if got := renderChar('f', drill.Wrong, false); !strings.Contains(got, "48;2;239;68;68") {
+	if got := renderChar('f', drill.Wrong, false, false); !strings.Contains(got, "48;2;239;68;68") {
 		t.Errorf("wrong = %q, want red", got)
 	}
 }

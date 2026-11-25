@@ -118,20 +118,28 @@ func (d drillScreen) renderText() string {
 	marks := d.session.Marks()
 	cursor := d.session.Position()
 	var lines []string
+	indent := true
 	for _, span := range wrap(text, drillWidth) {
 		var b strings.Builder
 		for i := span[0]; i < span[1]; i++ {
-			b.WriteString(renderChar(text[i], marks[i], i == cursor))
+			indent = indent && (text[i] == ' ' || text[i] == '\t')
+			b.WriteString(renderChar(text[i], marks[i], i == cursor, indent))
+			indent = indent || text[i] == '\n'
 		}
 		lines = append(lines, b.String())
 	}
 	return strings.Join(lines, "\n")
 }
 
-func renderChar(r rune, mark drill.Mark, cursor bool) string {
+func renderChar(r rune, mark drill.Mark, cursor, indent bool) string {
 	shown := string(r)
-	if r == '\t' {
+	switch {
+	case indent && r == '\t':
+		shown = "    "
+	case r == '\t':
 		shown = "→"
+	case r == '\n':
+		shown = "↵"
 	}
 	switch {
 	case cursor:
@@ -156,6 +164,11 @@ func wrap(text []rune, width int) [][2]int {
 	for i, r := range text {
 		if r == ' ' {
 			lastSpace = i
+		}
+		if r == '\n' {
+			spans = append(spans, [2]int{start, i + 1})
+			start = i + 1
+			continue
 		}
 		if i-start >= width && lastSpace > start {
 			spans = append(spans, [2]int{start, lastSpace + 1})

@@ -21,3 +21,33 @@ func TestTheEnterKeyTypesANewLine(t *testing.T) {
 		t.Fatalf("message = %#v", message(cmd))
 	}
 }
+
+func TestCodeKeepsItsLinesAndMarksEnter(t *testing.T) {
+	d := newDrillScreen("if ok {\n\treturn\n}", 0, newClock().Now)
+
+	lines := strings.Split(d.renderText(), "\n")
+
+	if len(lines) != 3 || lines[0] != "if ok {↵" || lines[1] != "    return↵" || lines[2] != "}" {
+		t.Fatalf("lines = %q", lines)
+	}
+}
+
+func TestNestedIndentationIsAllSpaces(t *testing.T) {
+	d := newDrillScreen("a {\n\tb {\n\t\tc\n\t}\n}", 0, newClock().Now)
+
+	lines := strings.Split(d.renderText(), "\n")
+
+	if lines[2] != "        c↵" || lines[3] != "    }↵" {
+		t.Fatalf("lines = %q", lines)
+	}
+}
+
+func TestATabInsideALineIsStillAnArrow(t *testing.T) {
+	d := newDrillScreen("a\tb\n\tc", 0, newClock().Now)
+
+	lines := strings.Split(d.renderText(), "\n")
+
+	if lines[0] != "a→b↵" || lines[1] != "    c" {
+		t.Fatalf("lines = %q", lines)
+	}
+}
