@@ -79,6 +79,7 @@ var keys = buildKeys()
 func buildKeys() map[rune]Key {
 	built := map[rune]Key{' ': {Char: ' ', Base: ' ', Finger: LeftThumb, Row: SpaceRow}}
 	built['\t'] = Key{Char: '\t', Base: '\t', Finger: LeftPinky, Row: TopRow}
+	built['\n'] = Key{Char: '\n', Base: '\n', Finger: RightPinky, Row: HomeRow}
 	built['`'] = Key{Char: '`', Base: '`', Finger: LeftPinky, Row: NumberRow}
 	built['~'] = Key{Char: '~', Base: '`', Shifted: true, Finger: LeftPinky, Row: NumberRow}
 	for row, chars := range rows {

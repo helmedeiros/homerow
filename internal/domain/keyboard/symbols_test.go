@@ -51,3 +51,11 @@ func TestTabBelongsToTheLeftPinky(t *testing.T) {
 		t.Fatalf("Lookup(tab) = %+v, %v", key, ok)
 	}
 }
+
+func TestEnterBelongsToTheRightPinky(t *testing.T) {
+	key, ok := keyboard.Lookup('\n')
+
+	if !ok || key.Finger != keyboard.RightPinky || key.Row != keyboard.HomeRow || key.Shifted {
+		t.Fatalf("Lookup(enter) = %+v, %v", key, ok)
+	}
+}
