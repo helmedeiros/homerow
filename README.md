@@ -7,7 +7,7 @@ pair at a time, you drill them, review them, race the clock with them, and play
 a short game before moving on. Every exercise is scored on accuracy and speed
 and earns up to five stars.
 
-The course has 187 lessons in six modules. `homerow lessons` lists every
+The course has 218 lessons in seven modules. `homerow lessons` lists every
 lesson with your stars, grouped by module.
 
 | Module      | Lessons | Keys                                  |
@@ -18,6 +18,7 @@ lesson with your stars, grouped by module.
 | Shift Key   | 89–142  | every capital, `:` and `?`            |
 | Numbers     | 143–157 | `1` to `0`                            |
 | Symbols     | 158–187 | `! @ # $ % ^ & * ( )`                 |
+| Punctuation | 188–218 | `` - ' [ ] = \ _ + { } " \| < > ` ~ `` |
 
 ![Meeting the f and j keys](docs/demo/new-keys.gif)
 
