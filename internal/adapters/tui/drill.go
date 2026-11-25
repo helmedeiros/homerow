@@ -53,6 +53,8 @@ func (d drillScreen) Update(msg tea.Msg) (screen, tea.Cmd) {
 		return d.typed(' ')
 	case tea.KeyTab:
 		return d.typed('\t')
+	case tea.KeyEnter:
+		return d.typed('\n')
 	case tea.KeyRunes:
 		return d.typed(key.Runes...)
 	}
