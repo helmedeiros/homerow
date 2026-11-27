@@ -5,6 +5,8 @@ import (
 	"testing"
 
 	tea "github.com/charmbracelet/bubbletea"
+
+	"github.com/helmedeiros/homerow/internal/domain/curriculum"
 )
 
 func TestTheEnterKeyTypesANewLine(t *testing.T) {
@@ -49,5 +51,25 @@ func TestATabInsideALineIsStillAnArrow(t *testing.T) {
 
 	if lines[0] != "a→b↵" || lines[1] != "    c" {
 		t.Fatalf("lines = %q", lines)
+	}
+}
+
+func TestACodeStepShowsItsNoteAboveTheCode(t *testing.T) {
+	lesson := curriculum.Lesson{Kind: curriculum.Code}
+	step := curriculum.Step{Kind: curriculum.DrillStep, Text: "a := 1", Page: "Declare and assign at once."}
+
+	view := Model{}.screenFor(lesson, step).View()
+
+	note, code := strings.Index(view, "Declare and assign at once."), strings.Index(view, "a := 1")
+	if note < 0 || code < 0 || note > code {
+		t.Fatalf("view:\n%s", view)
+	}
+}
+
+func TestADrillWithoutANoteStartsWithTheText(t *testing.T) {
+	view := newDrillScreen("fj", 0, newClock().Now).View()
+
+	if !strings.HasPrefix(view, "fj") {
+		t.Fatalf("view:\n%s", view)
 	}
 }

@@ -6,6 +6,7 @@ import (
 	"time"
 
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/charmbracelet/lipgloss"
 
 	"github.com/helmedeiros/homerow/internal/domain/drill"
 	"github.com/helmedeiros/homerow/internal/domain/keyboard"
@@ -16,6 +17,7 @@ const drillWidth = 48
 
 type drillScreen struct {
 	session *drill.Session
+	note    string
 	limit   time.Duration
 	now     func() time.Time
 	started time.Time
@@ -100,6 +102,9 @@ func (d drillScreen) finished() stepDoneMsg {
 
 func (d drillScreen) View() string {
 	var b strings.Builder
+	if d.note != "" {
+		b.WriteString(lipgloss.NewStyle().Width(pageWidth).Render(d.note) + "\n\n")
+	}
 	b.WriteString(d.renderText() + "\n\n")
 	next, more := d.session.Expected()
 	info, _ := keyboard.Lookup(next)

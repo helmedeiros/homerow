@@ -102,6 +102,7 @@ func (m Model) screenFor(lesson curriculum.Lesson, step curriculum.Step) screen 
 		return m.gameFor(step)
 	default:
 		d := newDrillScreen(step.Text, lesson.TimeLimit, m.opts.Now)
+		d.note = step.Page
 		d.tick = m.opts.ticker()
 		return d
 	}
