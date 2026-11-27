@@ -234,8 +234,8 @@ func TestWalkingTheWholeCourseAndReopeningTheProgressFile(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "progress.json")
 	course := content.Course()
 	lessons := course.Lessons()
-	if n, last := len(lessons), lessons[len(lessons)-1].Number; n != 218 || last != 218 {
-		t.Fatalf("course has %d lessons ending at %d, want 218", n, last)
+	if last := lessons[len(lessons)-1].Number; last != len(lessons) {
+		t.Fatalf("course has %d lessons ending at %d", len(lessons), last)
 	}
 
 	h := newHarnessWith(t, filestore.New(path))

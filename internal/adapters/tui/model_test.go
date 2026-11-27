@@ -69,11 +69,14 @@ func (h *harness) typeDrill() {
 	if !ok {
 		h.t.Fatalf("not on a drill:\n%s", h.view())
 	}
-	for _, r := range d.session.Text() {
+	for r, more := d.session.Expected(); more; r, more = d.session.Expected() {
 		h.clock.tick(time.Second)
-		if r == ' ' {
+		switch r {
+		case ' ':
 			h.send(special(tea.KeySpace))
-		} else {
+		case '\n':
+			h.send(special(tea.KeyEnter))
+		default:
 			h.send(runes(string(r)))
 		}
 	}
