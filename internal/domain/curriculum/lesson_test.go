@@ -83,3 +83,17 @@ func TestModuleFindsLessonsByNumber(t *testing.T) {
 		t.Fatal("Lesson(99) should not exist")
 	}
 }
+
+func TestTypedCodeLeavesOutTheIndentationAfterEachNewLine(t *testing.T) {
+	if got := curriculum.Typed("if ok {\n\treturn\n  }\n"); got != "if ok {\nreturn\n}\n" {
+		t.Fatalf("typed = %q", got)
+	}
+}
+
+func TestACodeLessonDoesNotNeedTheIndentationKeys(t *testing.T) {
+	l := curriculum.Lesson{Number: 1, Title: "t", Kind: curriculum.Code, Snippets: []string{"if x\n\ty"}, Keys: []rune("ifxy \n"), GoalWPM: 8}
+
+	if err := l.Validate(); err != nil {
+		t.Fatal(err)
+	}
+}

@@ -26,6 +26,8 @@ func (h *harness) finishStep() {
 			h.send(special(tea.KeySpace))
 		case '\t':
 			h.send(special(tea.KeyTab))
+		case '\n':
+			h.send(special(tea.KeyEnter))
 		default:
 			h.send(runes(string(s.key)))
 		}

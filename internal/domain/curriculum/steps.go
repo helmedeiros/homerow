@@ -54,7 +54,7 @@ func (l Lesson) Steps(rng *rand.Rand) []Step {
 	case Travel:
 		return []Step{drill(exercise.Travel(rng, l.Focus, l.letters(), reviewGroups))}
 	case Code:
-		return l.codeSteps()
+		return append(l.keyIntros(), l.codeSteps()...)
 	default:
 		return []Step{drill(l.reviewText(rng))}
 	}

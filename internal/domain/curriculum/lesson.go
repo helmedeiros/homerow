@@ -92,7 +92,7 @@ func (l Lesson) validateKeys() error {
 		return l.invalid("focuses on keys it does not allow")
 	case !subset(l.shiftedBases(), l.Keys):
 		return l.invalid("asks for a shifted key without its unshifted key")
-	case !subset([]rune(strings.Join(l.Snippets, "")), l.Keys):
+	case !subset([]rune(Typed(strings.Join(l.Snippets, ""))), l.Keys):
 		return l.invalid("has code with keys it does not allow")
 	}
 	return nil
@@ -134,4 +134,12 @@ func (m Module) Lesson(number int) (Lesson, bool) {
 		}
 	}
 	return Lesson{}, false
+}
+
+func Typed(code string) string {
+	lines := strings.Split(code, "\n")
+	for i := 1; i < len(lines); i++ {
+		lines[i] = strings.TrimLeft(lines[i], " \t")
+	}
+	return strings.Join(lines, "\n")
 }

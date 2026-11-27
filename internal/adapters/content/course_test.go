@@ -72,7 +72,7 @@ func TestEveryDrillUsesOnlyItsLessonKeys(t *testing.T) {
 				if step.Kind != curriculum.DrillStep {
 					continue
 				}
-				if strings.Trim(step.Text, allowed) != "" || step.Text == "" {
+				if strings.Trim(curriculum.Typed(step.Text), allowed) != "" || step.Text == "" {
 					t.Fatalf("lesson %d seed %d drill %q leaves %q", l.Number, seed, step.Text, allowed)
 				}
 			}

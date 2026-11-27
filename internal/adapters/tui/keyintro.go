@@ -35,6 +35,8 @@ func (k keyIntroScreen) Update(msg tea.Msg) (screen, tea.Cmd) {
 		pressed = " "
 	case tea.KeyTab:
 		pressed = "\t"
+	case tea.KeyEnter:
+		pressed = "\n"
 	}
 	if strings.ContainsRune(pressed, k.key) {
 		return k, send(stepDoneMsg{})
@@ -68,6 +70,8 @@ func keyName(k rune) string {
 		return pressStyle.Render(" space bar ")
 	case '\t':
 		return pressStyle.Render(" tab ") + " key"
+	case '\n':
+		return pressStyle.Render(" enter ") + " key"
 	}
 	return pressStyle.Render(" "+string(k)+" ") + " key"
 }

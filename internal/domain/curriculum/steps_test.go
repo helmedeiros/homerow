@@ -363,3 +363,17 @@ func TestACodeLessonTypesEachSnippetUnderItsNote(t *testing.T) {
 		}
 	}
 }
+
+func TestACodeLessonIntroducesItsNewKeyBeforeTheCode(t *testing.T) {
+	l := curriculum.Lesson{
+		Kind: curriculum.Code, Pages: []string{"One per line."}, NewKeys: []rune("\n"),
+		Snippets: []string{"a := 1\nb := 2"}, Keys: []rune("ab:=12 \n"), GoalWPM: 8,
+	}
+
+	steps := l.Steps(rng())
+
+	sameKinds(t, steps, curriculum.KeyIntroStep, curriculum.DrillStep)
+	if steps[0].Key != '\n' {
+		t.Fatalf("intro key = %q", steps[0].Key)
+	}
+}

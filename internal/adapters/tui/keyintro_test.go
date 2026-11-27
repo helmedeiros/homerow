@@ -107,3 +107,16 @@ func TestKeyIntroNamesAndAcceptsTheTabKey(t *testing.T) {
 		t.Fatalf("message = %#v, want step done", message(cmd))
 	}
 }
+
+func TestKeyIntroNamesAndAcceptsTheEnterKey(t *testing.T) {
+	s := newKeyIntroScreen('\n')
+	if view := s.View(); !strings.Contains(view, " enter  key") || !strings.Contains(view, "right pinky") || !strings.Contains(view, "‹enter›") {
+		t.Fatalf("view:\n%s", view)
+	}
+
+	_, cmd := s.Update(special(tea.KeyEnter))
+
+	if _, ok := message(cmd).(stepDoneMsg); !ok {
+		t.Fatalf("message = %#v, want step done", message(cmd))
+	}
+}
