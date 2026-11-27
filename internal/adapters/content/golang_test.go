@@ -77,3 +77,9 @@ func TestTheFirstCodeLessonIntroducesEnterAndIndentationIsNotAKey(t *testing.T) 
 		}
 	}
 }
+
+func TestGoErrors(t *testing.T) {
+	teaches(t, map[int]string{
+		225: "if err != nil {", 226: "%w", 227: "errors.Is(err, ErrNotFound)", 228: "os.ReadFile",
+	})
+}
