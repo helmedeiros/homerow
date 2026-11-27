@@ -23,6 +23,7 @@ const (
 	Travel
 	Tab
 	Dynamic
+	Code
 )
 
 var kindNames = [...]string{
@@ -35,6 +36,7 @@ var kindNames = [...]string{
 	Travel:    "travel",
 	Tab:       "tab",
 	Dynamic:   "dynamic",
+	Code:      "code",
 }
 
 func (k Kind) String() string { return kindNames[k] }
@@ -54,6 +56,7 @@ type Lesson struct {
 	Title     string
 	Kind      Kind
 	Pages     []string
+	Snippets  []string
 	NewKeys   []rune
 	Keys      []rune
 	Focus     []rune
@@ -73,6 +76,8 @@ func (l Lesson) Validate() error {
 		return l.invalid("has no keys to practise")
 	case l.Kind == Travel && len(l.Focus) == 0:
 		return l.invalid("travels without a home key to start from")
+	case l.Kind == Code && len(l.Snippets) == 0:
+		return l.invalid("is code without snippets")
 	case l.Kind.Scored() && l.GoalWPM <= 0:
 		return l.invalid("is scored without a speed goal")
 	}
@@ -87,6 +92,8 @@ func (l Lesson) validateKeys() error {
 		return l.invalid("focuses on keys it does not allow")
 	case !subset(l.shiftedBases(), l.Keys):
 		return l.invalid("asks for a shifted key without its unshifted key")
+	case !subset([]rune(strings.Join(l.Snippets, "")), l.Keys):
+		return l.invalid("has code with keys it does not allow")
 	}
 	return nil
 }

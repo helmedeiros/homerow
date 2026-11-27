@@ -345,3 +345,21 @@ func TestTabPracticeIntroducesItsNewKeyFirst(t *testing.T) {
 		t.Fatalf("intro key = %q", steps[0].Key)
 	}
 }
+
+func TestACodeLessonTypesEachSnippetUnderItsNote(t *testing.T) {
+	l := curriculum.Lesson{
+		Kind: curriculum.Code, Pages: []string{"Declare and assign at once.", "Only inside functions."},
+		Snippets: []string{"a := 1", "b, c := 2, 3"}, Keys: []rune("abc:=123, "), GoalWPM: 8,
+	}
+
+	steps := l.Steps(rng())
+
+	if len(steps) != 2 || steps[0].Text != "a := 1" || steps[1].Text != "b, c := 2, 3" {
+		t.Fatalf("steps = %+v", steps)
+	}
+	for _, s := range steps {
+		if s.Kind != curriculum.DrillStep || s.Page != "Declare and assign at once.\n\nOnly inside functions." {
+			t.Fatalf("step = %+v", s)
+		}
+	}
+}

@@ -53,6 +53,8 @@ func (l Lesson) Steps(rng *rand.Rand) []Step {
 		return append(l.keyIntros(), drill(l.tabText(rng)))
 	case Travel:
 		return []Step{drill(exercise.Travel(rng, l.Focus, l.letters(), reviewGroups))}
+	case Code:
+		return l.codeSteps()
 	default:
 		return []Step{drill(l.reviewText(rng))}
 	}
@@ -90,6 +92,15 @@ func (l Lesson) balloonText(rng *rand.Rand) (string, error) {
 		return exercise.CapitalWords(rng, l.letters(), capitals, balloonWords), nil
 	}
 	return exercise.Words(rng, l.letters(), balloonWords)
+}
+
+func (l Lesson) codeSteps() []Step {
+	note := strings.Join(l.Pages, "\n\n")
+	steps := make([]Step, len(l.Snippets))
+	for i, snippet := range l.Snippets {
+		steps[i] = Step{Kind: DrillStep, Text: snippet, Page: note}
+	}
+	return steps
 }
 
 func (l Lesson) pageSteps() []Step {

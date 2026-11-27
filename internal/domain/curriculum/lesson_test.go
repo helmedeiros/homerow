@@ -18,6 +18,7 @@ func TestOnlyPractisingKindsAreScored(t *testing.T) {
 		curriculum.Travel:    true,
 		curriculum.Tab:       true,
 		curriculum.Dynamic:   true,
+		curriculum.Code:      true,
 	}
 	for kind, want := range scored {
 		if kind.Scored() != want {
@@ -27,7 +28,7 @@ func TestOnlyPractisingKindsAreScored(t *testing.T) {
 }
 
 func TestKindNames(t *testing.T) {
-	if curriculum.HandDrill.String() != "hand drill" || curriculum.Play.String() != "play" || curriculum.Travel.String() != "travel" {
+	if curriculum.HandDrill.String() != "hand drill" || curriculum.Play.String() != "play" || curriculum.Travel.String() != "travel" || curriculum.Code.String() != "code" {
 		t.Fatalf("names = %q, %q", curriculum.HandDrill, curriculum.Play)
 	}
 }
@@ -38,6 +39,7 @@ func TestValidLessons(t *testing.T) {
 		{Number: 2, Title: "Keys f and j", Kind: curriculum.NewKeys, NewKeys: []rune("fj"), Keys: []rune("fj")},
 		{Number: 4, Title: "Review", Kind: curriculum.Review, Keys: []rune("fj"), Focus: []rune("f"), GoalWPM: 8},
 		{Number: 5, Title: "Capitals", Kind: curriculum.NewKeys, NewKeys: []rune("F:"), Keys: []rune("fj;F:")},
+		{Number: 6, Title: "Short declarations", Kind: curriculum.Code, Pages: []string{"note"}, Snippets: []string{"a := 1"}, Keys: []rune("a :=1;"), GoalWPM: 8},
 	}
 	for _, l := range lessons {
 		if err := l.Validate(); err != nil {
@@ -57,6 +59,8 @@ func TestInvalidLessons(t *testing.T) {
 		"travel without a home":  {Number: 7, Title: "x", Kind: curriculum.Travel, Keys: []rune("jum"), GoalWPM: 8},
 		"capital before letter":  {Number: 8, Title: "x", Kind: curriculum.NewKeys, NewKeys: []rune("K"), Keys: []rune("fjK")},
 		"colon before semicolon": {Number: 9, Title: "x", Kind: curriculum.NewKeys, NewKeys: []rune(":"), Keys: []rune("fj:")},
+		"code without snippets":  {Number: 10, Title: "x", Kind: curriculum.Code, Keys: []rune("fj"), GoalWPM: 8},
+		"code with a stray key":  {Number: 11, Title: "x", Kind: curriculum.Code, Snippets: []string{"fk"}, Keys: []rune("fj"), GoalWPM: 8},
 	}
 	for name, l := range cases {
 		if err := l.Validate(); !errors.Is(err, curriculum.ErrInvalidLesson) {
