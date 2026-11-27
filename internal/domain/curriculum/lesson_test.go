@@ -97,3 +97,11 @@ func TestACodeLessonDoesNotNeedTheIndentationKeys(t *testing.T) {
 		t.Fatal(err)
 	}
 }
+
+func TestALessonCannotFloatWordsWithKeysItDoesNotAllow(t *testing.T) {
+	l := curriculum.Lesson{Number: 1, Title: "t", Kind: curriculum.Play, Game: curriculum.BalloonWords, Keys: []rune("fun"), Vocabulary: []string{"func"}, GoalWPM: 8}
+
+	if err := l.Validate(); !errors.Is(err, curriculum.ErrInvalidLesson) {
+		t.Fatalf("err = %v", err)
+	}
+}

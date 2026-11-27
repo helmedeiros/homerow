@@ -2,6 +2,7 @@ package curriculum_test
 
 import (
 	"math/rand/v2"
+	"slices"
 	"strings"
 	"testing"
 
@@ -375,5 +376,21 @@ func TestACodeLessonIntroducesItsNewKeyBeforeTheCode(t *testing.T) {
 	sameKinds(t, steps, curriculum.KeyIntroStep, curriculum.DrillStep)
 	if steps[0].Key != '\n' {
 		t.Fatalf("intro key = %q", steps[0].Key)
+	}
+}
+
+func TestBalloonsFloatTheLessonsOwnWords(t *testing.T) {
+	vocabulary := []string{"func", "go", "chan", ":="}
+	l := curriculum.Lesson{Kind: curriculum.Play, Game: curriculum.BalloonWords, Keys: []rune("funcgoha:="), Vocabulary: vocabulary, GoalWPM: 8}
+
+	step := l.Steps(rng())[0]
+
+	if step.Game != curriculum.BalloonWords || len(step.Words) != 40 {
+		t.Fatalf("step = %+v", step)
+	}
+	for _, w := range step.Words {
+		if !slices.Contains(vocabulary, w) {
+			t.Fatalf("word %q is not in the vocabulary", w)
+		}
 	}
 }
