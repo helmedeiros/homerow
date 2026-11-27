@@ -52,18 +52,19 @@ const (
 )
 
 type Lesson struct {
-	Number    int
-	Title     string
-	Kind      Kind
-	Pages     []string
-	Snippets  []string
-	NewKeys   []rune
-	Keys      []rune
-	Focus     []rune
-	Words     bool
-	Game      Game
-	GoalWPM   float64
-	TimeLimit time.Duration
+	Number     int
+	Title      string
+	Kind       Kind
+	Pages      []string
+	Snippets   []string
+	Vocabulary []string
+	NewKeys    []rune
+	Keys       []rune
+	Focus      []rune
+	Words      bool
+	Game       Game
+	GoalWPM    float64
+	TimeLimit  time.Duration
 }
 
 func (l Lesson) Validate() error {
@@ -94,6 +95,8 @@ func (l Lesson) validateKeys() error {
 		return l.invalid("asks for a shifted key without its unshifted key")
 	case !subset([]rune(Typed(strings.Join(l.Snippets, ""))), l.Keys):
 		return l.invalid("has code with keys it does not allow")
+	case !subset([]rune(strings.Join(l.Vocabulary, "")), l.Keys):
+		return l.invalid("floats words with keys it does not allow")
 	}
 	return nil
 }

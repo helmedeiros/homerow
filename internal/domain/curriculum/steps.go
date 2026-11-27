@@ -82,6 +82,9 @@ func (l Lesson) gameStep(rng *rand.Rand) Step {
 }
 
 func (l Lesson) balloonText(rng *rand.Rand) (string, error) {
+	if len(l.Vocabulary) > 0 {
+		return l.vocabularyText(rng), nil
+	}
 	if marks := punctuation(l.letters()); len(marks) > 0 {
 		return exercise.PunctuationWords(rng, l.letters(), marks, balloonWords), nil
 	}
@@ -101,6 +104,14 @@ func (l Lesson) codeSteps() []Step {
 		steps[i] = Step{Kind: DrillStep, Text: snippet, Page: note}
 	}
 	return steps
+}
+
+func (l Lesson) vocabularyText(rng *rand.Rand) string {
+	words := make([]string, balloonWords)
+	for i := range words {
+		words[i] = l.Vocabulary[rng.IntN(len(l.Vocabulary))]
+	}
+	return strings.Join(words, " ")
 }
 
 func (l Lesson) pageSteps() []Step {
